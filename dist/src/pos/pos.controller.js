@@ -16,6 +16,7 @@ exports.PosController = void 0;
 const common_1 = require("@nestjs/common");
 const pos_service_1 = require("./pos.service");
 const validate_voucher_dto_1 = require("./dto/validate-voucher.dto");
+const create_order_dto_1 = require("./dto/create-order.dto");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
@@ -34,6 +35,20 @@ let PosController = class PosController {
             data
         };
     }
+    async createOrder(req, dto) {
+        const user = req.user;
+        const data = await this.posService.createOrder(user.userId, dto);
+        return data;
+    }
+    async getMenus(req) {
+        const user = req.user;
+        const data = await this.posService.getMenus(user.userId);
+        return {
+            success: true,
+            message: 'Daftar menu berhasil dimuat',
+            data
+        };
+    }
 };
 exports.PosController = PosController;
 __decorate([
@@ -46,6 +61,25 @@ __decorate([
     __metadata("design:paramtypes", [Object, validate_voucher_dto_1.ValidateVoucherDto]),
     __metadata("design:returntype", Promise)
 ], PosController.prototype, "validateVoucher", null);
+__decorate([
+    (0, common_1.Post)('orders'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_order_dto_1.CreateOrderDto]),
+    __metadata("design:returntype", Promise)
+], PosController.prototype, "createOrder", null);
+__decorate([
+    (0, common_1.Get)('menus'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PosController.prototype, "getMenus", null);
 exports.PosController = PosController = __decorate([
     (0, common_1.Controller)('api/pos'),
     __metadata("design:paramtypes", [pos_service_1.PosService])

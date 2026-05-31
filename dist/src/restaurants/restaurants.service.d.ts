@@ -8,8 +8,18 @@ export declare class RestaurantsService {
     constructor(prisma: PrismaService);
     private getOwnedRestaurant;
     createMenu(userId: string, dto: CreateMenuDto): Promise<{
-        id: string;
         name: string;
+        id: string;
+        createdAt: Date;
+        description: string;
+        price: number;
+        image: string;
+        isAvailable: boolean;
+        restaurantId: string;
+    }>;
+    getMenu(userId: string, menuId: string): Promise<{
+        name: string;
+        id: string;
         createdAt: Date;
         description: string;
         price: number;
@@ -18,8 +28,8 @@ export declare class RestaurantsService {
         restaurantId: string;
     }>;
     updateMenu(userId: string, menuId: string, dto: UpdateMenuDto): Promise<{
-        id: string;
         name: string;
+        id: string;
         createdAt: Date;
         description: string;
         price: number;
@@ -31,6 +41,13 @@ export declare class RestaurantsService {
         deleted: boolean;
     }>;
     createPromo(userId: string, dto: CreatePromoDto): Promise<{
+        id: string;
+        restaurantId: string;
+        discount: number;
+        startHour: string;
+        endHour: string;
+    }>;
+    getPromo(userId: string, promoId: string): Promise<{
         id: string;
         restaurantId: string;
         discount: number;
@@ -61,5 +78,40 @@ export declare class RestaurantsService {
             total: number;
             totalPages: number;
         };
+    }>;
+    findOnePublic(id: string): Promise<{
+        owner: {
+            name: string;
+        };
+    } & {
+        name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+        address: string;
+        latitude: number;
+        longitude: number;
+        legalPhoto: string;
+    }>;
+    getMenusPublic(restaurantId: string): Promise<{
+        name: string;
+        id: string;
+        createdAt: Date;
+        description: string;
+        price: number;
+        image: string;
+        isAvailable: boolean;
+        restaurantId: string;
+    }[]>;
+    getMenuDetailPublic(restaurantId: string, menuId: string): Promise<{
+        name: string;
+        id: string;
+        createdAt: Date;
+        description: string;
+        price: number;
+        image: string;
+        isAvailable: boolean;
+        restaurantId: string;
     }>;
 }

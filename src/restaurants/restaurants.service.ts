@@ -46,6 +46,16 @@ export class RestaurantsService {
     });
   }
 
+  async getMenu(userId: string, menuId: string) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+    const menu = await this.prisma.menu.findUnique({
+      where: { id: menuId },
+    });
+    if (!menu) throw new NotFoundException('Menu tidak ditemukan');
+    if (menu.restaurantId !== restaurant.id) throw new ForbiddenException('Akses ditolak');
+    return menu;
+  }
+
   async updateMenu(userId: string, menuId: string, dto: UpdateMenuDto) {
     const restaurant = await this.getOwnedRestaurant(userId);
 
@@ -101,6 +111,16 @@ export class RestaurantsService {
         endHour: dto.endHour,
       },
     });
+  }
+
+  async getPromo(userId: string, promoId: string) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+    const promo = await this.prisma.promo.findUnique({
+      where: { id: promoId },
+    });
+    if (!promo) throw new NotFoundException('Promo tidak ditemukan');
+    if (promo.restaurantId !== restaurant.id) throw new ForbiddenException('Akses ditolak');
+    return promo;
   }
 
   async updatePromo(userId: string, promoId: string, dto: UpdatePromoDto) {
@@ -280,5 +300,33 @@ export class RestaurantsService {
         totalPages: Math.ceil(total / limit),
       },
     };
+  }
+
+  async findOnePublic(id: string) {
+    const restaurant = await this.prisma.restaurant.findFirst({
+      where: {
+        id,
+        owner: { status: 'ACTIVE' },
+      },
+      include: { owner: { select: { name: true } } },
+    });
+    if (!restaurant) throw new NotFoundException('Restoran tidak ditemukan atau belum disetujui');
+    return restaurant;
+  }
+
+  async getMenusPublic(restaurantId: string) {
+    const restaurant = await this.findOnePublic(restaurantId);
+    return this.prisma.menu.findMany({
+      where: { restaurantId: restaurant.id, isAvailable: true },
+    });
+  }
+
+  async getMenuDetailPublic(restaurantId: string, menuId: string) {
+    const restaurant = await this.findOnePublic(restaurantId);
+    const menu = await this.prisma.menu.findFirst({
+      where: { id: menuId, restaurantId: restaurant.id, isAvailable: true },
+    });
+    if (!menu) throw new NotFoundException('Menu tidak ditemukan');
+    return menu;
   }
 }

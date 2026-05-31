@@ -13,8 +13,10 @@ exports.JwtStrategy = void 0;
 const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../../prisma/prisma.service");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
-    constructor() {
+    prisma;
+    constructor(prisma) {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromExtractors([
                 (request) => {
@@ -28,14 +30,31 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
             ignoreExpiration: false,
             secretOrKey: process.env.JWT_SECRET || 'mangan_rek_secret_key_2026_secure',
         });
+        this.prisma = prisma;
     }
     async validate(payload) {
+        if (payload.role === 'KASIR') {
+            const user = await this.prisma.user.findUnique({
+                where: { id: payload.sub },
+                include: {
+                    managedResto: {
+                        include: { owner: true },
+                    },
+                },
+            });
+            if (!user || user.status === 'REJECTED') {
+                throw new common_1.ForbiddenException('Akun kasir ditolak');
+            }
+            if (user.managedResto && user.managedResto.owner.status === 'REJECTED') {
+                throw new common_1.ForbiddenException('Akses ditolak: Restoran induk telah diblokir');
+            }
+        }
         return { userId: payload.sub, email: payload.email, role: payload.role, status: payload.status };
     }
 };
 exports.JwtStrategy = JwtStrategy;
 exports.JwtStrategy = JwtStrategy = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], JwtStrategy);
 //# sourceMappingURL=jwt.strategy.js.map

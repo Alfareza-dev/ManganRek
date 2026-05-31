@@ -84,6 +84,77 @@ let UsersService = class UsersService {
             throw error;
         }
     }
+    async getCashiers(adminId) {
+        const adminResto = await this.prisma.restaurant.findUnique({
+            where: { ownerId: adminId },
+        });
+        if (!adminResto)
+            throw new common_1.NotFoundException('Restoran tidak ditemukan');
+        return this.prisma.user.findMany({
+            where: { managedRestoId: adminResto.id, role: 'KASIR' },
+            select: { id: true, email: true, name: true, status: true, createdAt: true },
+        });
+    }
+    async getCashierById(adminId, cashierId) {
+        const adminResto = await this.prisma.restaurant.findUnique({
+            where: { ownerId: adminId },
+        });
+        if (!adminResto)
+            throw new common_1.NotFoundException('Restoran tidak ditemukan');
+        const cashier = await this.prisma.user.findFirst({
+            where: { id: cashierId, managedRestoId: adminResto.id, role: 'KASIR' },
+            select: { id: true, email: true, name: true, status: true, createdAt: true },
+        });
+        if (!cashier)
+            throw new common_1.NotFoundException('Kasir tidak ditemukan');
+        return cashier;
+    }
+    async updateCashier(adminId, cashierId, dto) {
+        const adminResto = await this.prisma.restaurant.findUnique({
+            where: { ownerId: adminId },
+        });
+        if (!adminResto)
+            throw new common_1.NotFoundException('Restoran tidak ditemukan');
+        const cashier = await this.prisma.user.findFirst({
+            where: { id: cashierId, managedRestoId: adminResto.id, role: 'KASIR' },
+        });
+        if (!cashier)
+            throw new common_1.NotFoundException('Kasir tidak ditemukan');
+        const data = {};
+        if (dto.name)
+            data.name = dto.name;
+        if (dto.email)
+            data.email = dto.email;
+        if (dto.password)
+            data.password = await bcrypt.hash(dto.password, 10);
+        try {
+            return await this.prisma.user.update({
+                where: { id: cashierId },
+                data,
+                select: { id: true, email: true, name: true, status: true },
+            });
+        }
+        catch (error) {
+            if (error instanceof client_1.Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new common_1.ConflictException('Email sudah digunakan');
+            }
+            throw error;
+        }
+    }
+    async deleteCashier(adminId, cashierId) {
+        const adminResto = await this.prisma.restaurant.findUnique({
+            where: { ownerId: adminId },
+        });
+        if (!adminResto)
+            throw new common_1.NotFoundException('Restoran tidak ditemukan');
+        const cashier = await this.prisma.user.findFirst({
+            where: { id: cashierId, managedRestoId: adminResto.id, role: 'KASIR' },
+        });
+        if (!cashier)
+            throw new common_1.NotFoundException('Kasir tidak ditemukan');
+        await this.prisma.user.delete({ where: { id: cashierId } });
+        return { message: 'Kasir berhasil dihapus' };
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

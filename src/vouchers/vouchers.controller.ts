@@ -31,6 +31,15 @@ export class VouchersController {
     return { success: true, message: 'Daftar voucher', data };
   }
 
+  @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async findOne(@Req() req: Request, @Param('id') id: string) {
+    const user = req.user as any;
+    const data = await this.vouchersService.findOne(user.userId, id);
+    return { success: true, message: 'Detail voucher berhasil dimuat', data };
+  }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN_RESTO)

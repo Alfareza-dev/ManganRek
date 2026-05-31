@@ -46,6 +46,15 @@ let VouchersService = class VouchersService {
             where: { restaurantId: resto.id }
         });
     }
+    async findOne(adminId, id) {
+        const resto = await this.getAdminResto(adminId);
+        const voucher = await this.prisma.voucher.findFirst({
+            where: { id, restaurantId: resto.id }
+        });
+        if (!voucher)
+            throw new common_1.NotFoundException('Voucher tidak ditemukan');
+        return voucher;
+    }
     async update(adminId, id, dto) {
         const resto = await this.getAdminResto(adminId);
         const voucher = await this.prisma.voucher.findFirst({

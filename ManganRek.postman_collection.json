@@ -13,7 +13,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -21,8 +24,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register/user",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register", "user"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "user"
+              ]
             }
           }
         },
@@ -31,7 +41,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -39,8 +52,15 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register/resto",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register", "resto"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register",
+                "resto"
+              ]
             }
           }
         },
@@ -49,7 +69,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -57,8 +80,104 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Name\",\n  \"email\": \"newemail@test.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"password123\",\n  \"newPassword\": \"password1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/change-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ]
             }
           }
         }
@@ -74,8 +193,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/admin/approvals",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "approvals"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "approvals"
+              ]
             }
           }
         },
@@ -84,7 +209,10 @@
           "request": {
             "method": "PATCH",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -92,10 +220,157 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/approvals/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "approvals", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "approvals",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-user-admin-resto" }
+                {
+                  "key": "id",
+                  "value": "isi-id-user-admin-resto"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Owners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/owners",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "owners"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Owner By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/owners/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "owners",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "owner_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Toggle Ban User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/:id/ban",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                ":id",
+                "ban"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User Permanently",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "user_id"
+                }
               ]
             }
           }
@@ -112,14 +387,113 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/restaurants?page=1&limit=10&lat=-7.9666&lng=112.6326&sort=terdekat",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "10" },
-                { "key": "lat", "value": "-7.9666" },
-                { "key": "lng", "value": "112.6326" },
-                { "key": "sort", "value": "terdekat" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "lat",
+                  "value": "-7.9666"
+                },
+                {
+                  "key": "lng",
+                  "value": "112.6326"
+                },
+                {
+                  "key": "sort",
+                  "value": "terdekat"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurant Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "resto_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurant Menus",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/:id/menus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                ":id",
+                "menus"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "resto_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get specific Menu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/:id/menus/:menuId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                ":id",
+                "menus",
+                ":menuId"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "resto_id"
+                },
+                {
+                  "key": "menuId",
+                  "value": "menu_id"
+                }
               ]
             }
           }
@@ -134,7 +508,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -142,8 +519,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/menus",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants", "menus"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "menus"
+              ]
             }
           }
         },
@@ -152,7 +535,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -160,10 +546,20 @@
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/menus/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants", "menus", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "menus",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-menu" }
+                {
+                  "key": "id",
+                  "value": "isi-id-menu"
+                }
               ]
             }
           }
@@ -175,10 +571,45 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/restaurants/menus/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants", "menus", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "menus",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-menu" }
+                {
+                  "key": "id",
+                  "value": "isi-id-menu"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Menu (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/menus/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "menus",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "menu_id"
+                }
               ]
             }
           }
@@ -193,7 +624,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -201,8 +635,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/promos",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants", "promos"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "promos"
+              ]
             }
           }
         },
@@ -211,7 +651,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -219,10 +662,20 @@
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/promos/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants", "promos", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "promos",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-promo" }
+                {
+                  "key": "id",
+                  "value": "isi-id-promo"
+                }
               ]
             }
           }
@@ -234,10 +687,45 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/restaurants/promos/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "restaurants", "promos", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "promos",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-promo" }
+                {
+                  "key": "id",
+                  "value": "isi-id-promo"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Promo (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/promos/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "promos",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "promo_id"
+                }
               ]
             }
           }
@@ -252,7 +740,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -260,8 +751,116 @@
             },
             "url": {
               "raw": "{{base_url}}/api/users/cashier",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "cashier"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "cashier"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Cashiers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/cashiers",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "cashiers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Cashier Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/cashiers/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "cashiers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "cashier_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Cashier",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kasir Update\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/cashiers/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "cashiers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "cashier_id"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Cashier",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/cashiers/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "cashiers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "cashier_id"
+                }
+              ]
             }
           }
         }
@@ -275,7 +874,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -283,8 +885,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/vouchers",
-              "host": ["{{base_url}}"],
-              "path": ["api", "vouchers"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers"
+              ]
             }
           }
         },
@@ -295,8 +902,13 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/vouchers",
-              "host": ["{{base_url}}"],
-              "path": ["api", "vouchers"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers"
+              ]
             }
           }
         },
@@ -305,7 +917,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -313,10 +928,19 @@
             },
             "url": {
               "raw": "{{base_url}}/api/vouchers/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "vouchers", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-voucher" }
+                {
+                  "key": "id",
+                  "value": "isi-id-voucher"
+                }
               ]
             }
           }
@@ -328,10 +952,43 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/vouchers/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "vouchers", ":id"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                ":id"
+              ],
               "variable": [
-                { "key": "id", "value": "isi-id-voucher" }
+                {
+                  "key": "id",
+                  "value": "isi-id-voucher"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get specific Voucher",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vouchers/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "voucher_id"
+                }
               ]
             }
           }
@@ -346,7 +1003,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -354,8 +1014,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/vouchers/buy",
-              "host": ["{{base_url}}"],
-              "path": ["api", "vouchers", "buy"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                "buy"
+              ]
             }
           }
         },
@@ -364,7 +1030,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -372,8 +1041,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/vouchers/webhook",
-              "host": ["{{base_url}}"],
-              "path": ["api", "vouchers", "webhook"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                "webhook"
+              ]
             }
           }
         }
@@ -387,7 +1062,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -395,8 +1073,59 @@
             },
             "url": {
               "raw": "{{base_url}}/api/pos/validate",
-              "host": ["{{base_url}}"],
-              "path": ["api", "pos", "validate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pos",
+                "validate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Pos Menus",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pos/menus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pos",
+                "menus"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Pos Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"menuId\": \"menu_id\", \"quantity\": 2 }\n  ],\n  \"paymentMethod\": \"QRIS\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pos/orders",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pos",
+                "orders"
+              ]
             }
           }
         }
@@ -412,14 +1141,34 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/itinerary?startLat=-7.9666&startLng=112.6326&endLat=-7.9797&endLng=112.6304&duration=4",
-              "host": ["{{base_url}}"],
-              "path": ["api", "itinerary"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "itinerary"
+              ],
               "query": [
-                { "key": "startLat", "value": "-7.9666" },
-                { "key": "startLng", "value": "112.6326" },
-                { "key": "endLat", "value": "-7.9797" },
-                { "key": "endLng", "value": "112.6304" },
-                { "key": "duration", "value": "4" }
+                {
+                  "key": "startLat",
+                  "value": "-7.9666"
+                },
+                {
+                  "key": "startLng",
+                  "value": "112.6326"
+                },
+                {
+                  "key": "endLat",
+                  "value": "-7.9797"
+                },
+                {
+                  "key": "endLng",
+                  "value": "112.6304"
+                },
+                {
+                  "key": "duration",
+                  "value": "4"
+                }
               ]
             }
           }

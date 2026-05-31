@@ -136,6 +136,65 @@ let AuthService = class AuthService {
             user: userWithoutPassword,
         };
     }
+    async getProfile(userId) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: userId },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                status: true,
+                managedRestoId: true,
+                restaurant: true,
+            },
+        });
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        return user;
+    }
+    async updateProfile(userId, dto) {
+        try {
+            const user = await this.prisma.user.update({
+                where: { id: userId },
+                data: {
+                    name: dto.name,
+                    email: dto.email,
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    name: true,
+                    role: true,
+                    status: true,
+                },
+            });
+            return user;
+        }
+        catch (error) {
+            if (error instanceof client_2.Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+                throw new common_1.ConflictException('Email sudah digunakan');
+            }
+            throw error;
+        }
+    }
+    async changePassword(userId, dto) {
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        const isPasswordValid = await bcrypt.compare(dto.oldPassword, user.password);
+        if (!isPasswordValid) {
+            throw new common_1.UnauthorizedException('Password lama salah');
+        }
+        const hashedNewPassword = await bcrypt.hash(dto.newPassword, 10);
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: { password: hashedNewPassword },
+        });
+        return { message: 'Password berhasil diubah' };
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([

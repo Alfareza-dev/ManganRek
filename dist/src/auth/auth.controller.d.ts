@@ -2,6 +2,8 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RegisterRestoDto } from './dto/register-resto.dto';
 import { LoginDto } from './dto/login.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import type { Response } from 'express';
 export declare class AuthController {
     private readonly authService;
@@ -10,9 +12,9 @@ export declare class AuthController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             createdAt: Date;
@@ -25,9 +27,9 @@ export declare class AuthController {
         message: string;
         data: {
             user: {
-                id: string;
-                email: string;
                 name: string;
+                email: string;
+                id: string;
                 role: import("@prisma/client").$Enums.Role;
                 status: import("@prisma/client").$Enums.AccountStatus;
                 createdAt: Date;
@@ -35,8 +37,8 @@ export declare class AuthController {
                 managedRestoId: string | null;
             };
             restaurant: {
-                id: string;
                 name: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 ownerId: string;
@@ -51,14 +53,56 @@ export declare class AuthController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             createdAt: Date;
             updatedAt: Date;
             managedRestoId: string | null;
         };
+    }>;
+    logout(res: Response): Promise<{
+        success: boolean;
+        message: string;
+    }>;
+    getMe(req: any): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            restaurant: {
+                name: string;
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                ownerId: string;
+                address: string;
+                latitude: number;
+                longitude: number;
+                legalPhoto: string;
+            } | null;
+            name: string;
+            email: string;
+            id: string;
+            role: import("@prisma/client").$Enums.Role;
+            status: import("@prisma/client").$Enums.AccountStatus;
+            managedRestoId: string | null;
+        };
+    }>;
+    updateProfile(req: any, dto: UpdateProfileDto): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            name: string;
+            email: string;
+            id: string;
+            role: import("@prisma/client").$Enums.Role;
+            status: import("@prisma/client").$Enums.AccountStatus;
+        };
+    }>;
+    changePassword(req: any, dto: ChangePasswordDto): Promise<{
+        success: boolean;
+        message: string;
     }>;
 }

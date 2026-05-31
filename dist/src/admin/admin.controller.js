@@ -41,6 +41,34 @@ let AdminController = class AdminController {
             data,
         };
     }
+    async getUsers(page = '1', limit = '10') {
+        const data = await this.adminService.getUsers(Number(page), Number(limit));
+        return { success: true, message: 'Berhasil mengambil data user', data };
+    }
+    async getOwners(page = '1', limit = '10') {
+        const data = await this.adminService.getOwners(Number(page), Number(limit));
+        return { success: true, message: 'Berhasil mengambil data owner', data };
+    }
+    async getUserById(id) {
+        const data = await this.adminService.getUserById(id);
+        return { success: true, message: 'Berhasil mengambil detail user', data };
+    }
+    async getOwnerById(id) {
+        const data = await this.adminService.getOwnerById(id);
+        return { success: true, message: 'Berhasil mengambil detail owner', data };
+    }
+    async toggleBanUser(id) {
+        const data = await this.adminService.toggleBanUser(id);
+        return {
+            success: true,
+            message: `Status akun berhasil diubah menjadi ${data.status}`,
+            data,
+        };
+    }
+    async deleteUser(id) {
+        const data = await this.adminService.deleteUser(id);
+        return { success: true, message: data.message };
+    }
 };
 exports.AdminController = AdminController;
 __decorate([
@@ -57,6 +85,50 @@ __decorate([
     __metadata("design:paramtypes", [String, update_approval_dto_1.UpdateApprovalDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "updateApproval", null);
+__decorate([
+    (0, common_1.Get)('users'),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getUsers", null);
+__decorate([
+    (0, common_1.Get)('owners'),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getOwners", null);
+__decorate([
+    (0, common_1.Get)('users/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Get)('owners/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getOwnerById", null);
+__decorate([
+    (0, common_1.Patch)('users/:id/ban'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "toggleBanUser", null);
+__decorate([
+    (0, common_1.Delete)('users/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "deleteUser", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('api/admin'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

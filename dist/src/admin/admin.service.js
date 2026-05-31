@@ -74,6 +74,72 @@ let AdminService = class AdminService {
             },
         });
     }
+    async getUsers(page, limit) {
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            this.prisma.user.findMany({
+                where: { role: { in: [client_1.Role.USER, client_1.Role.KASIR] } },
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+            }),
+            this.prisma.user.count({ where: { role: { in: [client_1.Role.USER, client_1.Role.KASIR] } } }),
+        ]);
+        return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+    }
+    async getOwners(page, limit) {
+        const skip = (page - 1) * limit;
+        const [data, total] = await Promise.all([
+            this.prisma.user.findMany({
+                where: { role: client_1.Role.ADMIN_RESTO },
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                include: { restaurant: true },
+            }),
+            this.prisma.user.count({ where: { role: client_1.Role.ADMIN_RESTO } }),
+        ]);
+        return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+    }
+    async getUserById(id) {
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+            include: {
+                restaurant: true,
+                managedResto: true,
+            },
+        });
+        if (!user)
+            throw new common_1.NotFoundException('User not found');
+        return user;
+    }
+    async getOwnerById(id) {
+        const owner = await this.prisma.user.findFirst({
+            where: { id, role: client_1.Role.ADMIN_RESTO },
+            include: { restaurant: true },
+        });
+        if (!owner)
+            throw new common_1.NotFoundException('Owner not found');
+        return owner;
+    }
+    async toggleBanUser(id) {
+        const user = await this.prisma.user.findUnique({ where: { id } });
+        if (!user)
+            throw new common_1.NotFoundException('User not found');
+        const newStatus = user.status === client_1.AccountStatus.REJECTED ? client_1.AccountStatus.ACTIVE : client_1.AccountStatus.REJECTED;
+        return this.prisma.user.update({
+            where: { id },
+            data: { status: newStatus },
+            select: { id: true, email: true, status: true },
+        });
+    }
+    async deleteUser(id) {
+        const user = await this.prisma.user.findUnique({ where: { id } });
+        if (!user)
+            throw new common_1.NotFoundException('User not found');
+        await this.prisma.user.delete({ where: { id } });
+        return { message: 'User berhasil dihapus secara permanen' };
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([

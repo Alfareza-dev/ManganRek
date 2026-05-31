@@ -1,9 +1,12 @@
-import { Controller, Post, Body, Res, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Put, Body, Res, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RegisterRestoDto } from './dto/register-resto.dto';
 import { LoginDto } from './dto/login.dto';
-import type { Response } from 'express';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import type { Response, Request } from 'express';
 
 @Controller('api/auth')
 export class AuthController {
@@ -45,6 +48,54 @@ export class AuthController {
       success: true,
       message: 'Login berhasil',
       data: user
+    };
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.cookie('auth_token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 0
+    });
+
+    return {
+      success: true,
+      message: 'Logout berhasil'
+    };
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async getMe(@Req() req: any) {
+    const data = await this.authService.getProfile(req.user.userId);
+    return {
+      success: true,
+      message: 'Berhasil mengambil profil',
+      data
+    };
+  }
+
+  @Put('profile')
+  @UseGuards(JwtAuthGuard)
+  async updateProfile(@Req() req: any, @Body() dto: UpdateProfileDto) {
+    const data = await this.authService.updateProfile(req.user.userId, dto);
+    return {
+      success: true,
+      message: 'Profil berhasil diperbarui',
+      data
+    };
+  }
+
+  @Put('change-password')
+  @UseGuards(JwtAuthGuard)
+  async changePassword(@Req() req: any, @Body() dto: ChangePasswordDto) {
+    const data = await this.authService.changePassword(req.user.userId, dto);
+    return {
+      success: true,
+      message: data.message
     };
   }
 }

@@ -37,6 +37,11 @@ let VouchersController = class VouchersController {
         const data = await this.vouchersService.findAll(user.userId);
         return { success: true, message: 'Daftar voucher', data };
     }
+    async findOne(req, id) {
+        const user = req.user;
+        const data = await this.vouchersService.findOne(user.userId, id);
+        return { success: true, message: 'Detail voucher berhasil dimuat', data };
+    }
     async update(req, id, dto) {
         const user = req.user;
         const data = await this.vouchersService.update(user.userId, id, dto);
@@ -76,6 +81,16 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], VouchersController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Put)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

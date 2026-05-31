@@ -32,6 +32,19 @@ export declare class VouchersController {
             expiryDate: Date;
         }[];
     }>;
+    findOne(req: Request, id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            createdAt: Date;
+            price: number;
+            restaurantId: string;
+            title: string;
+            value: number;
+            expiryDate: Date;
+        };
+    }>;
     update(req: Request, id: string, dto: UpdateVoucherDto): Promise<{
         success: boolean;
         message: string;

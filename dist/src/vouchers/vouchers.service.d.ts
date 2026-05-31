@@ -26,6 +26,15 @@ export declare class VouchersService {
         value: number;
         expiryDate: Date;
     }[]>;
+    findOne(adminId: string, id: string): Promise<{
+        id: string;
+        createdAt: Date;
+        price: number;
+        restaurantId: string;
+        title: string;
+        value: number;
+        expiryDate: Date;
+    }>;
     update(adminId: string, id: string, dto: UpdateVoucherDto): Promise<{
         id: string;
         createdAt: Date;

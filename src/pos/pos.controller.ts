@@ -1,6 +1,7 @@
-import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
 import { PosService } from './pos.service';
 import { ValidateVoucherDto } from './dto/validate-voucher.dto';
+import { CreateOrderDto } from './dto/create-order.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -28,6 +29,28 @@ export class PosController {
     return {
       success: true,
       message: `Voucher valid! Potongan belanja sebesar ${data.value} berhasil digunakan.`,
+      data
+    };
+  }
+
+  @Post('orders')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.KASIR)
+  async createOrder(@Req() req: Request, @Body() dto: CreateOrderDto) {
+    const user = req.user as any;
+    const data = await this.posService.createOrder(user.userId, dto);
+    return data;
+  }
+
+  @Get('menus')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.KASIR)
+  async getMenus(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.posService.getMenus(user.userId);
+    return {
+      success: true,
+      message: 'Daftar menu berhasil dimuat',
       data
     };
   }

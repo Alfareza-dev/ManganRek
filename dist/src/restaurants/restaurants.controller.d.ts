@@ -20,12 +20,73 @@ export declare class RestaurantsController {
             };
         };
     }>;
+    findOne(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            owner: {
+                name: string;
+            };
+        } & {
+            name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            ownerId: string;
+            address: string;
+            latitude: number;
+            longitude: number;
+            legalPhoto: string;
+        };
+    }>;
+    getMenus(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            description: string;
+            price: number;
+            image: string;
+            isAvailable: boolean;
+            restaurantId: string;
+        }[];
+    }>;
+    getMenuDetail(id: string, menuId: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            description: string;
+            price: number;
+            image: string;
+            isAvailable: boolean;
+            restaurantId: string;
+        };
+    }>;
+    getMenu(req: Request, id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            description: string;
+            price: number;
+            image: string;
+            isAvailable: boolean;
+            restaurantId: string;
+        };
+    }>;
     createMenu(req: Request, dto: CreateMenuDto): Promise<{
         success: boolean;
         message: string;
         data: {
-            id: string;
             name: string;
+            id: string;
             createdAt: Date;
             description: string;
             price: number;
@@ -38,8 +99,8 @@ export declare class RestaurantsController {
         success: boolean;
         message: string;
         data: {
-            id: string;
             name: string;
+            id: string;
             createdAt: Date;
             description: string;
             price: number;
@@ -51,6 +112,17 @@ export declare class RestaurantsController {
     deleteMenu(req: Request, id: string): Promise<{
         success: boolean;
         message: string;
+    }>;
+    getPromo(req: Request, id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            restaurantId: string;
+            discount: number;
+            startHour: string;
+            endHour: string;
+        };
     }>;
     createPromo(req: Request, dto: CreatePromoDto): Promise<{
         success: boolean;

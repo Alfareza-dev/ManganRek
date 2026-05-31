@@ -5,6 +5,8 @@ import {
   Param,
   Body,
   UseGuards,
+  Query,
+  Delete,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateApprovalDto } from './dto/update-approval.dto';
@@ -40,5 +42,51 @@ export class AdminController {
       message: `Status akun berhasil diubah menjadi ${dto.status}`,
       data,
     };
+  }
+
+  @Get('users')
+  async getUsers(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    const data = await this.adminService.getUsers(Number(page), Number(limit));
+    return { success: true, message: 'Berhasil mengambil data user', data };
+  }
+
+  @Get('owners')
+  async getOwners(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    const data = await this.adminService.getOwners(Number(page), Number(limit));
+    return { success: true, message: 'Berhasil mengambil data owner', data };
+  }
+
+  @Get('users/:id')
+  async getUserById(@Param('id') id: string) {
+    const data = await this.adminService.getUserById(id);
+    return { success: true, message: 'Berhasil mengambil detail user', data };
+  }
+
+  @Get('owners/:id')
+  async getOwnerById(@Param('id') id: string) {
+    const data = await this.adminService.getOwnerById(id);
+    return { success: true, message: 'Berhasil mengambil detail owner', data };
+  }
+
+  @Patch('users/:id/ban')
+  async toggleBanUser(@Param('id') id: string) {
+    const data = await this.adminService.toggleBanUser(id);
+    return {
+      success: true,
+      message: `Status akun berhasil diubah menjadi ${data.status}`,
+      data,
+    };
+  }
+
+  @Delete('users/:id')
+  async deleteUser(@Param('id') id: string) {
+    const data = await this.adminService.deleteUser(id);
+    return { success: true, message: data.message };
   }
 }

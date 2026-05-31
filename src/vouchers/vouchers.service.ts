@@ -40,6 +40,15 @@ export class VouchersService {
     });
   }
 
+  async findOne(adminId: string, id: string) {
+    const resto = await this.getAdminResto(adminId);
+    const voucher = await this.prisma.voucher.findFirst({
+      where: { id, restaurantId: resto.id }
+    });
+    if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
+    return voucher;
+  }
+
   async update(adminId: string, id: string, dto: UpdateVoucherDto) {
     const resto = await this.getAdminResto(adminId);
     const voucher = await this.prisma.voucher.findFirst({

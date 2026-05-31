@@ -49,7 +49,34 @@ export class RestaurantsController {
     };
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const data = await this.restaurantsService.findOnePublic(id);
+    return { success: true, message: 'Detail restoran berhasil dimuat', data };
+  }
+
+  @Get(':id/menus')
+  async getMenus(@Param('id') id: string) {
+    const data = await this.restaurantsService.getMenusPublic(id);
+    return { success: true, message: 'Daftar menu berhasil dimuat', data };
+  }
+
+  @Get(':id/menus/:menuId')
+  async getMenuDetail(@Param('id') id: string, @Param('menuId') menuId: string) {
+    const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
+    return { success: true, message: 'Detail menu berhasil dimuat', data };
+  }
+
   // ==================== MENU CRUD (ADMIN_RESTO) ====================
+
+  @Get('menus/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getMenu(@Req() req: Request, @Param('id') id: string) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getMenu(user.userId, id);
+    return { success: true, message: 'Detail menu berhasil dimuat', data };
+  }
 
   @Post('menus')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -98,6 +125,15 @@ export class RestaurantsController {
   }
 
   // ==================== PROMO CRUD (ADMIN_RESTO) ====================
+
+  @Get('promos/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getPromo(@Req() req: Request, @Param('id') id: string) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getPromo(user.userId, id);
+    return { success: true, message: 'Detail promo berhasil dimuat', data };
+  }
 
   @Post('promos')
   @UseGuards(JwtAuthGuard, RolesGuard)

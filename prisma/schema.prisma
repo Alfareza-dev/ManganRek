@@ -30,6 +30,17 @@ enum VoucherStatus {
   USED
 }
 
+enum PaymentMethod {
+  CASH
+  QRIS
+}
+
+enum OrderStatus {
+  PENDING
+  SETTLED
+  FAILED
+}
+
 // ==================== MODELS ====================
 
 model User {
@@ -47,6 +58,7 @@ model User {
   managedResto   Restaurant?   @relation("CashierResto", fields: [managedRestoId], references: [id])
   managedRestoId String?
   transactions   Transaction[] // One-to-Many: Transaksi pembelian voucher oleh user
+  orders         Order[]       @relation("CashierOrders") // Transaksi POS oleh Kasir
 
   @@map("users")
 }
@@ -68,6 +80,7 @@ model Restaurant {
   menus    Menu[]
   promos   Promo[]
   vouchers Voucher[]
+  orders   Order[]
 
   @@map("restaurants")
 }
@@ -83,7 +96,8 @@ model Menu {
   createdAt    DateTime @default(now())
 
   // Relations
-  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
 
   @@map("menus")
 }
@@ -133,4 +147,39 @@ model Transaction {
   voucher Voucher @relation(fields: [voucherId], references: [id])
 
   @@map("transactions")
+}
+
+model Order {
+  id            String        @id @default(uuid())
+  restaurantId  String
+  cashierId     String
+  totalAmount   Float
+  discount      Float         @default(0)
+  finalAmount   Float
+  paymentMethod PaymentMethod
+  status        OrderStatus   @default(PENDING)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  cashier    User        @relation("CashierOrders", fields: [cashierId], references: [id])
+  items      OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  menuId    String
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+
+  // Relations
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menu  Menu  @relation(fields: [menuId], references: [id])
+
+  @@map("order_items")
 }
