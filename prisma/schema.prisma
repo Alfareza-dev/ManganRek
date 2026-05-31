@@ -1,0 +1,136 @@
+// Prisma Schema - Mangan Rek Backend
+// Platform Direktori Kuliner, POS Kasir, & Itinerary Kota Malang
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ==================== ENUMS ====================
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN_RESTO
+  KASIR
+  USER
+}
+
+enum AccountStatus {
+  PENDING
+  ACTIVE
+  REJECTED
+}
+
+enum VoucherStatus {
+  PENDING
+  PAID
+  USED
+}
+
+// ==================== MODELS ====================
+
+model User {
+  id        String        @id @default(uuid())
+  email     String        @unique
+  password  String
+  name      String
+  role      Role          @default(USER)
+  status    AccountStatus @default(ACTIVE)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relations
+  restaurant     Restaurant?   @relation("OwnerResto") // One-to-One: Jika dia Admin Resto
+  managedResto   Restaurant?   @relation("CashierResto", fields: [managedRestoId], references: [id])
+  managedRestoId String?
+  transactions   Transaction[] // One-to-Many: Transaksi pembelian voucher oleh user
+
+  @@map("users")
+}
+
+model Restaurant {
+  id         String   @id @default(uuid())
+  name       String
+  address    String
+  latitude   Float
+  longitude  Float
+  legalPhoto String
+  ownerId    String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  owner    User      @relation("OwnerResto", fields: [ownerId], references: [id])
+  cashiers User[]    @relation("CashierResto")
+  menus    Menu[]
+  promos   Promo[]
+  vouchers Voucher[]
+
+  @@map("restaurants")
+}
+
+model Menu {
+  id           String   @id @default(uuid())
+  restaurantId String
+  name         String
+  description  String
+  price        Float
+  image        String
+  isAvailable  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  // Relations
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("menus")
+}
+
+model Promo {
+  id           String @id @default(uuid())
+  restaurantId String
+  discount     Int    // Persentase diskon, e.g. 15 untuk 15%
+  startHour    String // Format HH:MM (e.g., "14:00")
+  endHour      String // Format HH:MM (e.g., "17:00")
+
+  // Relations
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("promos")
+}
+
+model Voucher {
+  id           String   @id @default(uuid())
+  restaurantId String
+  title        String
+  price        Float    // Harga beli voucher
+  value        Float    // Nilai potongan belanja voucher di kasir
+  expiryDate   DateTime
+  createdAt    DateTime @default(now())
+
+  // Relations
+  restaurant   Restaurant    @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("vouchers")
+}
+
+model Transaction {
+  id         String        @id @default(uuid())
+  userId     String
+  voucherId  String
+  uniqueCode String?       @unique // Generate setelah status PAID, e.g. NGLM89XJ
+  status     VoucherStatus @default(PENDING)
+  totalPaid  Float
+  paymentUrl String?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  // Relations
+  user    User    @relation(fields: [userId], references: [id])
+  voucher Voucher @relation(fields: [voucherId], references: [id])
+
+  @@map("transactions")
+}
