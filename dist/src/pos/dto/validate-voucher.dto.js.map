@@ -1,1 +1,1 @@
-{"version":3,"file":"validate-voucher.dto.js","sourceRoot":"","sources":["../../../../src/pos/dto/validate-voucher.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,kBAAkB;IAC7B,UAAU,CAAU;CACrB;AAFD,gDAEC"}
+{"version":3,"file":"validate-voucher.dto.js","sourceRoot":"","sources":["../../../../src/pos/dto/validate-voucher.dto.ts"],"names":[],"mappings":";;;;AAAA,MAAa,kBAAkB;IAC7B,UAAU,CAAU;;;;CACrB;AAFD,gDAEC"}

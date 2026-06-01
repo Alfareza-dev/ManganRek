@@ -1,1 +1,1 @@
-{"version":3,"file":"create-cashier.dto.js","sourceRoot":"","sources":["../../../../src/users/dto/create-cashier.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,gBAAgB;IAC3B,KAAK,CAAU;IACf,QAAQ,CAAU;IAClB,IAAI,CAAU;CACf;AAJD,4CAIC"}
+{"version":3,"file":"create-cashier.dto.js","sourceRoot":"","sources":["../../../../src/users/dto/create-cashier.dto.ts"],"names":[],"mappings":";;;;AAAA,MAAa,gBAAgB;IAC3B,KAAK,CAAU;IACf,QAAQ,CAAU;IAClB,IAAI,CAAU;;;;CACf;AAJD,4CAIC"}

@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const restaurants_service_1 = require("./restaurants.service");
 const restaurants_controller_1 = require("./restaurants.controller");
 const prisma_module_1 = require("../prisma/prisma.module");
+const cloudinary_module_1 = require("../cloudinary/cloudinary.module");
 let RestaurantsModule = class RestaurantsModule {
 };
 exports.RestaurantsModule = RestaurantsModule;
 exports.RestaurantsModule = RestaurantsModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
+        imports: [prisma_module_1.PrismaModule, cloudinary_module_1.CloudinaryModule],
         providers: [restaurants_service_1.RestaurantsService],
         controllers: [restaurants_controller_1.RestaurantsController],
         exports: [restaurants_service_1.RestaurantsService],

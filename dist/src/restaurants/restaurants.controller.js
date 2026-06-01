@@ -13,7 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantsController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
+const swagger_1 = require("@nestjs/swagger");
 const restaurants_service_1 = require("./restaurants.service");
 const create_menu_dto_1 = require("./dto/create-menu.dto");
 const update_menu_dto_1 = require("./dto/update-menu.dto");
@@ -28,40 +31,32 @@ let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
     }
-    async findAll(page, limit, lat, lng, sort) {
-        const data = await this.restaurantsService.findAllPublic({
-            page,
-            limit,
-            lat,
-            lng,
-            sort,
-        });
-        return {
-            success: true,
-            message: 'Daftar restoran berhasil dimuat',
-            data,
-        };
+    async getRevenue(req) {
+        const user = req.user;
+        const data = await this.restaurantsService.getRevenue(user.userId);
+        return { success: true, message: 'Ringkasan pendapatan restoran berhasil dimuat', data };
     }
-    async findOne(id) {
-        const data = await this.restaurantsService.findOnePublic(id);
-        return { success: true, message: 'Detail restoran berhasil dimuat', data };
+    async getOrdersHistory(req) {
+        const user = req.user;
+        const data = await this.restaurantsService.getOrdersHistory(user.userId);
+        return { success: true, message: 'Riwayat transaksi berhasil dimuat', data };
     }
-    async getMenus(id) {
-        const data = await this.restaurantsService.getMenusPublic(id);
+    async getAllMenus(req) {
+        const user = req.user;
+        const data = await this.restaurantsService.getAllMenus(user.userId);
         return { success: true, message: 'Daftar menu berhasil dimuat', data };
-    }
-    async getMenuDetail(id, menuId) {
-        const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
-        return { success: true, message: 'Detail menu berhasil dimuat', data };
     }
     async getMenu(req, id) {
         const user = req.user;
         const data = await this.restaurantsService.getMenu(user.userId, id);
         return { success: true, message: 'Detail menu berhasil dimuat', data };
     }
-    async createMenu(req, dto) {
+    async createMenu(req, dto, file) {
+        if (!file) {
+            throw new common_1.BadRequestException('Gambar menu wajib diunggah');
+        }
         const user = req.user;
-        const data = await this.restaurantsService.createMenu(user.userId, dto);
+        const data = await this.restaurantsService.createMenu(user.userId, dto, file);
         return {
             success: true,
             message: 'Menu berhasil ditambahkan',
@@ -84,6 +79,11 @@ let RestaurantsController = class RestaurantsController {
             success: true,
             message: 'Menu berhasil dihapus',
         };
+    }
+    async getAllPromos(req) {
+        const user = req.user;
+        const data = await this.restaurantsService.getAllPromos(user.userId);
+        return { success: true, message: 'Daftar promo berhasil dimuat', data };
     }
     async getPromo(req, id) {
         const user = req.user;
@@ -116,45 +116,81 @@ let RestaurantsController = class RestaurantsController {
             message: 'Promo berhasil dihapus',
         };
     }
+    async getAllMenusPublic(page, limit, search) {
+        const data = await this.restaurantsService.getAllMenusPublicWithPagination({
+            page,
+            limit,
+            search,
+        });
+        return {
+            success: true,
+            message: 'Daftar semua menu berhasil dimuat',
+            data,
+        };
+    }
+    async findAll(page, limit, lat, lng, sort) {
+        const data = await this.restaurantsService.findAllPublic({
+            page,
+            limit,
+            lat,
+            lng,
+            sort,
+        });
+        return {
+            success: true,
+            message: 'Daftar restoran berhasil dimuat',
+            data,
+        };
+    }
+    async findOne(id) {
+        const data = await this.restaurantsService.findOnePublic(id);
+        return { success: true, message: 'Detail restoran berhasil dimuat', data };
+    }
+    async getMenus(id) {
+        const data = await this.restaurantsService.getMenusPublic(id);
+        return { success: true, message: 'Daftar menu berhasil dimuat', data };
+    }
+    async getMenuDetail(id, menuId) {
+        const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
+        return { success: true, message: 'Detail menu berhasil dimuat', data };
+    }
 };
 exports.RestaurantsController = RestaurantsController;
 __decorate([
-    (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)('page')),
-    __param(1, (0, common_1.Query)('limit')),
-    __param(2, (0, common_1.Query)('lat')),
-    __param(3, (0, common_1.Query)('lng')),
-    __param(4, (0, common_1.Query)('sort')),
+    (0, common_1.Get)('revenue'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String, String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], RestaurantsController.prototype, "findAll", null);
+], RestaurantsController.prototype, "getRevenue", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)('orders/history'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], RestaurantsController.prototype, "findOne", null);
+], RestaurantsController.prototype, "getOrdersHistory", null);
 __decorate([
-    (0, common_1.Get)(':id/menus'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)('menus'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], RestaurantsController.prototype, "getMenus", null);
-__decorate([
-    (0, common_1.Get)(':id/menus/:menuId'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Param)('menuId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], RestaurantsController.prototype, "getMenuDetail", null);
+], RestaurantsController.prototype, "getAllMenus", null);
 __decorate([
     (0, common_1.Get)('menus/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -165,16 +201,25 @@ __decorate([
     (0, common_1.Post)('menus'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        description: 'Tambah menu baru dengan upload gambar',
+        type: create_menu_dto_1.CreateMenuDto,
+    }),
+    openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, create_menu_dto_1.CreateMenuDto]),
+    __metadata("design:paramtypes", [Object, create_menu_dto_1.CreateMenuDto, Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "createMenu", null);
 __decorate([
     (0, common_1.Put)('menus/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Body)()),
@@ -186,6 +231,7 @@ __decorate([
     (0, common_1.Delete)('menus/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -193,9 +239,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "deleteMenu", null);
 __decorate([
+    (0, common_1.Get)('promos'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getAllPromos", null);
+__decorate([
     (0, common_1.Get)('promos/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -206,6 +263,7 @@ __decorate([
     (0, common_1.Post)('promos'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -216,6 +274,7 @@ __decorate([
     (0, common_1.Put)('promos/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Body)()),
@@ -227,12 +286,68 @@ __decorate([
     (0, common_1.Delete)('promos/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "deletePromo", null);
+__decorate([
+    openapi.ApiQuery({ name: "page", required: false }),
+    openapi.ApiQuery({ name: "limit", required: false }),
+    openapi.ApiQuery({ name: "search", required: false }),
+    (0, common_1.Get)('all-menus'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __param(2, (0, common_1.Query)('search')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getAllMenusPublic", null);
+__decorate([
+    openapi.ApiQuery({ name: "page", required: false }),
+    openapi.ApiQuery({ name: "limit", required: false }),
+    openapi.ApiQuery({ name: "lat", required: false }),
+    openapi.ApiQuery({ name: "lng", required: false }),
+    openapi.ApiQuery({ name: "sort", required: false }),
+    (0, common_1.Get)(),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __param(2, (0, common_1.Query)('lat')),
+    __param(3, (0, common_1.Query)('lng')),
+    __param(4, (0, common_1.Query)('sort')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String, String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Get)(':id/menus'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getMenus", null);
+__decorate([
+    (0, common_1.Get)(':id/menus/:menuId'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Param)('menuId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getMenuDetail", null);
 exports.RestaurantsController = RestaurantsController = __decorate([
     (0, common_1.Controller)('api/restaurants'),
     __metadata("design:paramtypes", [restaurants_service_1.RestaurantsService])

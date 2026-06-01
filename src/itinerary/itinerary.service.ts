@@ -119,7 +119,6 @@ export class ItineraryService {
       },
       include: {
         menus: {
-          where: { isAvailable: true },
           orderBy: { price: 'asc' },
           take: 5, // Ambil maks 5 menu rekomendasi (yang termurah)
         },

@@ -2,6 +2,7 @@ import {
   Controller,
   Patch,
   Get,
+  Post,
   Param,
   Body,
   UseGuards,
@@ -10,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { UpdateApprovalDto } from './dto/update-approval.dto';
+import { UpdateConfigDto } from './dto/system-config.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -20,6 +22,25 @@ import { Role } from '@prisma/client';
 @Roles(Role.SUPER_ADMIN)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
+
+  @Post('config')
+  async updateConfig(@Body() dto: UpdateConfigDto) {
+    const data = await this.adminService.upsertConfig(dto.key, dto.value);
+    return { success: true, message: 'Konfigurasi berhasil disimpan', data };
+  }
+
+  @Get('config')
+  async getConfig(@Query('key') key: string) {
+    const targetKey = key || 'VOUCHER_FEE_PERCENTAGE';
+    const value = await this.adminService.getConfig(targetKey);
+    return { success: true, message: 'Konfigurasi berhasil diambil', data: { key: targetKey, value } };
+  }
+
+  @Get('revenue')
+  async getRevenue() {
+    const totalPlatformFee = await this.adminService.getPlatformRevenue();
+    return { success: true, message: 'Total pendapatan platform', data: { totalPlatformFee } };
+  }
 
   @Get('approvals')
   async getPendingApprovals() {

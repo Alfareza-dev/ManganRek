@@ -140,6 +140,26 @@ let AdminService = class AdminService {
         await this.prisma.user.delete({ where: { id } });
         return { message: 'User berhasil dihapus secara permanen' };
     }
+    async upsertConfig(key, value) {
+        return this.prisma.systemConfig.upsert({
+            where: { key },
+            update: { value },
+            create: { key, value },
+        });
+    }
+    async getConfig(key) {
+        const config = await this.prisma.systemConfig.findUnique({
+            where: { key },
+        });
+        return config ? config.value : null;
+    }
+    async getPlatformRevenue() {
+        const result = await this.prisma.transaction.aggregate({
+            where: { status: 'PAID' },
+            _sum: { platformFee: true },
+        });
+        return result._sum.platformFee || 0;
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([

@@ -137,4 +137,12 @@ export declare class AdminService {
     deleteUser(id: string): Promise<{
         message: string;
     }>;
+    upsertConfig(key: string, value: string): Promise<{
+        id: string;
+        updatedAt: Date;
+        value: string;
+        key: string;
+    }>;
+    getConfig(key: string): Promise<string | null>;
+    getPlatformRevenue(): Promise<number>;
 }

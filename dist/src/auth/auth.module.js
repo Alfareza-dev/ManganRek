@@ -13,6 +13,7 @@ const auth_controller_1 = require("./auth.controller");
 const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
 const prisma_module_1 = require("../prisma/prisma.module");
+const cloudinary_module_1 = require("../cloudinary/cloudinary.module");
 const jwt_strategy_1 = require("./strategies/jwt.strategy");
 let AuthModule = class AuthModule {
 };
@@ -22,6 +23,7 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             prisma_module_1.PrismaModule,
             passport_1.PassportModule,
+            cloudinary_module_1.CloudinaryModule,
             jwt_1.JwtModule.register({
                 secret: process.env.JWT_SECRET || 'mangan_rek_secret_key_2026_secure',
                 signOptions: { expiresIn: '7d' },

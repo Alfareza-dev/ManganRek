@@ -1,6 +1,7 @@
 import { Injectable, ConflictException, ForbiddenException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RegisterRestoDto } from './dto/register-resto.dto';
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private cloudinaryService: CloudinaryService,
   ) {}
 
   async registerUser(dto: RegisterUserDto) {
@@ -40,7 +42,11 @@ export class AuthService {
     }
   }
 
-  async registerResto(dto: RegisterRestoDto) {
+  async registerResto(dto: RegisterRestoDto, file: Express.Multer.File) {
+    // Upload file to Cloudinary first
+    const uploadResult = await this.cloudinaryService.uploadFile(file);
+    const legalPhotoUrl = uploadResult.secure_url;
+
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     try {
       // Create User and Restaurant in a transaction
@@ -59,9 +65,9 @@ export class AuthService {
           data: {
             name: dto.restaurantName,
             address: dto.address,
-            latitude: dto.latitude,
-            longitude: dto.longitude,
-            legalPhoto: dto.legalPhoto,
+            latitude: Number(dto.latitude),
+            longitude: Number(dto.longitude),
+            legalPhoto: legalPhotoUrl,
             ownerId: user.id,
           },
         });

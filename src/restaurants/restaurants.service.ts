@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { CreatePromoDto } from './dto/create-promo.dto';
@@ -12,7 +13,10 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class RestaurantsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
   // ==================== HELPER ====================
 
@@ -30,18 +34,76 @@ export class RestaurantsService {
     return restaurant;
   }
 
+  // ==================== FINANCE & ORDERS ====================
+
+  async getRevenue(userId: string) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+    
+    const ordersAgg = await this.prisma.order.aggregate({
+      where: { restaurantId: restaurant.id, status: 'SETTLED' },
+      _sum: { finalAmount: true },
+    });
+    const totalOrderRevenue = ordersAgg._sum.finalAmount || 0;
+
+    const vouchersAgg = await this.prisma.transaction.findMany({
+      where: { 
+        voucher: { restaurantId: restaurant.id },
+        status: 'PAID'
+      }
+    });
+
+    const totalVoucherRevenue = vouchersAgg.reduce((sum, tx) => sum + (tx.totalPaid - tx.platformFee), 0);
+
+    return {
+      totalOrderRevenue,
+      totalVoucherRevenue,
+      grandTotal: totalOrderRevenue + totalVoucherRevenue
+    };
+  }
+
+  async getOrdersHistory(userId: string) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+    
+    const orders = await this.prisma.order.findMany({
+      where: { restaurantId: restaurant.id },
+      orderBy: { createdAt: 'desc' },
+      include: { items: { include: { menu: { select: { name: true } } } }, cashier: { select: { name: true } } }
+    });
+
+    const vouchers = await this.prisma.transaction.findMany({
+      where: { voucher: { restaurantId: restaurant.id } },
+      orderBy: { createdAt: 'desc' },
+      include: { voucher: true, user: { select: { name: true } } }
+    });
+
+    return { orders, vouchers };
+  }
+
   // ==================== MENU CRUD ====================
 
-  async createMenu(userId: string, dto: CreateMenuDto) {
+  async getAllMenus(userId: string) {
     const restaurant = await this.getOwnedRestaurant(userId);
+    const menus = await this.prisma.menu.findMany({
+      where: { restaurantId: restaurant.id },
+      orderBy: { createdAt: 'desc' }
+    });
+    return this.applyPromosToMenus(menus);
+  }
+
+  async createMenu(userId: string, dto: CreateMenuDto, file: Express.Multer.File) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+
+    // Upload image to Cloudinary
+    const uploadResult = await this.cloudinaryService.uploadFile(file, 'mangan-rek/menus');
+
     return this.prisma.menu.create({
       data: {
         restaurantId: restaurant.id,
         name: dto.name,
         description: dto.description,
-        price: dto.price,
-        image: dto.image,
-        isAvailable: dto.isAvailable ?? true,
+        price: Number(dto.price),
+        image: uploadResult.secure_url,
+        isAvailable: dto.isAvailable !== undefined ? (String(dto.isAvailable) === 'true' || dto.isAvailable === true) : true,
       },
     });
   }
@@ -53,7 +115,8 @@ export class RestaurantsService {
     });
     if (!menu) throw new NotFoundException('Menu tidak ditemukan');
     if (menu.restaurantId !== restaurant.id) throw new ForbiddenException('Akses ditolak');
-    return menu;
+    const [enriched] = await this.applyPromosToMenus([menu]);
+    return enriched;
   }
 
   async updateMenu(userId: string, menuId: string, dto: UpdateMenuDto) {
@@ -101,15 +164,34 @@ export class RestaurantsService {
 
   // ==================== PROMO CRUD ====================
 
+  async getAllPromos(userId: string) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+    return this.prisma.promo.findMany({
+      where: { restaurantId: restaurant.id },
+      include: { menus: { select: { id: true, name: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async createPromo(userId: string, dto: CreatePromoDto) {
     const restaurant = await this.getOwnedRestaurant(userId);
+    const data: any = {
+      restaurantId: restaurant.id,
+      discount: dto.discount,
+      startHour: dto.startHour,
+      endHour: dto.endHour,
+      type: dto.type || 'ALL',
+    };
+
+    if (dto.type === 'SPECIFIC' && dto.menuIds && dto.menuIds.length > 0) {
+      data.menus = {
+        connect: dto.menuIds.map((id) => ({ id })),
+      };
+    }
+
     return this.prisma.promo.create({
-      data: {
-        restaurantId: restaurant.id,
-        discount: dto.discount,
-        startHour: dto.startHour,
-        endHour: dto.endHour,
-      },
+      data,
+      include: { menus: { select: { id: true, name: true } } },
     });
   }
 
@@ -117,6 +199,7 @@ export class RestaurantsService {
     const restaurant = await this.getOwnedRestaurant(userId);
     const promo = await this.prisma.promo.findUnique({
       where: { id: promoId },
+      include: { menus: { select: { id: true, name: true } } },
     });
     if (!promo) throw new NotFoundException('Promo tidak ditemukan');
     if (promo.restaurantId !== restaurant.id) throw new ForbiddenException('Akses ditolak');
@@ -136,13 +219,27 @@ export class RestaurantsService {
       throw new ForbiddenException('Anda tidak memiliki akses ke promo ini');
     }
 
+    const data: any = {
+      ...(dto.discount !== undefined && { discount: dto.discount }),
+      ...(dto.startHour !== undefined && { startHour: dto.startHour }),
+      ...(dto.endHour !== undefined && { endHour: dto.endHour }),
+      ...(dto.type !== undefined && { type: dto.type }),
+    };
+
+    const finalType = dto.type || promo.type;
+
+    if (finalType === 'SPECIFIC') {
+      if (dto.menuIds !== undefined) {
+        data.menus = { set: dto.menuIds.map((id) => ({ id })) };
+      }
+    } else if (finalType === 'ALL') {
+      data.menus = { set: [] };
+    }
+
     return this.prisma.promo.update({
       where: { id: promoId },
-      data: {
-        ...(dto.discount !== undefined && { discount: dto.discount }),
-        ...(dto.startHour !== undefined && { startHour: dto.startHour }),
-        ...(dto.endHour !== undefined && { endHour: dto.endHour }),
-      },
+      data,
+      include: { menus: { select: { id: true, name: true } } },
     });
   }
 
@@ -316,17 +413,103 @@ export class RestaurantsService {
 
   async getMenusPublic(restaurantId: string) {
     const restaurant = await this.findOnePublic(restaurantId);
-    return this.prisma.menu.findMany({
-      where: { restaurantId: restaurant.id, isAvailable: true },
+    const menus = await this.prisma.menu.findMany({
+      where: { restaurantId: restaurant.id },
     });
+    return this.applyPromosToMenus(menus);
   }
 
   async getMenuDetailPublic(restaurantId: string, menuId: string) {
     const restaurant = await this.findOnePublic(restaurantId);
     const menu = await this.prisma.menu.findFirst({
-      where: { id: menuId, restaurantId: restaurant.id, isAvailable: true },
+      where: { id: menuId, restaurantId: restaurant.id },
     });
     if (!menu) throw new NotFoundException('Menu tidak ditemukan');
-    return menu;
+    const [enriched] = await this.applyPromosToMenus([menu]);
+    return enriched;
+  }
+
+  async getAllMenusPublicWithPagination(query: { page?: string; limit?: string; search?: string }) {
+    const page = parseInt(query.page || '1', 10);
+    const limit = parseInt(query.limit || '10', 10);
+    const offset = (page - 1) * limit;
+
+    const where: Prisma.MenuWhereInput = {
+      restaurant: {
+        owner: { status: 'ACTIVE' },
+      },
+    };
+
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { description: { contains: query.search, mode: 'insensitive' } },
+      ];
+    }
+
+    const [menus, total] = await Promise.all([
+      this.prisma.menu.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: { restaurant: { select: { id: true, name: true, address: true, latitude: true, longitude: true } } },
+      }),
+      this.prisma.menu.count({ where }),
+    ]);
+
+    const enrichedMenus = await this.applyPromosToMenus(menus);
+
+    return {
+      menus: enrichedMenus,
+      pagination: {
+        page,
+        limit,
+        total,
+      },
+    };
+  }
+
+  async applyPromosToMenus(menus: any[]) {
+    if (!menus.length) return menus;
+
+    const restaurantIds = [...new Set(menus.map((m) => m.restaurantId))];
+
+    // Get active promos for these restaurants
+    const promos = await this.prisma.promo.findMany({
+      where: { restaurantId: { in: restaurantIds } },
+      include: { menus: { select: { id: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const now = new Date();
+    const wibOffset = 7 * 60; // UTC+7 in minutes
+    const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const wibMinutes = (utcMinutes + wibOffset) % (24 * 60);
+    const currentHours = Math.floor(wibMinutes / 60);
+    const currentMins = wibMinutes % 60;
+    const currentTime = `${String(currentHours).padStart(2, '0')}:${String(currentMins).padStart(2, '0')}`;
+
+    const activePromos = promos.filter(p => currentTime >= p.startHour && currentTime <= p.endHour);
+
+    return menus.map((menu) => {
+      // Find the first matching active promo (which is the newest due to desc order)
+      const appliedPromo = activePromos.find((p) => {
+        if (p.restaurantId !== menu.restaurantId) return false;
+        if (p.type === 'ALL') return true;
+        if (p.type === 'SPECIFIC') {
+           return p.menus.some(pm => pm.id === menu.id);
+        }
+        return false;
+      });
+
+      if (appliedPromo) {
+        const discountPercentage = appliedPromo.discount;
+        const discountedPrice = menu.price - (menu.price * discountPercentage / 100);
+        return { ...menu, discountPercentage, discountedPrice };
+      }
+
+      return { ...menu, discountPercentage: null, discountedPrice: null };
+    });
   }
 }

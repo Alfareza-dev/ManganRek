@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VouchersController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const vouchers_service_1 = require("./vouchers.service");
 const create_voucher_dto_1 = require("./dto/create-voucher.dto");
@@ -37,6 +38,14 @@ let VouchersController = class VouchersController {
         const data = await this.vouchersService.findAll(user.userId);
         return { success: true, message: 'Daftar voucher', data };
     }
+    async findAllPublic() {
+        const data = await this.vouchersService.findAllPublic();
+        return { success: true, message: 'Daftar semua voucher publik', data };
+    }
+    async findByRestoPublic(restoId) {
+        const data = await this.vouchersService.findByRestoPublic(restoId);
+        return { success: true, message: 'Daftar voucher restoran', data };
+    }
     async findOne(req, id) {
         const user = req.user;
         const data = await this.vouchersService.findOne(user.userId, id);
@@ -60,12 +69,21 @@ let VouchersController = class VouchersController {
     async handleWebhook(payload) {
         return this.vouchersService.handleWebhook(payload);
     }
+    async verifyMockTransaction(id) {
+        const data = await this.vouchersService.verifyMockTransaction(id);
+        return {
+            success: true,
+            message: 'Mock verifikasi sukses. Status transaksi menjadi PAID.',
+            data
+        };
+    }
 };
 exports.VouchersController = VouchersController;
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -76,15 +94,32 @@ __decorate([
     (0, common_1.Get)(),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], VouchersController.prototype, "findAll", null);
 __decorate([
+    (0, common_1.Get)('public/all'),
+    openapi.ApiResponse({ status: 200 }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "findAllPublic", null);
+__decorate([
+    (0, common_1.Get)('public/resto/:restoId'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('restoId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "findByRestoPublic", null);
+__decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -95,6 +130,7 @@ __decorate([
     (0, common_1.Put)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Body)()),
@@ -106,6 +142,7 @@ __decorate([
     (0, common_1.Delete)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -116,6 +153,7 @@ __decorate([
     (0, common_1.Post)('buy'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.USER),
+    openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -125,11 +163,20 @@ __decorate([
 __decorate([
     (0, common_1.Post)('webhook'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    openapi.ApiResponse({ status: common_1.HttpStatus.OK }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], VouchersController.prototype, "handleWebhook", null);
+__decorate([
+    (0, common_1.Patch)('transactions/:id/verify-mock'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "verifyMockTransaction", null);
 exports.VouchersController = VouchersController = __decorate([
     (0, common_1.Controller)('api/vouchers'),
     __metadata("design:paramtypes", [vouchers_service_1.VouchersService])

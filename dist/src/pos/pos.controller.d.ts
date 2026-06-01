@@ -33,11 +33,12 @@ export declare class PosController {
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
-            discount: number;
-            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-            totalAmount: number;
             finalAmount: number;
+            totalAmount: number;
+            discount: number;
             cashierId: string;
+            customerName: string | null;
+            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
         };
         qr_string?: undefined;
     } | {
@@ -58,26 +59,65 @@ export declare class PosController {
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
-            discount: number;
-            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
-            totalAmount: number;
             finalAmount: number;
+            totalAmount: number;
+            discount: number;
             cashierId: string;
+            customerName: string | null;
+            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
         };
         qr_string: string;
     } | undefined>;
     getMenus(req: Request): Promise<{
         success: boolean;
         message: string;
-        data: {
-            name: string;
+        data: any[];
+    }>;
+    getOrderHistory(req: Request): Promise<{
+        success: boolean;
+        message: string;
+        data: ({
+            items: ({
+                menu: {
+                    name: string;
+                };
+            } & {
+                id: string;
+                createdAt: Date;
+                price: number;
+                menuId: string;
+                quantity: number;
+                orderId: string;
+            })[];
+        } & {
             id: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
             createdAt: Date;
-            description: string;
-            price: number;
-            image: string;
-            isAvailable: boolean;
+            updatedAt: Date;
             restaurantId: string;
-        }[];
+            finalAmount: number;
+            totalAmount: number;
+            discount: number;
+            cashierId: string;
+            customerName: string | null;
+            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        })[];
+    }>;
+    verifyMockOrder(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
+            createdAt: Date;
+            updatedAt: Date;
+            restaurantId: string;
+            finalAmount: number;
+            totalAmount: number;
+            discount: number;
+            cashierId: string;
+            customerName: string | null;
+            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        };
     }>;
 }

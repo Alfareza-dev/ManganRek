@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Patch, Body, Param, UseGuards, Req, HttpCode, HttpStatus } from '@nestjs/common';
 import { VouchersService } from './vouchers.service';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
@@ -29,6 +29,18 @@ export class VouchersController {
     const user = req.user as any;
     const data = await this.vouchersService.findAll(user.userId);
     return { success: true, message: 'Daftar voucher', data };
+  }
+
+  @Get('public/all')
+  async findAllPublic() {
+    const data = await this.vouchersService.findAllPublic();
+    return { success: true, message: 'Daftar semua voucher publik', data };
+  }
+
+  @Get('public/resto/:restoId')
+  async findByRestoPublic(@Param('restoId') restoId: string) {
+    const data = await this.vouchersService.findByRestoPublic(restoId);
+    return { success: true, message: 'Daftar voucher restoran', data };
   }
 
   @Get(':id')
@@ -71,5 +83,15 @@ export class VouchersController {
   @HttpCode(HttpStatus.OK)
   async handleWebhook(@Body() payload: any) {
     return this.vouchersService.handleWebhook(payload);
+  }
+
+  @Patch('transactions/:id/verify-mock')
+  async verifyMockTransaction(@Param('id') id: string) {
+    const data = await this.vouchersService.verifyMockTransaction(id);
+    return {
+      success: true,
+      message: 'Mock verifikasi sukses. Status transaksi menjadi PAID.',
+      data
+    };
   }
 }

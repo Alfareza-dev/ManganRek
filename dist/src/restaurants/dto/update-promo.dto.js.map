@@ -1,1 +1,1 @@
-{"version":3,"file":"update-promo.dto.js","sourceRoot":"","sources":["../../../../src/restaurants/dto/update-promo.dto.ts"],"names":[],"mappings":";;;AAAA,MAAa,cAAc;IACzB,QAAQ,CAAU;IAClB,SAAS,CAAU;IACnB,OAAO,CAAU;CAClB;AAJD,wCAIC"}
+{"version":3,"file":"update-promo.dto.js","sourceRoot":"","sources":["../../../../src/restaurants/dto/update-promo.dto.ts"],"names":[],"mappings":";;;;AAEA,MAAa,cAAc;IACzB,IAAI,CAAa;IACjB,QAAQ,CAAU;IAClB,SAAS,CAAU;IACnB,OAAO,CAAU;IACjB,OAAO,CAAY;;;;CACpB;AAND,wCAMC"}

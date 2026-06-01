@@ -1,6 +1,7 @@
 import { UsersService } from './users.service';
 import { CreateCashierDto } from './dto/create-cashier.dto';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
+import { UpdateCashierPasswordDto } from './dto/update-cashier-password.dto';
 import type { Request } from 'express';
 export declare class UsersController {
     private readonly usersService;
@@ -50,6 +51,10 @@ export declare class UsersController {
             id: string;
             status: import("@prisma/client").$Enums.AccountStatus;
         };
+    }>;
+    updateCashierPassword(req: Request, id: string, dto: UpdateCashierPasswordDto): Promise<{
+        success: boolean;
+        message: string;
     }>;
     deleteCashier(req: Request, id: string): Promise<{
         success: boolean;

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateCashierDto } from './dto/create-cashier.dto';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
+import { UpdateCashierPasswordDto } from './dto/update-cashier-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -51,6 +52,15 @@ export class UsersController {
     const user = req.user as any;
     const data = await this.usersService.updateCashier(user.userId, id, dto);
     return { success: true, message: 'Data kasir berhasil diperbarui', data };
+  }
+
+  @Patch('cashiers/:id/password')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async updateCashierPassword(@Req() req: Request, @Param('id') id: string, @Body() dto: UpdateCashierPasswordDto) {
+    const user = req.user as any;
+    const data = await this.usersService.updateCashierPassword(user.userId, id, dto.password);
+    return { success: true, message: data.message };
   }
 
   @Delete('cashiers/:id')

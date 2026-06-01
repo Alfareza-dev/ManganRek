@@ -22,7 +22,7 @@ export declare class AuthController {
             managedRestoId: string | null;
         };
     }>;
-    registerResto(dto: RegisterRestoDto): Promise<{
+    registerResto(dto: RegisterRestoDto, file: Express.Multer.File): Promise<{
         success: boolean;
         message: string;
         data: {
@@ -62,6 +62,7 @@ export declare class AuthController {
             updatedAt: Date;
             managedRestoId: string | null;
         };
+        token: string;
     }>;
     logout(res: Response): Promise<{
         success: boolean;

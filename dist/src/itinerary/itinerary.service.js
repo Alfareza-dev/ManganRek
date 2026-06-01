@@ -62,7 +62,6 @@ let ItineraryService = class ItineraryService {
             },
             include: {
                 menus: {
-                    where: { isAvailable: true },
                     orderBy: { price: 'asc' },
                     take: 5,
                 },

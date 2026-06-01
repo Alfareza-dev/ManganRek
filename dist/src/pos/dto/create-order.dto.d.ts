@@ -4,6 +4,7 @@ export declare class OrderItemDto {
     quantity: number;
 }
 export declare class CreateOrderDto {
+    customerName: string;
     items: OrderItemDto[];
     paymentMethod: PaymentMethod;
 }

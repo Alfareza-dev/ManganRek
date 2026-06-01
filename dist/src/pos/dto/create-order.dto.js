@@ -10,12 +10,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateOrderDto = exports.OrderItemDto = void 0;
+const openapi = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
 const client_1 = require("@prisma/client");
 class OrderItemDto {
     menuId;
     quantity;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { menuId: { required: true, type: () => String }, quantity: { required: true, type: () => Number } };
+    }
 }
 exports.OrderItemDto = OrderItemDto;
 __decorate([
@@ -29,10 +33,19 @@ __decorate([
     __metadata("design:type", Number)
 ], OrderItemDto.prototype, "quantity", void 0);
 class CreateOrderDto {
+    customerName;
     items;
     paymentMethod;
+    static _OPENAPI_METADATA_FACTORY() {
+        return { customerName: { required: true, type: () => String }, items: { required: true, type: () => [require("./create-order.dto").OrderItemDto] }, paymentMethod: { required: true, enum: ["CASH", "QRIS"] } };
+    }
 }
 exports.CreateOrderDto = CreateOrderDto;
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateOrderDto.prototype, "customerName", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),

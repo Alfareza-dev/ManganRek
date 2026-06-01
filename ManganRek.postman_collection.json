@@ -40,15 +40,51 @@
           "name": "Register Resto (Multi-entity)",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"owner.bakso@example.com\",\n  \"password\": \"OwnerPassword123\",\n  \"name\": \"Ahmad Subarjo\",\n  \"restaurantName\": \"Bakso Malang Cak Subar\",\n  \"address\": \"Jl. Ijen No. 10, Kota Malang\",\n  \"latitude\": -7.9666,\n  \"longitude\": 112.6326,\n  \"legalPhoto\": \"https://example.com/uploads/legal_surat_izin.jpg\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "owner.bakso@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "OwnerPassword123",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "value": "Ahmad Subarjo",
+                  "type": "text"
+                },
+                {
+                  "key": "restaurantName",
+                  "value": "Bakso Malang Cak Subar",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "Jl. Ijen No. 10, Kota Malang",
+                  "type": "text"
+                },
+                {
+                  "key": "latitude",
+                  "value": "-7.9666",
+                  "type": "text"
+                },
+                {
+                  "key": "longitude",
+                  "value": "112.6326",
+                  "type": "text"
+                },
+                {
+                  "key": "legalPhoto",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register/resto",
@@ -374,6 +410,90 @@
               ]
             }
           }
+        },
+        {
+          "name": "POST Update System Config",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "auth_token={{super_admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/config",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "config"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"VOUCHER_FEE_PERCENTAGE\",\n  \"value\": \"5\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET System Config",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "auth_token={{super_admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/config?key=VOUCHER_FEE_PERCENTAGE",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "config?key=VOUCHER_FEE_PERCENTAGE"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Platform Revenue",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "auth_token={{super_admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/revenue",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "revenue"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -497,6 +617,38 @@
               ]
             }
           }
+        },
+        {
+          "name": "Get All Menus (Semua Resto, Pagination)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/all-menus?page=1&limit=10&search=",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "all-menus"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "search",
+                  "value": ""
+                }
+              ]
+            }
+          }
         }
       ]
     },
@@ -504,18 +656,57 @@
       "name": "4. Menu Restoran (ADMIN_RESTO)",
       "item": [
         {
+          "name": "Get All Menus (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/menus",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "menus"
+              ]
+            }
+          }
+        },
+        {
           "name": "Add Menu",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Bakso Malang Premium\",\n  \"description\": \"Bakso urat khas Malang dengan kuah kaldu sapi asli, tahu goreng, siomay.\",\n  \"price\": 25000,\n  \"image\": \"https://example.com/images/bakso.jpg\",\n  \"isAvailable\": true\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Bakso Malang Premium",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Bakso urat khas Malang dengan kuah kaldu sapi asli, tahu goreng, siomay.",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "25000",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/menus",
@@ -620,7 +811,25 @@
       "name": "5. Promo Happy Hour (ADMIN_RESTO)",
       "item": [
         {
-          "name": "Add Promo",
+          "name": "Get All Promos (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/promos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "promos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Promo (ALL - Semua Produk)",
           "request": {
             "method": "POST",
             "header": [
@@ -631,7 +840,44 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"discount\": 15,\n  \"startHour\": \"14:00\",\n  \"endHour\": \"17:00\"\n}"
+              "raw": "{\n  \"type\": \"ALL\",\n  \"discount\": 15,\n  \"startHour\": \"14:00\",\n  \"endHour\": \"17:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/promos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "promos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Promo (SPECIFIC - Produk Tertentu)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"SPECIFIC\",\n  \"discount\": 20,\n  \"startHour\": \"18:00\",\n  \"endHour\": \"21:00\",\n  \"menuIds\": [\n    \"isi-id-menu-1\",\n    \"isi-id-menu-2\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/promos",
@@ -658,7 +904,12 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"discount\": 20\n}"
+              "raw": "{\n  \"type\": \"SPECIFIC\",\n  \"discount\": 20,\n  \"startHour\": \"16:00\",\n  \"endHour\": \"19:00\",\n  \"menuIds\": [\n    \"isi-id-menu-1\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
               "raw": "{{base_url}}/api/restaurants/promos/:id",
@@ -840,6 +1091,41 @@
           }
         },
         {
+          "name": "Update Cashier Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"NewPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/cashiers/:id/password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "cashiers",
+                ":id",
+                "password"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "cashier_id"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Delete Cashier",
           "request": {
             "method": "DELETE",
@@ -881,7 +1167,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Voucher Diskon Rp10.000\",\n  \"price\": 8000,\n  \"value\": 10000,\n  \"expiryDate\": \"2026-12-31T23:59:59.000Z\"\n}"
+              "raw": "{\n  \"title\": \"Voucher Diskon Rp10.000\",\n  \"price\": 8000,\n  \"value\": 10000,\n  \"stock\": 100,\n  \"expiryDate\": \"2026-12-31T23:59:59.000Z\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/vouchers",
@@ -913,6 +1199,30 @@
           }
         },
         {
+          "name": "Get Voucher Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vouchers/:id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "isi-id-voucher"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Update Voucher",
           "request": {
             "method": "PUT",
@@ -924,7 +1234,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Voucher Spesial Rp12.000\",\n  \"value\": 12000\n}"
+              "raw": "{\n  \"title\": \"Voucher Spesial Rp12.000\",\n  \"value\": 12000,\n  \"stock\": 50\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/vouchers/:id",
@@ -970,24 +1280,45 @@
           }
         },
         {
-          "name": "Get specific Voucher",
+          "name": "Get All Public Vouchers",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/vouchers/:id",
+              "raw": "{{base_url}}/api/vouchers/public/all",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "vouchers",
-                ":id"
+                "public",
+                "all"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Public Vouchers by Resto",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vouchers/public/resto/:restoId",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                "public",
+                "resto",
+                ":restoId"
               ],
               "variable": [
                 {
-                  "key": "id",
-                  "value": "voucher_id"
+                  "key": "restoId",
+                  "value": "isi-id-resto"
                 }
               ]
             }
@@ -1114,7 +1445,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"items\": [\n    { \"menuId\": \"menu_id\", \"quantity\": 2 }\n  ],\n  \"paymentMethod\": \"QRIS\"\n}"
+              "raw": "{\n  \"customerName\": \"Budi Santoso\",\n  \"items\": [\n    { \"menuId\": \"menu_id\", \"quantity\": 2 }\n  ],\n  \"paymentMethod\": \"QRIS\",\n  \"voucherCode\": \"\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/pos/orders",
@@ -1128,6 +1459,32 @@
               ]
             }
           }
+        },
+        {
+          "name": "GET POS Orders History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "auth_token={{kasir_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pos/orders/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pos",
+                "orders",
+                "history"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1172,6 +1529,109 @@
               ]
             }
           }
+        }
+      ]
+    },
+    {
+      "name": "11. Finance & History (ADMIN_RESTO)",
+      "item": [
+        {
+          "name": "GET Restaurant Revenue",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "auth_token={{admin_resto_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/revenue",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "revenue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Restaurant Orders History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "auth_token={{admin_resto_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/orders/history",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "orders",
+                "history"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12. Mock API (Testing / Public)",
+      "item": [
+        {
+          "name": "PATCH Verify Mock Voucher Transaction",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/vouchers/transactions/isi-id-transaksi/verify-mock",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "vouchers",
+                "transactions",
+                "isi-id-transaksi",
+                "verify-mock"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Verify Mock POS Order",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/pos/orders/isi-id-order/verify-mock",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "pos",
+                "orders",
+                "isi-id-order",
+                "verify-mock"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }

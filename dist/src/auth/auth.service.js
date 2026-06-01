@@ -46,15 +46,18 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
+const cloudinary_service_1 = require("../cloudinary/cloudinary.service");
 const bcrypt = __importStar(require("bcrypt"));
 const client_1 = require("@prisma/client");
 const client_2 = require("@prisma/client");
 let AuthService = class AuthService {
     prisma;
     jwtService;
-    constructor(prisma, jwtService) {
+    cloudinaryService;
+    constructor(prisma, jwtService, cloudinaryService) {
         this.prisma = prisma;
         this.jwtService = jwtService;
+        this.cloudinaryService = cloudinaryService;
     }
     async registerUser(dto) {
         const hashedPassword = await bcrypt.hash(dto.password, 10);
@@ -78,7 +81,9 @@ let AuthService = class AuthService {
             throw error;
         }
     }
-    async registerResto(dto) {
+    async registerResto(dto, file) {
+        const uploadResult = await this.cloudinaryService.uploadFile(file);
+        const legalPhotoUrl = uploadResult.secure_url;
         const hashedPassword = await bcrypt.hash(dto.password, 10);
         try {
             const result = await this.prisma.$transaction(async (tx) => {
@@ -95,9 +100,9 @@ let AuthService = class AuthService {
                     data: {
                         name: dto.restaurantName,
                         address: dto.address,
-                        latitude: dto.latitude,
-                        longitude: dto.longitude,
-                        legalPhoto: dto.legalPhoto,
+                        latitude: Number(dto.latitude),
+                        longitude: Number(dto.longitude),
+                        legalPhoto: legalPhotoUrl,
                         ownerId: user.id,
                     },
                 });
@@ -200,6 +205,7 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        cloudinary_service_1.CloudinaryService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

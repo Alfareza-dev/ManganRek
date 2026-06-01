@@ -13,6 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PosController = void 0;
+const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const pos_service_1 = require("./pos.service");
 const validate_voucher_dto_1 = require("./dto/validate-voucher.dto");
@@ -49,12 +50,30 @@ let PosController = class PosController {
             data
         };
     }
+    async getOrderHistory(req) {
+        const user = req.user;
+        const data = await this.posService.getOrderHistory(user.userId);
+        return {
+            success: true,
+            message: 'Riwayat order kasir berhasil diambil',
+            data
+        };
+    }
+    async verifyMockOrder(id) {
+        const data = await this.posService.verifyMockOrder(id);
+        return {
+            success: true,
+            message: 'Mock verifikasi sukses. Status order menjadi SETTLED.',
+            data
+        };
+    }
 };
 exports.PosController = PosController;
 __decorate([
     (0, common_1.Post)('validate'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -65,6 +84,7 @@ __decorate([
     (0, common_1.Post)('orders'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -75,11 +95,30 @@ __decorate([
     (0, common_1.Get)('menus'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PosController.prototype, "getMenus", null);
+__decorate([
+    (0, common_1.Get)('orders/history'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], PosController.prototype, "getOrderHistory", null);
+__decorate([
+    (0, common_1.Patch)('orders/:id/verify-mock'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], PosController.prototype, "verifyMockOrder", null);
 exports.PosController = PosController = __decorate([
     (0, common_1.Controller)('api/pos'),
     __metadata("design:paramtypes", [pos_service_1.PosService])

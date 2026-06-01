@@ -1,4 +1,9 @@
-import { Controller, Post, Get, Put, Body, Res, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller, Post, Get, Put, Body, Res, HttpCode, HttpStatus,
+  UseGuards, Req, UseInterceptors, UploadedFile, BadRequestException,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RegisterRestoDto } from './dto/register-resto.dto';
@@ -23,8 +28,21 @@ export class AuthController {
   }
 
   @Post('register/resto')
-  async registerResto(@Body() dto: RegisterRestoDto) {
-    const data = await this.authService.registerResto(dto);
+  @UseInterceptors(FileInterceptor('legalPhoto'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Registrasi restoran baru dengan upload berkas legalitas',
+    type: RegisterRestoDto,
+  })
+  async registerResto(
+    @Body() dto: RegisterRestoDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Berkas legalPhoto wajib disertakan');
+    }
+
+    const data = await this.authService.registerResto(dto, file);
     return {
       success: true,
       message: 'Registrasi multi-entity berhasil diajukan. Akun berstatus PENDING menunggu verifikasi administrator.',
@@ -47,7 +65,8 @@ export class AuthController {
     return {
       success: true,
       message: 'Login berhasil',
-      data: user
+      data: user,
+      token: token
     };
   }
 

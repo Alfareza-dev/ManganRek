@@ -12,10 +12,11 @@ export declare class VouchersController {
         data: {
             id: string;
             createdAt: Date;
-            price: number;
-            restaurantId: string;
-            title: string;
             value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
             expiryDate: Date;
         };
     }>;
@@ -25,10 +26,44 @@ export declare class VouchersController {
         data: {
             id: string;
             createdAt: Date;
-            price: number;
-            restaurantId: string;
-            title: string;
             value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
+            expiryDate: Date;
+        }[];
+    }>;
+    findAllPublic(): Promise<{
+        success: boolean;
+        message: string;
+        data: ({
+            restaurant: {
+                name: string;
+                address: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
+            expiryDate: Date;
+        })[];
+    }>;
+    findByRestoPublic(restoId: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
             expiryDate: Date;
         }[];
     }>;
@@ -38,10 +73,11 @@ export declare class VouchersController {
         data: {
             id: string;
             createdAt: Date;
-            price: number;
-            restaurantId: string;
-            title: string;
             value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
             expiryDate: Date;
         };
     }>;
@@ -51,10 +87,11 @@ export declare class VouchersController {
         data: {
             id: string;
             createdAt: Date;
-            price: number;
-            restaurantId: string;
-            title: string;
             value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
             expiryDate: Date;
         };
     }>;
@@ -70,14 +107,31 @@ export declare class VouchersController {
             status: import("@prisma/client").$Enums.VoucherStatus;
             createdAt: Date;
             updatedAt: Date;
-            uniqueCode: string | null;
-            totalPaid: number;
-            paymentUrl: string | null;
             userId: string;
             voucherId: string;
+            uniqueCode: string | null;
+            totalPaid: number;
+            platformFee: number;
+            paymentUrl: string | null;
         };
     }>;
     handleWebhook(payload: any): Promise<{
         received: boolean;
+    }>;
+    verifyMockTransaction(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            status: import("@prisma/client").$Enums.VoucherStatus;
+            createdAt: Date;
+            updatedAt: Date;
+            userId: string;
+            voucherId: string;
+            uniqueCode: string | null;
+            totalPaid: number;
+            platformFee: number;
+            paymentUrl: string | null;
+        };
     }>;
 }

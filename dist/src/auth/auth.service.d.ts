@@ -1,5 +1,6 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { RegisterRestoDto } from './dto/register-resto.dto';
 import { LoginDto } from './dto/login.dto';
@@ -8,7 +9,8 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 export declare class AuthService {
     private prisma;
     private jwtService;
-    constructor(prisma: PrismaService, jwtService: JwtService);
+    private cloudinaryService;
+    constructor(prisma: PrismaService, jwtService: JwtService, cloudinaryService: CloudinaryService);
     registerUser(dto: RegisterUserDto): Promise<{
         name: string;
         email: string;
@@ -19,7 +21,7 @@ export declare class AuthService {
         updatedAt: Date;
         managedRestoId: string | null;
     }>;
-    registerResto(dto: RegisterRestoDto): Promise<{
+    registerResto(dto: RegisterRestoDto, file: Express.Multer.File): Promise<{
         user: {
             name: string;
             email: string;

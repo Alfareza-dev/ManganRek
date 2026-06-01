@@ -12,10 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PosService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const restaurants_service_1 = require("../restaurants/restaurants.service");
 let PosService = class PosService {
     prisma;
-    constructor(prisma) {
+    restaurantsService;
+    constructor(prisma, restaurantsService) {
         this.prisma = prisma;
+        this.restaurantsService = restaurantsService;
     }
     async validateVoucher(cashierId, dto) {
         const cashier = await this.prisma.user.findUnique({
@@ -60,9 +63,10 @@ let PosService = class PosService {
         if (!cashier || !cashier.managedRestoId) {
             throw new common_1.ForbiddenException('Akses ditolak: Kasir tidak terdaftar pada restoran manapun');
         }
-        return this.prisma.menu.findMany({
-            where: { restaurantId: cashier.managedRestoId, isAvailable: true }
+        const menus = await this.prisma.menu.findMany({
+            where: { restaurantId: cashier.managedRestoId }
         });
+        return this.restaurantsService.applyPromosToMenus(menus);
     }
     async createOrder(cashierId, dto) {
         const cashier = await this.prisma.user.findUnique({
@@ -98,6 +102,7 @@ let PosService = class PosService {
             data: {
                 restaurantId: cashier.managedRestoId,
                 cashierId: cashier.id,
+                customerName: dto.customerName,
                 totalAmount,
                 discount,
                 finalAmount,
@@ -121,7 +126,8 @@ let PosService = class PosService {
                 const res = await fetch("https://api.louvin.dev/create-transaction", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json"
+                        "Content-Type": "application/json",
+                        "x-api-key": process.env.LOUVIN_API_KEY || ""
                     },
                     body: JSON.stringify({
                         amount: finalAmount,
@@ -155,10 +161,30 @@ let PosService = class PosService {
             }
         }
     }
+    async getOrderHistory(cashierId) {
+        return this.prisma.order.findMany({
+            where: { cashierId },
+            orderBy: { createdAt: 'desc' },
+            include: { items: { include: { menu: { select: { name: true } } } } }
+        });
+    }
+    async verifyMockOrder(orderId) {
+        const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+        if (!order)
+            throw new common_1.NotFoundException('Order tidak ditemukan');
+        if (order.status !== 'PENDING') {
+            throw new common_1.BadRequestException('Order tidak dalam status PENDING');
+        }
+        return this.prisma.order.update({
+            where: { id: orderId },
+            data: { status: 'SETTLED' }
+        });
+    }
 };
 exports.PosService = PosService;
 exports.PosService = PosService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        restaurants_service_1.RestaurantsService])
 ], PosService);
 //# sourceMappingURL=pos.service.js.map

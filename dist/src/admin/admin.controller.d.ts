@@ -1,8 +1,34 @@
 import { AdminService } from './admin.service';
 import { UpdateApprovalDto } from './dto/update-approval.dto';
+import { UpdateConfigDto } from './dto/system-config.dto';
 export declare class AdminController {
     private readonly adminService;
     constructor(adminService: AdminService);
+    updateConfig(dto: UpdateConfigDto): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            updatedAt: Date;
+            value: string;
+            key: string;
+        };
+    }>;
+    getConfig(key: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            key: string;
+            value: string | null;
+        };
+    }>;
+    getRevenue(): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            totalPlatformFee: number;
+        };
+    }>;
     getPendingApprovals(): Promise<{
         success: boolean;
         message: string;

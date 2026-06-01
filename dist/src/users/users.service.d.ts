@@ -45,6 +45,9 @@ export declare class UsersService {
         id: string;
         status: import("@prisma/client").$Enums.AccountStatus;
     }>;
+    updateCashierPassword(adminId: string, cashierId: string, newPassword: string): Promise<{
+        message: string;
+    }>;
     deleteCashier(adminId: string, cashierId: string): Promise<{
         message: string;
     }>;

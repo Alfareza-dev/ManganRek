@@ -8,8 +8,13 @@ import {
   Param,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
   Req,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { RestaurantsService } from './restaurants.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
@@ -25,49 +30,36 @@ import type { Request } from 'express';
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
-  // ==================== PUBLIC DIRECTORY ====================
+  // ==================== FINANCE & ORDERS (ADMIN_RESTO) ====================
 
-  @Get()
-  async findAll(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-    @Query('lat') lat?: string,
-    @Query('lng') lng?: string,
-    @Query('sort') sort?: string,
-  ) {
-    const data = await this.restaurantsService.findAllPublic({
-      page,
-      limit,
-      lat,
-      lng,
-      sort,
-    });
-    return {
-      success: true,
-      message: 'Daftar restoran berhasil dimuat',
-      data,
-    };
+  @Get('revenue')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getRevenue(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getRevenue(user.userId);
+    return { success: true, message: 'Ringkasan pendapatan restoran berhasil dimuat', data };
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const data = await this.restaurantsService.findOnePublic(id);
-    return { success: true, message: 'Detail restoran berhasil dimuat', data };
-  }
-
-  @Get(':id/menus')
-  async getMenus(@Param('id') id: string) {
-    const data = await this.restaurantsService.getMenusPublic(id);
-    return { success: true, message: 'Daftar menu berhasil dimuat', data };
-  }
-
-  @Get(':id/menus/:menuId')
-  async getMenuDetail(@Param('id') id: string, @Param('menuId') menuId: string) {
-    const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
-    return { success: true, message: 'Detail menu berhasil dimuat', data };
+  @Get('orders/history')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getOrdersHistory(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getOrdersHistory(user.userId);
+    return { success: true, message: 'Riwayat transaksi berhasil dimuat', data };
   }
 
   // ==================== MENU CRUD (ADMIN_RESTO) ====================
+
+  @Get('menus')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getAllMenus(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getAllMenus(user.userId);
+    return { success: true, message: 'Daftar menu berhasil dimuat', data };
+  }
 
   @Get('menus/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -81,9 +73,23 @@ export class RestaurantsController {
   @Post('menus')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN_RESTO)
-  async createMenu(@Req() req: Request, @Body() dto: CreateMenuDto) {
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Tambah menu baru dengan upload gambar',
+    type: CreateMenuDto,
+  })
+  async createMenu(
+    @Req() req: Request,
+    @Body() dto: CreateMenuDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Gambar menu wajib diunggah');
+    }
+
     const user = req.user as any;
-    const data = await this.restaurantsService.createMenu(user.userId, dto);
+    const data = await this.restaurantsService.createMenu(user.userId, dto, file);
     return {
       success: true,
       message: 'Menu berhasil ditambahkan',
@@ -125,6 +131,15 @@ export class RestaurantsController {
   }
 
   // ==================== PROMO CRUD (ADMIN_RESTO) ====================
+
+  @Get('promos')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getAllPromos(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getAllPromos(user.userId);
+    return { success: true, message: 'Daftar promo berhasil dimuat', data };
+  }
 
   @Get('promos/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -180,4 +195,65 @@ export class RestaurantsController {
       message: 'Promo berhasil dihapus',
     };
   }
+
+  // ==================== PUBLIC DIRECTORY ====================
+
+  @Get('all-menus')
+  async getAllMenusPublic(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+  ) {
+    const data = await this.restaurantsService.getAllMenusPublicWithPagination({
+      page,
+      limit,
+      search,
+    });
+    return {
+      success: true,
+      message: 'Daftar semua menu berhasil dimuat',
+      data,
+    };
+  }
+
+  @Get()
+  async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('lat') lat?: string,
+    @Query('lng') lng?: string,
+    @Query('sort') sort?: string,
+  ) {
+    const data = await this.restaurantsService.findAllPublic({
+      page,
+      limit,
+      lat,
+      lng,
+      sort,
+    });
+    return {
+      success: true,
+      message: 'Daftar restoran berhasil dimuat',
+      data,
+    };
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const data = await this.restaurantsService.findOnePublic(id);
+    return { success: true, message: 'Detail restoran berhasil dimuat', data };
+  }
+
+  @Get(':id/menus')
+  async getMenus(@Param('id') id: string) {
+    const data = await this.restaurantsService.getMenusPublic(id);
+    return { success: true, message: 'Daftar menu berhasil dimuat', data };
+  }
+
+  @Get(':id/menus/:menuId')
+  async getMenuDetail(@Param('id') id: string, @Param('menuId') menuId: string) {
+    const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
+    return { success: true, message: 'Detail menu berhasil dimuat', data };
+  }
 }
+

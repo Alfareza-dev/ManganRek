@@ -41,7 +41,22 @@ enum OrderStatus {
   FAILED
 }
 
+enum PromoType {
+  ALL
+  SPECIFIC
+}
+
 // ==================== MODELS ====================
+
+model SystemConfig {
+  id        String   @id @default(uuid())
+  key       String   @unique // e.g., "VOUCHER_FEE_PERCENTAGE"
+  value     String   // e.g., "5" (berarti 5%)
+  updatedAt DateTime @updatedAt
+
+  @@map("system_configs")
+}
+
 
 model User {
   id        String        @id @default(uuid())
@@ -98,19 +113,23 @@ model Menu {
   // Relations
   restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
+  promos     Promo[]     @relation("MenuPromos")
 
   @@map("menus")
 }
 
 model Promo {
-  id           String @id @default(uuid())
+  id           String    @id @default(uuid())
   restaurantId String
-  discount     Int    // Persentase diskon, e.g. 15 untuk 15%
-  startHour    String // Format HH:MM (e.g., "14:00")
-  endHour      String // Format HH:MM (e.g., "17:00")
+  type         PromoType @default(ALL)
+  discount     Int       // Persentase diskon, e.g. 15 untuk 15%
+  startHour    String    // Format HH:MM (e.g., "14:00")
+  endHour      String    // Format HH:MM (e.g., "17:00")
+  createdAt    DateTime  @default(now())
 
   // Relations
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  menus      Menu[]     @relation("MenuPromos")
 
   @@map("promos")
 }
@@ -121,6 +140,7 @@ model Voucher {
   title        String
   price        Float    // Harga beli voucher
   value        Float    // Nilai potongan belanja voucher di kasir
+  stock        Int      @default(0) // Kapasitas/jumlah stok voucher
   expiryDate   DateTime
   createdAt    DateTime @default(now())
 
@@ -138,6 +158,7 @@ model Transaction {
   uniqueCode String?       @unique // Generate setelah status PAID, e.g. NGLM89XJ
   status     VoucherStatus @default(PENDING)
   totalPaid  Float
+  platformFee Float        @default(0)
   paymentUrl String?
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
@@ -153,6 +174,7 @@ model Order {
   id            String        @id @default(uuid())
   restaurantId  String
   cashierId     String
+  customerName  String?
   totalAmount   Float
   discount      Float         @default(0)
   finalAmount   Float

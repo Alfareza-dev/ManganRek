@@ -141,6 +141,24 @@ let UsersService = class UsersService {
             throw error;
         }
     }
+    async updateCashierPassword(adminId, cashierId, newPassword) {
+        const adminResto = await this.prisma.restaurant.findUnique({
+            where: { ownerId: adminId },
+        });
+        if (!adminResto)
+            throw new common_1.NotFoundException('Restoran tidak ditemukan');
+        const cashier = await this.prisma.user.findFirst({
+            where: { id: cashierId, managedRestoId: adminResto.id, role: 'KASIR' },
+        });
+        if (!cashier)
+            throw new common_1.NotFoundException('Kasir tidak ditemukan');
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await this.prisma.user.update({
+            where: { id: cashierId },
+            data: { password: hashedPassword },
+        });
+        return { message: 'Password kasir berhasil diubah' };
+    }
     async deleteCashier(adminId, cashierId) {
         const adminResto = await this.prisma.restaurant.findUnique({
             where: { ownerId: adminId },

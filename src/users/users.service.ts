@@ -104,6 +104,26 @@ export class UsersService {
     }
   }
 
+  async updateCashierPassword(adminId: string, cashierId: string, newPassword: string) {
+    const adminResto = await this.prisma.restaurant.findUnique({
+      where: { ownerId: adminId },
+    });
+    if (!adminResto) throw new NotFoundException('Restoran tidak ditemukan');
+
+    const cashier = await this.prisma.user.findFirst({
+      where: { id: cashierId, managedRestoId: adminResto.id, role: 'KASIR' },
+    });
+    if (!cashier) throw new NotFoundException('Kasir tidak ditemukan');
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.prisma.user.update({
+      where: { id: cashierId },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Password kasir berhasil diubah' };
+  }
+
   async deleteCashier(adminId: string, cashierId: string) {
     const adminResto = await this.prisma.restaurant.findUnique({
       where: { ownerId: adminId },

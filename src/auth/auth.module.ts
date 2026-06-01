@@ -4,12 +4,14 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PrismaModule } from '../prisma/prisma.module';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
     PrismaModule,
     PassportModule,
+    CloudinaryModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'mangan_rek_secret_key_2026_secure',
       signOptions: { expiresIn: '7d' },

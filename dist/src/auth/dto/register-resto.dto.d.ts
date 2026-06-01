@@ -6,5 +6,5 @@ export declare class RegisterRestoDto {
     address: string;
     latitude: number;
     longitude: number;
-    legalPhoto: string;
+    legalPhoto?: any;
 }

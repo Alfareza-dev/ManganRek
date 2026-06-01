@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const pos_controller_1 = require("./pos.controller");
 const pos_service_1 = require("./pos.service");
 const prisma_module_1 = require("../prisma/prisma.module");
+const restaurants_module_1 = require("../restaurants/restaurants.module");
 let PosModule = class PosModule {
 };
 exports.PosModule = PosModule;
 exports.PosModule = PosModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule],
+        imports: [prisma_module_1.PrismaModule, restaurants_module_1.RestaurantsModule],
         controllers: [pos_controller_1.PosController],
         providers: [pos_service_1.PosService]
     })

@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Param, Body, UseGuards, Req } from '@nestjs/common';
 import { PosService } from './pos.service';
 import { ValidateVoucherDto } from './dto/validate-voucher.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -51,6 +51,29 @@ export class PosController {
     return {
       success: true,
       message: 'Daftar menu berhasil dimuat',
+      data
+    };
+  }
+
+  @Get('orders/history')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.KASIR)
+  async getOrderHistory(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.posService.getOrderHistory(user.userId);
+    return {
+      success: true,
+      message: 'Riwayat order kasir berhasil diambil',
+      data
+    };
+  }
+
+  @Patch('orders/:id/verify-mock')
+  async verifyMockOrder(@Param('id') id: string) {
+    const data = await this.posService.verifyMockOrder(id);
+    return {
+      success: true,
+      message: 'Mock verifikasi sukses. Status order menjadi SETTLED.',
       data
     };
   }

@@ -27,6 +27,7 @@ export class VouchersService {
         title: dto.title,
         price: dto.price,
         value: dto.value,
+        stock: dto.stock,
         expiryDate: new Date(dto.expiryDate),
         restaurantId: resto.id
       }
@@ -87,9 +88,18 @@ export class VouchersService {
     if (voucher.expiryDate < new Date()) {
       throw new BadRequestException('Voucher sudah kadaluarsa');
     }
+    if (voucher.stock <= 0) {
+      throw new BadRequestException('Stok voucher habis');
+    }
 
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     
+    // Decrement stock
+    await this.prisma.voucher.update({
+      where: { id: voucher.id },
+      data: { stock: { decrement: 1 } }
+    });
+
     const transaction = await this.prisma.transaction.create({
       data: {
         userId,
@@ -131,6 +141,11 @@ export class VouchersService {
     } catch (err: any) {
       // Rollback transaction if payment creation failed
       await this.prisma.transaction.delete({ where: { id: transaction.id } });
+      // Rollback stock
+      await this.prisma.voucher.update({
+        where: { id: voucher.id },
+        data: { stock: { increment: 1 } }
+      });
       throw new InternalServerErrorException(err.message);
     }
   }
@@ -166,4 +181,57 @@ export class VouchersService {
     }
     return { received: true };
   }
+
+  async verifyMockTransaction(transactionId: string) {
+    const tx = await this.prisma.transaction.findUnique({
+      where: { id: transactionId }
+    });
+
+    if (!tx) throw new NotFoundException('Transaksi tidak ditemukan');
+    if (tx.status !== 'PENDING') throw new BadRequestException('Transaksi tidak dalam status PENDING');
+
+    // Generate unique code
+    const uniqueCode = this.generateUniqueCode(8);
+
+    // Get config fee
+    let feePercentage = 0;
+    const config = await this.prisma.systemConfig.findUnique({
+      where: { key: 'VOUCHER_FEE_PERCENTAGE' }
+    });
+    
+    if (config) {
+      feePercentage = parseFloat(config.value) || 0;
+    }
+
+    const platformFee = tx.totalPaid * (feePercentage / 100);
+
+    return this.prisma.transaction.update({
+      where: { id: tx.id },
+      data: {
+        status: 'PAID',
+        uniqueCode,
+        platformFee
+      }
+    });
+  }
+
+
+  async findAllPublic() {
+    return this.prisma.voucher.findMany({
+      include: {
+        restaurant: {
+          select: { name: true, address: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
+
+  async findByRestoPublic(restoId: string) {
+    return this.prisma.voucher.findMany({
+      where: { restaurantId: restoId },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
 }
+

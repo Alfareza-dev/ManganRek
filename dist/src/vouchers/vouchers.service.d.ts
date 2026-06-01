@@ -11,46 +11,51 @@ export declare class VouchersService {
     create(adminId: string, dto: CreateVoucherDto): Promise<{
         id: string;
         createdAt: Date;
-        price: number;
-        restaurantId: string;
-        title: string;
         value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
         expiryDate: Date;
     }>;
     findAll(adminId: string): Promise<{
         id: string;
         createdAt: Date;
-        price: number;
-        restaurantId: string;
-        title: string;
         value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
         expiryDate: Date;
     }[]>;
     findOne(adminId: string, id: string): Promise<{
         id: string;
         createdAt: Date;
-        price: number;
-        restaurantId: string;
-        title: string;
         value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
         expiryDate: Date;
     }>;
     update(adminId: string, id: string, dto: UpdateVoucherDto): Promise<{
         id: string;
         createdAt: Date;
-        price: number;
-        restaurantId: string;
-        title: string;
         value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
         expiryDate: Date;
     }>;
     remove(adminId: string, id: string): Promise<{
         id: string;
         createdAt: Date;
-        price: number;
-        restaurantId: string;
-        title: string;
         value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
         expiryDate: Date;
     }>;
     buyVoucher(userId: string, dto: BuyVoucherDto): Promise<{
@@ -58,14 +63,52 @@ export declare class VouchersService {
         status: import("@prisma/client").$Enums.VoucherStatus;
         createdAt: Date;
         updatedAt: Date;
-        uniqueCode: string | null;
-        totalPaid: number;
-        paymentUrl: string | null;
         userId: string;
         voucherId: string;
+        uniqueCode: string | null;
+        totalPaid: number;
+        platformFee: number;
+        paymentUrl: string | null;
     }>;
     private generateUniqueCode;
     handleWebhook(payload: any): Promise<{
         received: boolean;
     }>;
+    verifyMockTransaction(transactionId: string): Promise<{
+        id: string;
+        status: import("@prisma/client").$Enums.VoucherStatus;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        voucherId: string;
+        uniqueCode: string | null;
+        totalPaid: number;
+        platformFee: number;
+        paymentUrl: string | null;
+    }>;
+    findAllPublic(): Promise<({
+        restaurant: {
+            name: string;
+            address: string;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
+        expiryDate: Date;
+    })[]>;
+    findByRestoPublic(restoId: string): Promise<{
+        id: string;
+        createdAt: Date;
+        value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
+        expiryDate: Date;
+    }[]>;
 }
