@@ -76,9 +76,11 @@ export class PosService {
       throw new ForbiddenException('Akses ditolak: Kasir tidak terdaftar pada restoran manapun');
     }
 
+    const managedRestoId = cashier.managedRestoId;
+
     const menuIds = dto.items.map(i => i.menuId);
     const menus = await this.prisma.menu.findMany({
-      where: { id: { in: menuIds }, restaurantId: cashier.managedRestoId }
+      where: { id: { in: menuIds }, restaurantId: managedRestoId }
     });
 
     if (menus.length !== menuIds.length) {
@@ -116,7 +118,7 @@ export class PosService {
         throw new BadRequestException('Voucher belum lunas / tidak valid');
       }
 
-      if (tx.voucher.restaurantId !== cashier.managedRestoId) {
+      if (tx.voucher.restaurantId !== managedRestoId) {
         throw new ForbiddenException('Kode voucher ini tidak berlaku di restoran Anda');
       }
 
@@ -139,7 +141,7 @@ export class PosService {
     const order = await this.prisma.$transaction(async (prisma) => {
       const newOrder = await prisma.order.create({
         data: {
-          restaurantId: cashier.managedRestoId,
+          restaurantId: managedRestoId,
           cashierId: cashier.id,
           customerName: dto.customerName,
           totalAmount,

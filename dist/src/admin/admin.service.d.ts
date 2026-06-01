@@ -145,4 +145,61 @@ export declare class AdminService {
     }>;
     getConfig(key: string): Promise<string | null>;
     getPlatformRevenue(): Promise<number>;
+    getAllPayments(page: number, limit: number): Promise<{
+        transactions: {
+            data: ({
+                user: {
+                    name: string;
+                    email: string;
+                };
+                voucher: {
+                    restaurant: {
+                        name: string;
+                    };
+                    title: string;
+                };
+            } & {
+                id: string;
+                status: import("@prisma/client").$Enums.VoucherStatus;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                voucherId: string;
+                uniqueCode: string | null;
+                totalPaid: number;
+                platformFee: number;
+                paymentUrl: string | null;
+            })[];
+            total: number;
+            page: number;
+            limit: number;
+            totalPages: number;
+        };
+        orders: {
+            data: ({
+                restaurant: {
+                    name: string;
+                };
+                cashier: {
+                    name: string;
+                };
+            } & {
+                id: string;
+                status: import("@prisma/client").$Enums.OrderStatus;
+                createdAt: Date;
+                updatedAt: Date;
+                restaurantId: string;
+                finalAmount: number;
+                totalAmount: number;
+                discount: number;
+                cashierId: string;
+                customerName: string | null;
+                paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+            })[];
+            total: number;
+            page: number;
+            limit: number;
+            totalPages: number;
+        };
+    }>;
 }

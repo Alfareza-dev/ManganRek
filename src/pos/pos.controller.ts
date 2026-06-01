@@ -1,4 +1,5 @@
 import { Controller, Post, Get, Patch, Param, Body, UseGuards, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { PosService } from './pos.service';
 import { ValidateVoucherDto } from './dto/validate-voucher.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -8,6 +9,8 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import type { Request } from 'express';
 
+@ApiTags('POS Kasir')
+@ApiBearerAuth()
 @Controller('api/pos')
 export class PosController {
   constructor(private readonly posService: PosService) {}
@@ -15,6 +18,7 @@ export class PosController {
   @Post('validate')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.KASIR)
+  @ApiOperation({ summary: 'Validasi Voucher (Cek status dan potongan harga)' })
   async validateVoucher(@Req() req: Request, @Body() dto: ValidateVoucherDto) {
     const user = req.user as any;
     
@@ -36,6 +40,7 @@ export class PosController {
   @Post('orders')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.KASIR)
+  @ApiOperation({ summary: 'Buat Order POS Kasir' })
   async createOrder(@Req() req: Request, @Body() dto: CreateOrderDto) {
     const user = req.user as any;
     const data = await this.posService.createOrder(user.userId, dto);
@@ -45,6 +50,7 @@ export class PosController {
   @Get('menus')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.KASIR)
+  @ApiOperation({ summary: 'Ambil daftar menu restoran Kasir (termasuk diskon)' })
   async getMenus(@Req() req: Request) {
     const user = req.user as any;
     const data = await this.posService.getMenus(user.userId);
@@ -58,6 +64,7 @@ export class PosController {
   @Get('orders/history')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.KASIR)
+  @ApiOperation({ summary: 'Ambil riwayat order kasir' })
   async getOrderHistory(@Req() req: Request) {
     const user = req.user as any;
     const data = await this.posService.getOrderHistory(user.userId);
@@ -69,6 +76,7 @@ export class PosController {
   }
 
   @Patch('orders/:id/verify-mock')
+  @ApiOperation({ summary: 'Mock verifikasi order QRIS (Ubah PENDING menjadi SETTLED)' })
   async verifyMockOrder(@Param('id') id: string) {
     const data = await this.posService.verifyMockOrder(id);
     return {

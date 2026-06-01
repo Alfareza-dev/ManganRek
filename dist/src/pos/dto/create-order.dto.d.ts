@@ -7,4 +7,5 @@ export declare class CreateOrderDto {
     customerName: string;
     items: OrderItemDto[];
     paymentMethod: PaymentMethod;
+    voucherCode?: string;
 }

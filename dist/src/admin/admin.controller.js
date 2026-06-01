@@ -40,6 +40,10 @@ let AdminController = class AdminController {
         const totalPlatformFee = await this.adminService.getPlatformRevenue();
         return { success: true, message: 'Total pendapatan platform', data: { totalPlatformFee } };
     }
+    async getAllPayments(page = '1', limit = '10') {
+        const data = await this.adminService.getAllPayments(Number(page), Number(limit));
+        return { success: true, message: 'Berhasil mengambil histori pembayaran', data };
+    }
     async getPendingApprovals() {
         const data = await this.adminService.getPendingApprovals();
         return {
@@ -109,6 +113,17 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getRevenue", null);
+__decorate([
+    openapi.ApiQuery({ name: "page", required: false }),
+    openapi.ApiQuery({ name: "limit", required: false }),
+    (0, common_1.Get)('payments'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAllPayments", null);
 __decorate([
     (0, common_1.Get)('approvals'),
     openapi.ApiResponse({ status: 200 }),

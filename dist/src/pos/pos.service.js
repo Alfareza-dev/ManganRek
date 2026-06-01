@@ -45,15 +45,11 @@ let PosService = class PosService {
         if (new Date() > tx.voucher.expiryDate) {
             throw new common_1.BadRequestException('Voucher sudah kadaluarsa');
         }
-        const updatedTx = await this.prisma.transaction.update({
-            where: { id: tx.id },
-            data: { status: 'USED' }
-        });
         return {
-            transactionId: updatedTx.id,
+            transactionId: tx.id,
             voucherTitle: tx.voucher.title,
             value: tx.voucher.value,
-            status: 'USED'
+            status: 'VALID'
         };
     }
     async getMenus(cashierId) {
@@ -75,9 +71,10 @@ let PosService = class PosService {
         if (!cashier || !cashier.managedRestoId) {
             throw new common_1.ForbiddenException('Akses ditolak: Kasir tidak terdaftar pada restoran manapun');
         }
+        const managedRestoId = cashier.managedRestoId;
         const menuIds = dto.items.map(i => i.menuId);
         const menus = await this.prisma.menu.findMany({
-            where: { id: { in: menuIds }, restaurantId: cashier.managedRestoId }
+            where: { id: { in: menuIds }, restaurantId: managedRestoId }
         });
         if (menus.length !== menuIds.length) {
             throw new common_1.BadRequestException('Beberapa menu tidak valid atau bukan milik restoran ini');
@@ -95,24 +92,59 @@ let PosService = class PosService {
                 price: price
             };
         });
-        const discount = 0;
+        let discount = 0;
+        let validTxId;
+        if (dto.voucherCode) {
+            const tx = await this.prisma.transaction.findUnique({
+                where: { uniqueCode: dto.voucherCode },
+                include: { voucher: true }
+            });
+            if (!tx || !tx.voucher) {
+                throw new common_1.NotFoundException('Kode voucher tidak ditemukan');
+            }
+            if (tx.status !== 'PAID') {
+                if (tx.status === 'USED')
+                    throw new common_1.BadRequestException('Voucher ini sudah pernah digunakan');
+                throw new common_1.BadRequestException('Voucher belum lunas / tidak valid');
+            }
+            if (tx.voucher.restaurantId !== managedRestoId) {
+                throw new common_1.ForbiddenException('Kode voucher ini tidak berlaku di restoran Anda');
+            }
+            if (new Date() > tx.voucher.expiryDate) {
+                throw new common_1.BadRequestException('Voucher sudah kadaluarsa');
+            }
+            discount = tx.voucher.value;
+            validTxId = tx.id;
+        }
+        if (discount > totalAmount) {
+            discount = totalAmount;
+        }
         const finalAmount = totalAmount - discount;
         const orderStatus = dto.paymentMethod === 'CASH' ? 'SETTLED' : 'PENDING';
-        const order = await this.prisma.order.create({
-            data: {
-                restaurantId: cashier.managedRestoId,
-                cashierId: cashier.id,
-                customerName: dto.customerName,
-                totalAmount,
-                discount,
-                finalAmount,
-                paymentMethod: dto.paymentMethod,
-                status: orderStatus,
-                items: {
-                    create: orderItemsData
-                }
-            },
-            include: { items: true }
+        const order = await this.prisma.$transaction(async (prisma) => {
+            const newOrder = await prisma.order.create({
+                data: {
+                    restaurantId: managedRestoId,
+                    cashierId: cashier.id,
+                    customerName: dto.customerName,
+                    totalAmount,
+                    discount,
+                    finalAmount,
+                    paymentMethod: dto.paymentMethod,
+                    status: orderStatus,
+                    items: {
+                        create: orderItemsData
+                    }
+                },
+                include: { items: true }
+            });
+            if (validTxId) {
+                await prisma.transaction.update({
+                    where: { id: validTxId },
+                    data: { status: 'USED' }
+                });
+            }
+            return newOrder;
         });
         if (dto.paymentMethod === 'CASH') {
             return {

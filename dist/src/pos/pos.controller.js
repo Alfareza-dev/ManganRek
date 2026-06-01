@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PosController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 const pos_service_1 = require("./pos.service");
 const validate_voucher_dto_1 = require("./dto/validate-voucher.dto");
 const create_order_dto_1 = require("./dto/create-order.dto");
@@ -73,6 +74,7 @@ __decorate([
     (0, common_1.Post)('validate'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    (0, swagger_1.ApiOperation)({ summary: 'Validasi Voucher (Cek status dan potongan harga)' }),
     openapi.ApiResponse({ status: 201 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
@@ -84,6 +86,7 @@ __decorate([
     (0, common_1.Post)('orders'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    (0, swagger_1.ApiOperation)({ summary: 'Buat Order POS Kasir' }),
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
@@ -95,6 +98,7 @@ __decorate([
     (0, common_1.Get)('menus'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    (0, swagger_1.ApiOperation)({ summary: 'Ambil daftar menu restoran Kasir (termasuk diskon)' }),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -105,6 +109,7 @@ __decorate([
     (0, common_1.Get)('orders/history'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    (0, swagger_1.ApiOperation)({ summary: 'Ambil riwayat order kasir' }),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -113,6 +118,7 @@ __decorate([
 ], PosController.prototype, "getOrderHistory", null);
 __decorate([
     (0, common_1.Patch)('orders/:id/verify-mock'),
+    (0, swagger_1.ApiOperation)({ summary: 'Mock verifikasi order QRIS (Ubah PENDING menjadi SETTLED)' }),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -120,6 +126,8 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PosController.prototype, "verifyMockOrder", null);
 exports.PosController = PosController = __decorate([
+    (0, swagger_1.ApiTags)('POS Kasir'),
+    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Controller)('api/pos'),
     __metadata("design:paramtypes", [pos_service_1.PosService])
 ], PosController);

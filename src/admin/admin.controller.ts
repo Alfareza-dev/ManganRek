@@ -42,6 +42,15 @@ export class AdminController {
     return { success: true, message: 'Total pendapatan platform', data: { totalPlatformFee } };
   }
 
+  @Get('payments')
+  async getAllPayments(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+  ) {
+    const data = await this.adminService.getAllPayments(Number(page), Number(limit));
+    return { success: true, message: 'Berhasil mengambil histori pembayaran', data };
+  }
+
   @Get('approvals')
   async getPendingApprovals() {
     const data = await this.adminService.getPendingApprovals();

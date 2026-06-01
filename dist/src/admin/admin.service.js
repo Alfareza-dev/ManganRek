@@ -160,6 +160,47 @@ let AdminService = class AdminService {
         });
         return result._sum.platformFee || 0;
     }
+    async getAllPayments(page, limit) {
+        const skip = (page - 1) * limit;
+        const [transactions, totalTransactions, orders, totalOrders] = await Promise.all([
+            this.prisma.transaction.findMany({
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                include: {
+                    user: { select: { name: true, email: true } },
+                    voucher: { select: { title: true, restaurant: { select: { name: true } } } }
+                }
+            }),
+            this.prisma.transaction.count(),
+            this.prisma.order.findMany({
+                skip,
+                take: limit,
+                orderBy: { createdAt: 'desc' },
+                include: {
+                    restaurant: { select: { name: true } },
+                    cashier: { select: { name: true } }
+                }
+            }),
+            this.prisma.order.count(),
+        ]);
+        return {
+            transactions: {
+                data: transactions,
+                total: totalTransactions,
+                page,
+                limit,
+                totalPages: Math.ceil(totalTransactions / limit)
+            },
+            orders: {
+                data: orders,
+                total: totalOrders,
+                page,
+                limit,
+                totalPages: Math.ceil(totalOrders / limit)
+            }
+        };
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([

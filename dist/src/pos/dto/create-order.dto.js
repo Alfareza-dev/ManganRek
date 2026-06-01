@@ -36,8 +36,9 @@ class CreateOrderDto {
     customerName;
     items;
     paymentMethod;
+    voucherCode;
     static _OPENAPI_METADATA_FACTORY() {
-        return { customerName: { required: true, type: () => String }, items: { required: true, type: () => [require("./create-order.dto").OrderItemDto] }, paymentMethod: { required: true, enum: ["CASH", "QRIS"] } };
+        return { customerName: { required: true, type: () => String }, items: { required: true, type: () => [require("./create-order.dto").OrderItemDto] }, paymentMethod: { required: true, enum: ["CASH", "QRIS"] }, voucherCode: { required: false, type: () => String } };
     }
 }
 exports.CreateOrderDto = CreateOrderDto;
@@ -57,4 +58,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateOrderDto.prototype, "paymentMethod", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateOrderDto.prototype, "voucherCode", void 0);
 //# sourceMappingURL=create-order.dto.js.map
