@@ -35,13 +35,14 @@ export class AuthController {
     type: RegisterRestoDto,
   })
   async registerResto(
-    @Body() dto: RegisterRestoDto,
+    @Req() req: Request,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) {
       throw new BadRequestException('Berkas legalPhoto wajib disertakan');
     }
 
+    const dto = req.body as RegisterRestoDto;
     const data = await this.authService.registerResto(dto, file);
     return {
       success: true,

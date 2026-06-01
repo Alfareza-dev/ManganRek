@@ -41,6 +41,7 @@ let AuthController = class AuthController {
         if (!file) {
             throw new common_1.BadRequestException('Berkas legalPhoto wajib disertakan');
         }
+        console.log("=== DTO IN CONTROLLER ===", dto);
         const data = await this.authService.registerResto(dto, file);
         return {
             success: true,

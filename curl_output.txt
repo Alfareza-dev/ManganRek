@@ -1,0 +1,33 @@
+Note: Unnecessary use of -X or --request, POST is already inferred.
+* Host localhost:5001 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0*   Trying [::1]:5001...
+* Connected to localhost (::1) port 5001
+> POST /api/auth/register/resto HTTP/1.1
+> Host: localhost:5001
+> User-Agent: curl/8.7.1
+> Accept: application/json
+> Content-Length: 3709
+> Content-Type: multipart/form-data; boundary=------------------------rhJFFmdCfY3Eno2TIgrAYg
+> 
+} [3709 bytes data]
+* upload completely sent off: 3709 bytes
+100  3709    0     0  100  3709      0   3061  0:00:01  0:00:01 --:--:--  3062< HTTP/1.1 500 Internal Server Error
+< X-Powered-By: Express
+< Access-Control-Allow-Origin: http://localhost:3000
+< Vary: Origin
+< Access-Control-Allow-Credentials: true
+< Content-Type: application/json; charset=utf-8
+< Content-Length: 52
+< ETag: W/"34-rlKccw1E+/fV8niQk4oFitDfPro"
+< Date: Mon, 01 Jun 2026 23:54:14 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< 
+{ [52 bytes data]
+100  3761  100    52  100  3709     41   2974  0:00:01  0:00:01 --:--:--  3018
+* Connection #0 to host localhost left intact
+{"statusCode":500,"message":"Internal server error"}

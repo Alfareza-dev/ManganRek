@@ -1,0 +1,113 @@
+
+> BE@0.0.1 start:dev
+> nest start --watch
+
+[2J[3J[H[[90m6:54:22 AM[0m] Starting compilation in watch mode...
+
+[[90m6:54:25 AM[0m] Found 0 errors. Watching for file changes.
+
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPrismaModule dependencies initialized[39m[38;5;3m +17ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mCloudinaryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAdminModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mItineraryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRestaurantsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPosModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mVouchersModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAppController {/}:[39m[38;5;3m +26ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/, GET} route[39m[38;5;3m +2ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/api/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/cashier, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/cashiers, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/cashiers/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/cashiers/:id, PUT} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/cashiers/:id/password, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/cashiers/:id, DELETE} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mRestaurantsController {/api/restaurants}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/revenue, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/orders/history, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/menus, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/menus/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/menus, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/menus/:id, PUT} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/menus/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/promos, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/promos/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/promos, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/promos/:id, PUT} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/promos/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/all-menus, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/:id/menus, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/restaurants/:id/menus/:menuId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/api/auth}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/register/user, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/register/resto, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/login, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/logout, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/me, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/profile, PUT} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/change-password, PUT} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAdminController {/api/admin}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/config, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/config, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/revenue, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/payments, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/approvals, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/approvals/:id, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/users, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/owners, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/users/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/owners/:id, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/users/:id/ban, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/admin/users/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mVouchersController {/api/vouchers}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/public/all, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/public/resto/:restoId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/:id, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/:id, PUT} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/:id, DELETE} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/buy, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/webhook, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/vouchers/transactions/:id/verify-mock, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mPosController {/api/pos}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/pos/validate, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/pos/orders, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/pos/menus, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/pos/orders/history, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/pos/orders/:id/verify-mock, PATCH} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mItineraryController {/api/itinerary}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/itinerary, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +93ms[39m
+[31m[Nest] 69999  - [39m06/02/2026, 6:54:25 AM [31m  ERROR[39m [38;5;3m[NestApplication] [39m[31mError: listen EADDRINUSE: address already in use :::5001[39m[38;5;3m +7ms[39m
+node:net:1908
+    const ex = new UVExceptionWithHostPort(err, 'listen', address, port);
+               ^
+
+Error: listen EADDRINUSE: address already in use :::5001
+    at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+    at listenInCluster (node:net:1965:12)
+    at Server.listen (node:net:2067:7)
+    at ExpressAdapter.listen (/Users/alfareza/Documents/Smk Telkom Malang/Study/XI/RPL/UKL FINAL/BE/node_modules/@nestjs/platform-express/adapters/express-adapter.js:115:32)
+    at /Users/alfareza/Documents/Smk Telkom Malang/Study/XI/RPL/UKL FINAL/BE/node_modules/@nestjs/core/nest-application.js:190:30
+    at new Promise (<anonymous>)
+    at NestApplication.listen (/Users/alfareza/Documents/Smk Telkom Malang/Study/XI/RPL/UKL FINAL/BE/node_modules/@nestjs/core/nest-application.js:180:16)
+    at async bootstrap (/Users/alfareza/Documents/Smk Telkom Malang/Study/XI/RPL/UKL FINAL/BE/src/main.ts:24:3) {
+  code: 'EADDRINUSE',
+  errno: -48,
+  syscall: 'listen',
+  address: '::',
+  port: 5001
+}
+
+Node.js v20.20.1
