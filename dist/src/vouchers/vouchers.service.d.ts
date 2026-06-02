@@ -111,4 +111,33 @@ export declare class VouchersService {
         stock: number;
         expiryDate: Date;
     }[]>;
+    getUserHistory(userId: string): Promise<({
+        voucher: {
+            restaurant: {
+                name: string;
+                address: string;
+                legalPhoto: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
+            expiryDate: Date;
+        };
+    } & {
+        id: string;
+        status: import("@prisma/client").$Enums.VoucherStatus;
+        createdAt: Date;
+        updatedAt: Date;
+        userId: string;
+        voucherId: string;
+        uniqueCode: string | null;
+        totalPaid: number;
+        platformFee: number;
+        paymentUrl: string | null;
+    })[]>;
 }

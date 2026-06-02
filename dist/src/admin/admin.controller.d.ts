@@ -157,6 +157,12 @@ export declare class AdminController {
                     latitude: number;
                     longitude: number;
                     legalPhoto: string;
+                    category: string | null;
+                    openingHours: string | null;
+                    branches: string | null;
+                    googleMapsUrl: string | null;
+                    description: string | null;
+                    isOpen: boolean | null;
                 } | null;
             } & {
                 name: string;
@@ -189,6 +195,12 @@ export declare class AdminController {
                 latitude: number;
                 longitude: number;
                 legalPhoto: string;
+                category: string | null;
+                openingHours: string | null;
+                branches: string | null;
+                googleMapsUrl: string | null;
+                description: string | null;
+                isOpen: boolean | null;
             } | null;
             managedResto: {
                 name: string;
@@ -200,6 +212,12 @@ export declare class AdminController {
                 latitude: number;
                 longitude: number;
                 legalPhoto: string;
+                category: string | null;
+                openingHours: string | null;
+                branches: string | null;
+                googleMapsUrl: string | null;
+                description: string | null;
+                isOpen: boolean | null;
             } | null;
         } & {
             name: string;
@@ -227,6 +245,12 @@ export declare class AdminController {
                 latitude: number;
                 longitude: number;
                 legalPhoto: string;
+                category: string | null;
+                openingHours: string | null;
+                branches: string | null;
+                googleMapsUrl: string | null;
+                description: string | null;
+                isOpen: boolean | null;
             } | null;
         } & {
             name: string;

@@ -1,9 +1,6 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ItineraryService } from './itinerary.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { Role } from '@prisma/client';
+// No auth guards needed anymore
 
 @Controller('api/itinerary')
 export class ItineraryController {
@@ -21,8 +18,6 @@ export class ItineraryController {
    * Guard: USER
    */
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER)
   async getItinerary(
     @Query('startLat') startLat: string,
     @Query('startLng') startLng: string,

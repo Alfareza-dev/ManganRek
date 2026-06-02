@@ -22,6 +22,7 @@ const create_menu_dto_1 = require("./dto/create-menu.dto");
 const update_menu_dto_1 = require("./dto/update-menu.dto");
 const create_promo_dto_1 = require("./dto/create-promo.dto");
 const update_promo_dto_1 = require("./dto/update-promo.dto");
+const update_restaurant_dto_1 = require("./dto/update-restaurant.dto");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
@@ -30,6 +31,11 @@ let RestaurantsController = class RestaurantsController {
     restaurantsService;
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
+    }
+    async updateProfile(req, dto) {
+        const user = req.user;
+        const data = await this.restaurantsService.updateProfile(user.userId, dto);
+        return { success: true, message: 'Profil restoran berhasil diperbarui', data };
     }
     async getRevenue(req) {
         const user = req.user;
@@ -194,6 +200,17 @@ let RestaurantsController = class RestaurantsController {
     }
 };
 exports.RestaurantsController = RestaurantsController;
+__decorate([
+    (0, common_1.Put)('profile'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, update_restaurant_dto_1.UpdateRestaurantDto]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "updateProfile", null);
 __decorate([
     (0, common_1.Get)('revenue'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

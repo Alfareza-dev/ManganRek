@@ -43,6 +43,15 @@ export class VouchersController {
     return { success: true, message: 'Daftar voucher restoran', data };
   }
 
+  @Get('history/user')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.USER)
+  async getUserHistory(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.vouchersService.getUserHistory(user.userId);
+    return { success: true, message: 'Berhasil mengambil histori pembelian voucher', data };
+  }
+
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN_RESTO)

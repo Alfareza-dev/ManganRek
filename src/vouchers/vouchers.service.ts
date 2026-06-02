@@ -233,5 +233,21 @@ export class VouchersService {
       orderBy: { createdAt: 'desc' }
     });
   }
+
+  async getUserHistory(userId: string) {
+    return this.prisma.transaction.findMany({
+      where: { userId },
+      include: {
+        voucher: {
+          include: {
+            restaurant: {
+              select: { name: true, address: true, legalPhoto: true }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+  }
 }
 

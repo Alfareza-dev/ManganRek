@@ -20,6 +20,7 @@ import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { CreatePromoDto } from './dto/create-promo.dto';
 import { UpdatePromoDto } from './dto/update-promo.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -29,6 +30,17 @@ import type { Request } from 'express';
 @Controller('api/restaurants')
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
+
+  // ==================== RESTAURANT PROFILE (ADMIN_RESTO) ====================
+
+  @Put('profile')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async updateProfile(@Req() req: Request, @Body() dto: UpdateRestaurantDto) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.updateProfile(user.userId, dto);
+    return { success: true, message: 'Profil restoran berhasil diperbarui', data };
+  }
 
   // ==================== FINANCE & ORDERS (ADMIN_RESTO) ====================
 

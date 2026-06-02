@@ -19,6 +19,7 @@ const admin_module_1 = require("./admin/admin.module");
 const vouchers_module_1 = require("./vouchers/vouchers.module");
 const pos_module_1 = require("./pos/pos.module");
 const itinerary_module_1 = require("./itinerary/itinerary.module");
+const contacts_module_1 = require("./contacts/contacts.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -34,6 +35,7 @@ exports.AppModule = AppModule = __decorate([
             vouchers_module_1.VouchersModule,
             pos_module_1.PosModule,
             itinerary_module_1.ItineraryModule,
+            contacts_module_1.ContactsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

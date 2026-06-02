@@ -45,6 +45,12 @@ export declare class AuthController {
                 latitude: number;
                 longitude: number;
                 legalPhoto: string;
+                category: string | null;
+                openingHours: string | null;
+                branches: string | null;
+                googleMapsUrl: string | null;
+                description: string | null;
+                isOpen: boolean | null;
             };
         };
     }>;
@@ -81,6 +87,12 @@ export declare class AuthController {
                 latitude: number;
                 longitude: number;
                 legalPhoto: string;
+                category: string | null;
+                openingHours: string | null;
+                branches: string | null;
+                googleMapsUrl: string | null;
+                description: string | null;
+                isOpen: boolean | null;
             } | null;
             name: string;
             email: string;

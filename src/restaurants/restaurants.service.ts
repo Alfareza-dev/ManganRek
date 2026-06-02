@@ -10,6 +10,7 @@ import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { CreatePromoDto } from './dto/create-promo.dto';
 import { UpdatePromoDto } from './dto/update-promo.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
@@ -33,6 +34,26 @@ export class RestaurantsService {
       throw new NotFoundException('Restoran tidak ditemukan untuk akun ini');
     }
     return restaurant;
+  }
+
+  // ==================== RESTAURANT PROFILE ====================
+
+  async updateProfile(userId: string, dto: UpdateRestaurantDto) {
+    const restaurant = await this.getOwnedRestaurant(userId);
+    
+    return this.prisma.restaurant.update({
+      where: { id: restaurant.id },
+      data: {
+        ...(dto.name !== undefined && { name: dto.name }),
+        ...(dto.address !== undefined && { address: dto.address }),
+        ...(dto.category !== undefined && { category: dto.category }),
+        ...(dto.openingHours !== undefined && { openingHours: dto.openingHours }),
+        ...(dto.branches !== undefined && { branches: dto.branches }),
+        ...(dto.googleMapsUrl !== undefined && { googleMapsUrl: dto.googleMapsUrl }),
+        ...(dto.description !== undefined && { description: dto.description }),
+        ...(dto.isOpen !== undefined && { isOpen: dto.isOpen }),
+      },
+    });
   }
 
   // ==================== FINANCE & ORDERS ====================
@@ -298,6 +319,12 @@ export class RestaurantsService {
             r.longitude,
             r."legalPhoto",
             r."ownerId",
+            r.category,
+            r."openingHours",
+            r.branches,
+            r."googleMapsUrl",
+            r.description,
+            r."isOpen",
             r."createdAt",
             r."updatedAt",
             (

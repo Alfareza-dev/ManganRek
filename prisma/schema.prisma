@@ -85,9 +85,16 @@ model Restaurant {
   latitude   Float
   longitude  Float
   legalPhoto String
-  ownerId    String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  ownerId       String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  category      String?
+  openingHours  String?
+  branches      String?
+  googleMapsUrl String?
+  description   String?
+  isOpen        Boolean? @default(true)
 
   // Relations
   owner    User      @relation("OwnerResto", fields: [ownerId], references: [id])
@@ -98,6 +105,16 @@ model Restaurant {
   orders   Order[]
 
   @@map("restaurants")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
 }
 
 model Menu {

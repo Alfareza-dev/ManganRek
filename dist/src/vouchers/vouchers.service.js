@@ -215,6 +215,21 @@ let VouchersService = class VouchersService {
             orderBy: { createdAt: 'desc' }
         });
     }
+    async getUserHistory(userId) {
+        return this.prisma.transaction.findMany({
+            where: { userId },
+            include: {
+                voucher: {
+                    include: {
+                        restaurant: {
+                            select: { name: true, address: true, legalPhoto: true }
+                        }
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+    }
 };
 exports.VouchersService = VouchersService;
 exports.VouchersService = VouchersService = __decorate([

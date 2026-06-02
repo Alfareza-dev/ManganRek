@@ -10,6 +10,7 @@ import { AdminModule } from './admin/admin.module';
 import { VouchersModule } from './vouchers/vouchers.module';
 import { PosModule } from './pos/pos.module';
 import { ItineraryModule } from './itinerary/itinerary.module';
+import { ContactsModule } from './contacts/contacts.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ItineraryModule } from './itinerary/itinerary.module';
     VouchersModule,
     PosModule,
     ItineraryModule,
+    ContactsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

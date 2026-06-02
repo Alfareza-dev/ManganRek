@@ -3,10 +3,32 @@ import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { CreatePromoDto } from './dto/create-promo.dto';
 import { UpdatePromoDto } from './dto/update-promo.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import type { Request } from 'express';
 export declare class RestaurantsController {
     private readonly restaurantsService;
     constructor(restaurantsService: RestaurantsService);
+    updateProfile(req: Request, dto: UpdateRestaurantDto): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            ownerId: string;
+            address: string;
+            latitude: number;
+            longitude: number;
+            legalPhoto: string;
+            category: string | null;
+            openingHours: string | null;
+            branches: string | null;
+            googleMapsUrl: string | null;
+            description: string | null;
+            isOpen: boolean | null;
+        };
+    }>;
     getRevenue(req: Request): Promise<{
         success: boolean;
         message: string;
@@ -94,8 +116,8 @@ export declare class RestaurantsController {
             name: string;
             id: string;
             createdAt: Date;
-            price: number;
             description: string;
+            price: number;
             image: string;
             isAvailable: boolean;
             restaurantId: string;
@@ -109,8 +131,8 @@ export declare class RestaurantsController {
             name: string;
             id: string;
             createdAt: Date;
-            price: number;
             description: string;
+            price: number;
             image: string;
             isAvailable: boolean;
             restaurantId: string;
@@ -300,6 +322,12 @@ export declare class RestaurantsController {
             latitude: number;
             longitude: number;
             legalPhoto: string;
+            category: string | null;
+            openingHours: string | null;
+            branches: string | null;
+            googleMapsUrl: string | null;
+            description: string | null;
+            isOpen: boolean | null;
         };
     }>;
     getMenus(id: string): Promise<{

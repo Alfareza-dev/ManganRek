@@ -16,10 +16,6 @@ exports.ItineraryController = void 0;
 const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const itinerary_service_1 = require("./itinerary.service");
-const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
-const roles_guard_1 = require("../auth/guards/roles.guard");
-const roles_decorator_1 = require("../auth/decorators/roles.decorator");
-const client_1 = require("@prisma/client");
 let ItineraryController = class ItineraryController {
     itineraryService;
     constructor(itineraryService) {
@@ -52,8 +48,6 @@ let ItineraryController = class ItineraryController {
 exports.ItineraryController = ItineraryController;
 __decorate([
     (0, common_1.Get)(),
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(client_1.Role.USER),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Query)('startLat')),
     __param(1, (0, common_1.Query)('startLng')),

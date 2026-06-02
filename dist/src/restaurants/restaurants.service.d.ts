@@ -4,11 +4,29 @@ import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { CreatePromoDto } from './dto/create-promo.dto';
 import { UpdatePromoDto } from './dto/update-promo.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 export declare class RestaurantsService {
     private prisma;
     private cloudinaryService;
     constructor(prisma: PrismaService, cloudinaryService: CloudinaryService);
     private getOwnedRestaurant;
+    updateProfile(userId: string, dto: UpdateRestaurantDto): Promise<{
+        name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+        address: string;
+        latitude: number;
+        longitude: number;
+        legalPhoto: string;
+        category: string | null;
+        openingHours: string | null;
+        branches: string | null;
+        googleMapsUrl: string | null;
+        description: string | null;
+        isOpen: boolean | null;
+    }>;
     getRevenue(userId: string): Promise<{
         totalOrderRevenue: number;
         totalVoucherRevenue: number;
@@ -76,8 +94,8 @@ export declare class RestaurantsService {
         name: string;
         id: string;
         createdAt: Date;
-        price: number;
         description: string;
+        price: number;
         image: string;
         isAvailable: boolean;
         restaurantId: string;
@@ -88,8 +106,8 @@ export declare class RestaurantsService {
         name: string;
         id: string;
         createdAt: Date;
-        price: number;
         description: string;
+        price: number;
         image: string;
         isAvailable: boolean;
         restaurantId: string;
@@ -186,6 +204,12 @@ export declare class RestaurantsService {
         latitude: number;
         longitude: number;
         legalPhoto: string;
+        category: string | null;
+        openingHours: string | null;
+        branches: string | null;
+        googleMapsUrl: string | null;
+        description: string | null;
+        isOpen: boolean | null;
     }>;
     getMenusPublic(restaurantId: string): Promise<any[]>;
     getMenuDetailPublic(restaurantId: string, menuId: string): Promise<any>;

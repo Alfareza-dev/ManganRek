@@ -46,6 +46,11 @@ let VouchersController = class VouchersController {
         const data = await this.vouchersService.findByRestoPublic(restoId);
         return { success: true, message: 'Daftar voucher restoran', data };
     }
+    async getUserHistory(req) {
+        const user = req.user;
+        const data = await this.vouchersService.getUserHistory(user.userId);
+        return { success: true, message: 'Berhasil mengambil histori pembelian voucher', data };
+    }
     async findOne(req, id) {
         const user = req.user;
         const data = await this.vouchersService.findOne(user.userId, id);
@@ -115,6 +120,16 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], VouchersController.prototype, "findByRestoPublic", null);
+__decorate([
+    (0, common_1.Get)('history/user'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.USER),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], VouchersController.prototype, "getUserHistory", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
