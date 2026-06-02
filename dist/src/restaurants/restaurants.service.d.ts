@@ -189,6 +189,63 @@ export declare class RestaurantsService {
     }>;
     getMenusPublic(restaurantId: string): Promise<any[]>;
     getMenuDetailPublic(restaurantId: string, menuId: string): Promise<any>;
+    getVouchersPublic(restaurantId: string): Promise<{
+        id: string;
+        createdAt: Date;
+        value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
+        expiryDate: Date;
+    }[]>;
+    getVoucherDetailPublic(restaurantId: string, voucherId: string): Promise<{
+        restaurant: {
+            name: string;
+            address: string;
+        };
+    } & {
+        id: string;
+        createdAt: Date;
+        value: number;
+        price: number;
+        title: string;
+        restaurantId: string;
+        stock: number;
+        expiryDate: Date;
+    }>;
+    getPromosPublic(restaurantId: string): Promise<{
+        isActive: boolean;
+        menus: {
+            name: string;
+            id: string;
+            price: number;
+            image: string;
+        }[];
+        id: string;
+        createdAt: Date;
+        type: import("@prisma/client").$Enums.PromoType;
+        restaurantId: string;
+        discount: number;
+        startHour: string;
+        endHour: string;
+    }[]>;
+    getPromoDetailPublic(restaurantId: string, promoId: string): Promise<{
+        isActive: boolean;
+        menus: {
+            name: string;
+            id: string;
+            price: number;
+            image: string;
+        }[];
+        id: string;
+        createdAt: Date;
+        type: import("@prisma/client").$Enums.PromoType;
+        restaurantId: string;
+        discount: number;
+        startHour: string;
+        endHour: string;
+    }>;
     getAllMenusPublicWithPagination(query: {
         page?: string;
         limit?: string;
@@ -199,6 +256,65 @@ export declare class RestaurantsService {
             page: number;
             limit: number;
             total: number;
+        };
+    }>;
+    getAllVouchersPublic(query: {
+        page?: string;
+        limit?: string;
+    }): Promise<{
+        vouchers: ({
+            restaurant: {
+                name: string;
+                id: string;
+                address: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
+            expiryDate: Date;
+        })[];
+        pagination: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
+        };
+    }>;
+    getAllPromosPublic(query: {
+        page?: string;
+        limit?: string;
+    }): Promise<{
+        promos: {
+            isActive: boolean;
+            restaurant: {
+                name: string;
+                id: string;
+                address: string;
+            };
+            menus: {
+                name: string;
+                id: string;
+                price: number;
+                image: string;
+            }[];
+            id: string;
+            createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
+            restaurantId: string;
+            discount: number;
+            startHour: string;
+            endHour: string;
+        }[];
+        pagination: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPages: number;
         };
     }>;
     applyPromosToMenus(menus: any[]): Promise<any[]>;

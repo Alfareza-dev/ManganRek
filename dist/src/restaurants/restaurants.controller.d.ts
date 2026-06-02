@@ -209,6 +209,67 @@ export declare class RestaurantsController {
             };
         };
     }>;
+    getAllVouchersPublic(page?: string, limit?: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            vouchers: ({
+                restaurant: {
+                    name: string;
+                    id: string;
+                    address: string;
+                };
+            } & {
+                id: string;
+                createdAt: Date;
+                value: number;
+                price: number;
+                title: string;
+                restaurantId: string;
+                stock: number;
+                expiryDate: Date;
+            })[];
+            pagination: {
+                page: number;
+                limit: number;
+                total: number;
+                totalPages: number;
+            };
+        };
+    }>;
+    getAllPromosPublic(page?: string, limit?: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            promos: {
+                isActive: boolean;
+                restaurant: {
+                    name: string;
+                    id: string;
+                    address: string;
+                };
+                menus: {
+                    name: string;
+                    id: string;
+                    price: number;
+                    image: string;
+                }[];
+                id: string;
+                createdAt: Date;
+                type: import("@prisma/client").$Enums.PromoType;
+                restaurantId: string;
+                discount: number;
+                startHour: string;
+                endHour: string;
+            }[];
+            pagination: {
+                page: number;
+                limit: number;
+                total: number;
+                totalPages: number;
+            };
+        };
+    }>;
     findAll(page?: string, limit?: string, lat?: string, lng?: string, sort?: string): Promise<{
         success: boolean;
         message: string;
@@ -250,5 +311,78 @@ export declare class RestaurantsController {
         success: boolean;
         message: string;
         data: any;
+    }>;
+    getVouchersPublic(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
+            expiryDate: Date;
+        }[];
+    }>;
+    getVoucherDetailPublic(id: string, voucherId: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            restaurant: {
+                name: string;
+                address: string;
+            };
+        } & {
+            id: string;
+            createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
+            stock: number;
+            expiryDate: Date;
+        };
+    }>;
+    getPromosPublic(id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            isActive: boolean;
+            menus: {
+                name: string;
+                id: string;
+                price: number;
+                image: string;
+            }[];
+            id: string;
+            createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
+            restaurantId: string;
+            discount: number;
+            startHour: string;
+            endHour: string;
+        }[];
+    }>;
+    getPromoDetailPublic(id: string, promoId: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            isActive: boolean;
+            menus: {
+                name: string;
+                id: string;
+                price: number;
+                image: string;
+            }[];
+            id: string;
+            createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
+            restaurantId: string;
+            discount: number;
+            startHour: string;
+            endHour: string;
+        };
     }>;
 }

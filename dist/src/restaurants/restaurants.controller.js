@@ -128,6 +128,28 @@ let RestaurantsController = class RestaurantsController {
             data,
         };
     }
+    async getAllVouchersPublic(page, limit) {
+        const data = await this.restaurantsService.getAllVouchersPublic({
+            page,
+            limit,
+        });
+        return {
+            success: true,
+            message: 'Daftar semua voucher berhasil dimuat',
+            data,
+        };
+    }
+    async getAllPromosPublic(page, limit) {
+        const data = await this.restaurantsService.getAllPromosPublic({
+            page,
+            limit,
+        });
+        return {
+            success: true,
+            message: 'Daftar semua promo berhasil dimuat',
+            data,
+        };
+    }
     async findAll(page, limit, lat, lng, sort) {
         const data = await this.restaurantsService.findAllPublic({
             page,
@@ -153,6 +175,22 @@ let RestaurantsController = class RestaurantsController {
     async getMenuDetail(id, menuId) {
         const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
         return { success: true, message: 'Detail menu berhasil dimuat', data };
+    }
+    async getVouchersPublic(id) {
+        const data = await this.restaurantsService.getVouchersPublic(id);
+        return { success: true, message: 'Daftar voucher restoran berhasil dimuat', data };
+    }
+    async getVoucherDetailPublic(id, voucherId) {
+        const data = await this.restaurantsService.getVoucherDetailPublic(id, voucherId);
+        return { success: true, message: 'Detail voucher berhasil dimuat', data };
+    }
+    async getPromosPublic(id) {
+        const data = await this.restaurantsService.getPromosPublic(id);
+        return { success: true, message: 'Daftar promo restoran berhasil dimuat', data };
+    }
+    async getPromoDetailPublic(id, promoId) {
+        const data = await this.restaurantsService.getPromoDetailPublic(id, promoId);
+        return { success: true, message: 'Detail promo berhasil dimuat', data };
     }
 };
 exports.RestaurantsController = RestaurantsController;
@@ -309,6 +347,28 @@ __decorate([
 __decorate([
     openapi.ApiQuery({ name: "page", required: false }),
     openapi.ApiQuery({ name: "limit", required: false }),
+    (0, common_1.Get)('all-vouchers'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getAllVouchersPublic", null);
+__decorate([
+    openapi.ApiQuery({ name: "page", required: false }),
+    openapi.ApiQuery({ name: "limit", required: false }),
+    (0, common_1.Get)('all-promos'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getAllPromosPublic", null);
+__decorate([
+    openapi.ApiQuery({ name: "page", required: false }),
+    openapi.ApiQuery({ name: "limit", required: false }),
     openapi.ApiQuery({ name: "lat", required: false }),
     openapi.ApiQuery({ name: "lng", required: false }),
     openapi.ApiQuery({ name: "sort", required: false }),
@@ -348,6 +408,40 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "getMenuDetail", null);
+__decorate([
+    (0, common_1.Get)(':id/vouchers'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getVouchersPublic", null);
+__decorate([
+    (0, common_1.Get)(':id/vouchers/:voucherId'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Param)('voucherId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getVoucherDetailPublic", null);
+__decorate([
+    (0, common_1.Get)(':id/promos'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getPromosPublic", null);
+__decorate([
+    (0, common_1.Get)(':id/promos/:promoId'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Param)('promoId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getPromoDetailPublic", null);
 exports.RestaurantsController = RestaurantsController = __decorate([
     (0, common_1.Controller)('api/restaurants'),
     __metadata("design:paramtypes", [restaurants_service_1.RestaurantsService])

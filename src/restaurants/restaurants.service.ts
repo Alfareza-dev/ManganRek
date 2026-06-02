@@ -433,6 +433,80 @@ export class RestaurantsService {
     return enriched;
   }
 
+  async getVouchersPublic(restaurantId: string) {
+    const restaurant = await this.findOnePublic(restaurantId);
+    return this.prisma.voucher.findMany({
+      where: {
+        restaurantId: restaurant.id,
+        expiryDate: { gte: new Date() },
+        stock: { gt: 0 },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async getVoucherDetailPublic(restaurantId: string, voucherId: string) {
+    const restaurant = await this.findOnePublic(restaurantId);
+    const voucher = await this.prisma.voucher.findFirst({
+      where: {
+        id: voucherId,
+        restaurantId: restaurant.id,
+      },
+      include: {
+        restaurant: {
+          select: { name: true, address: true },
+        },
+      },
+    });
+    if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
+    return voucher;
+  }
+
+  async getPromosPublic(restaurantId: string) {
+    const restaurant = await this.findOnePublic(restaurantId);
+    const promos = await this.prisma.promo.findMany({
+      where: { restaurantId: restaurant.id },
+      include: { menus: { select: { id: true, name: true, price: true, image: true } } },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    // Enrich with isActive status based on current WIB time
+    const now = new Date();
+    const wibOffset = 7 * 60;
+    const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const wibMinutes = (utcMinutes + wibOffset) % (24 * 60);
+    const currentHours = Math.floor(wibMinutes / 60);
+    const currentMins = wibMinutes % 60;
+    const currentTime = `${String(currentHours).padStart(2, '0')}:${String(currentMins).padStart(2, '0')}`;
+
+    return promos.map((promo) => ({
+      ...promo,
+      isActive: currentTime >= promo.startHour && currentTime <= promo.endHour,
+    }));
+  }
+
+  async getPromoDetailPublic(restaurantId: string, promoId: string) {
+    const restaurant = await this.findOnePublic(restaurantId);
+    const promo = await this.prisma.promo.findFirst({
+      where: { id: promoId, restaurantId: restaurant.id },
+      include: { menus: { select: { id: true, name: true, price: true, image: true } } },
+    });
+    if (!promo) throw new NotFoundException('Promo tidak ditemukan');
+
+    const now = new Date();
+    const wibOffset = 7 * 60;
+    const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const wibMinutes = (utcMinutes + wibOffset) % (24 * 60);
+    const currentHours = Math.floor(wibMinutes / 60);
+    const currentMins = wibMinutes % 60;
+    const currentTime = `${String(currentHours).padStart(2, '0')}:${String(currentMins).padStart(2, '0')}`;
+
+    return {
+      ...promo,
+      isActive: currentTime >= promo.startHour && currentTime <= promo.endHour,
+    };
+  }
+
   async getAllMenusPublicWithPagination(query: { page?: string; limit?: string; search?: string }) {
     const page = parseInt(query.page || '1', 10);
     const limit = parseInt(query.limit || '10', 10);
@@ -471,6 +545,95 @@ export class RestaurantsService {
         page,
         limit,
         total,
+      },
+    };
+  }
+
+  // ==================== ALL VOUCHERS & PROMOS (PUBLIC, NO ID) ====================
+
+  async getAllVouchersPublic(query: { page?: string; limit?: string }) {
+    const page = parseInt(query.page || '1', 10);
+    const limit = parseInt(query.limit || '10', 10);
+    const offset = (page - 1) * limit;
+
+    const where: Prisma.VoucherWhereInput = {
+      restaurant: { owner: { status: 'ACTIVE' } },
+      expiryDate: { gte: new Date() },
+      stock: { gt: 0 },
+    };
+
+    const [vouchers, total] = await Promise.all([
+      this.prisma.voucher.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          restaurant: {
+            select: { id: true, name: true, address: true },
+          },
+        },
+      }),
+      this.prisma.voucher.count({ where }),
+    ]);
+
+    return {
+      vouchers,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+
+  async getAllPromosPublic(query: { page?: string; limit?: string }) {
+    const page = parseInt(query.page || '1', 10);
+    const limit = parseInt(query.limit || '10', 10);
+    const offset = (page - 1) * limit;
+
+    const where: Prisma.PromoWhereInput = {
+      restaurant: { owner: { status: 'ACTIVE' } },
+    };
+
+    const [promos, total] = await Promise.all([
+      this.prisma.promo.findMany({
+        where,
+        skip: offset,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          menus: { select: { id: true, name: true, price: true, image: true } },
+          restaurant: {
+            select: { id: true, name: true, address: true },
+          },
+        },
+      }),
+      this.prisma.promo.count({ where }),
+    ]);
+
+    // Enrich with isActive status based on current WIB time
+    const now = new Date();
+    const wibOffset = 7 * 60;
+    const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const wibMinutes = (utcMinutes + wibOffset) % (24 * 60);
+    const currentHours = Math.floor(wibMinutes / 60);
+    const currentMins = wibMinutes % 60;
+    const currentTime = `${String(currentHours).padStart(2, '0')}:${String(currentMins).padStart(2, '0')}`;
+
+    const enrichedPromos = promos.map((promo) => ({
+      ...promo,
+      isActive: currentTime >= promo.startHour && currentTime <= promo.endHour,
+    }));
+
+    return {
+      promos: enrichedPromos,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
     };
   }

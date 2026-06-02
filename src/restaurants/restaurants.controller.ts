@@ -216,6 +216,38 @@ export class RestaurantsController {
     };
   }
 
+  @Get('all-vouchers')
+  async getAllVouchersPublic(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const data = await this.restaurantsService.getAllVouchersPublic({
+      page,
+      limit,
+    });
+    return {
+      success: true,
+      message: 'Daftar semua voucher berhasil dimuat',
+      data,
+    };
+  }
+
+  @Get('all-promos')
+  async getAllPromosPublic(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const data = await this.restaurantsService.getAllPromosPublic({
+      page,
+      limit,
+    });
+    return {
+      success: true,
+      message: 'Daftar semua promo berhasil dimuat',
+      data,
+    };
+  }
+
   @Get()
   async findAll(
     @Query('page') page?: string,
@@ -255,5 +287,28 @@ export class RestaurantsController {
     const data = await this.restaurantsService.getMenuDetailPublic(id, menuId);
     return { success: true, message: 'Detail menu berhasil dimuat', data };
   }
-}
 
+  @Get(':id/vouchers')
+  async getVouchersPublic(@Param('id') id: string) {
+    const data = await this.restaurantsService.getVouchersPublic(id);
+    return { success: true, message: 'Daftar voucher restoran berhasil dimuat', data };
+  }
+
+  @Get(':id/vouchers/:voucherId')
+  async getVoucherDetailPublic(@Param('id') id: string, @Param('voucherId') voucherId: string) {
+    const data = await this.restaurantsService.getVoucherDetailPublic(id, voucherId);
+    return { success: true, message: 'Detail voucher berhasil dimuat', data };
+  }
+
+  @Get(':id/promos')
+  async getPromosPublic(@Param('id') id: string) {
+    const data = await this.restaurantsService.getPromosPublic(id);
+    return { success: true, message: 'Daftar promo restoran berhasil dimuat', data };
+  }
+
+  @Get(':id/promos/:promoId')
+  async getPromoDetailPublic(@Param('id') id: string, @Param('promoId') promoId: string) {
+    const data = await this.restaurantsService.getPromoDetailPublic(id, promoId);
+    return { success: true, message: 'Detail promo berhasil dimuat', data };
+  }
+}
