@@ -33,8 +33,8 @@ export declare class RestaurantsController {
                     createdAt: Date;
                     price: number;
                     menuId: string;
-                    quantity: number;
                     orderId: string;
+                    quantity: number;
                 })[];
             } & {
                 id: string;

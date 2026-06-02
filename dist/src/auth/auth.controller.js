@@ -37,11 +37,11 @@ let AuthController = class AuthController {
             data
         };
     }
-    async registerResto(dto, file) {
+    async registerResto(req, file) {
         if (!file) {
             throw new common_1.BadRequestException('Berkas legalPhoto wajib disertakan');
         }
-        console.log("=== DTO IN CONTROLLER ===", dto);
+        const dto = req.body;
         const data = await this.authService.registerResto(dto, file);
         return {
             success: true,
@@ -118,10 +118,10 @@ __decorate([
         type: register_resto_dto_1.RegisterRestoDto,
     }),
     openapi.ApiResponse({ status: 201 }),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [register_resto_dto_1.RegisterRestoDto, Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "registerResto", null);
 __decorate([

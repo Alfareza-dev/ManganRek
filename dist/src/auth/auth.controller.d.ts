@@ -1,10 +1,9 @@
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
-import { RegisterRestoDto } from './dto/register-resto.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import type { Response } from 'express';
+import type { Response, Request } from 'express';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
@@ -22,7 +21,7 @@ export declare class AuthController {
             managedRestoId: string | null;
         };
     }>;
-    registerResto(dto: RegisterRestoDto, file: Express.Multer.File): Promise<{
+    registerResto(req: Request, file: Express.Multer.File): Promise<{
         success: boolean;
         message: string;
         data: {

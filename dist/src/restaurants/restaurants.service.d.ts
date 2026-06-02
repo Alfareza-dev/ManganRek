@@ -28,8 +28,8 @@ export declare class RestaurantsService {
                 createdAt: Date;
                 price: number;
                 menuId: string;
-                quantity: number;
                 orderId: string;
+                quantity: number;
             })[];
         } & {
             id: string;

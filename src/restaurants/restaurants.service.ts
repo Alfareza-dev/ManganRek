@@ -2,6 +2,7 @@ import {
   Injectable,
   ForbiddenException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -156,6 +157,11 @@ export class RestaurantsService {
     }
     if (menu.restaurantId !== restaurant.id) {
       throw new ForbiddenException('Anda tidak memiliki akses ke menu ini');
+    }
+
+    const orderItemCount = await this.prisma.orderItem.count({ where: { menuId } });
+    if (orderItemCount > 0) {
+      throw new BadRequestException('Menu tidak dapat dihapus karena sudah memiliki riwayat pesanan. Silakan nonaktifkan (set tidak tersedia) menu ini melalui fitur Edit.');
     }
 
     await this.prisma.menu.delete({ where: { id: menuId } });

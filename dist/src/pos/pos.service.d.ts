@@ -22,8 +22,8 @@ export declare class PosService {
                 createdAt: Date;
                 price: number;
                 menuId: string;
-                quantity: number;
                 orderId: string;
+                quantity: number;
             }[];
         } & {
             id: string;
@@ -48,8 +48,8 @@ export declare class PosService {
                 createdAt: Date;
                 price: number;
                 menuId: string;
-                quantity: number;
                 orderId: string;
+                quantity: number;
             }[];
         } & {
             id: string;
@@ -76,8 +76,8 @@ export declare class PosService {
             createdAt: Date;
             price: number;
             menuId: string;
-            quantity: number;
             orderId: string;
+            quantity: number;
         })[];
     } & {
         id: string;

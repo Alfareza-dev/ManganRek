@@ -131,6 +131,10 @@ let RestaurantsService = class RestaurantsService {
         if (menu.restaurantId !== restaurant.id) {
             throw new common_1.ForbiddenException('Anda tidak memiliki akses ke menu ini');
         }
+        const orderItemCount = await this.prisma.orderItem.count({ where: { menuId } });
+        if (orderItemCount > 0) {
+            throw new common_1.BadRequestException('Menu tidak dapat dihapus karena sudah memiliki riwayat pesanan. Silakan nonaktifkan (set tidak tersedia) menu ini melalui fitur Edit.');
+        }
         await this.prisma.menu.delete({ where: { id: menuId } });
         return { deleted: true };
     }
