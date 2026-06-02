@@ -108,6 +108,7 @@ model Menu {
   price        Float
   image        String
   isAvailable  Boolean  @default(true)
+  isDeleted    Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   // Relations

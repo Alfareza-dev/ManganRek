@@ -85,7 +85,7 @@ export class RestaurantsService {
   async getAllMenus(userId: string) {
     const restaurant = await this.getOwnedRestaurant(userId);
     const menus = await this.prisma.menu.findMany({
-      where: { restaurantId: restaurant.id },
+      where: { restaurantId: restaurant.id, isDeleted: false },
       orderBy: { createdAt: 'desc' }
     });
     return this.applyPromosToMenus(menus);
@@ -114,7 +114,7 @@ export class RestaurantsService {
     const menu = await this.prisma.menu.findUnique({
       where: { id: menuId },
     });
-    if (!menu) throw new NotFoundException('Menu tidak ditemukan');
+    if (!menu || menu.isDeleted) throw new NotFoundException('Menu tidak ditemukan');
     if (menu.restaurantId !== restaurant.id) throw new ForbiddenException('Akses ditolak');
     const [enriched] = await this.applyPromosToMenus([menu]);
     return enriched;
@@ -127,7 +127,7 @@ export class RestaurantsService {
     const menu = await this.prisma.menu.findUnique({
       where: { id: menuId },
     });
-    if (!menu) {
+    if (!menu || menu.isDeleted) {
       throw new NotFoundException('Menu tidak ditemukan');
     }
     if (menu.restaurantId !== restaurant.id) {
@@ -152,19 +152,17 @@ export class RestaurantsService {
     const menu = await this.prisma.menu.findUnique({
       where: { id: menuId },
     });
-    if (!menu) {
+    if (!menu || menu.isDeleted) {
       throw new NotFoundException('Menu tidak ditemukan');
     }
     if (menu.restaurantId !== restaurant.id) {
       throw new ForbiddenException('Anda tidak memiliki akses ke menu ini');
     }
 
-    const orderItemCount = await this.prisma.orderItem.count({ where: { menuId } });
-    if (orderItemCount > 0) {
-      throw new BadRequestException('Menu tidak dapat dihapus karena sudah memiliki riwayat pesanan. Silakan nonaktifkan (set tidak tersedia) menu ini melalui fitur Edit.');
-    }
-
-    await this.prisma.menu.delete({ where: { id: menuId } });
+    await this.prisma.menu.update({ 
+      where: { id: menuId },
+      data: { isDeleted: true }
+    });
     return { deleted: true };
   }
 
@@ -420,7 +418,7 @@ export class RestaurantsService {
   async getMenusPublic(restaurantId: string) {
     const restaurant = await this.findOnePublic(restaurantId);
     const menus = await this.prisma.menu.findMany({
-      where: { restaurantId: restaurant.id },
+      where: { restaurantId: restaurant.id, isDeleted: false },
     });
     return this.applyPromosToMenus(menus);
   }
@@ -428,7 +426,7 @@ export class RestaurantsService {
   async getMenuDetailPublic(restaurantId: string, menuId: string) {
     const restaurant = await this.findOnePublic(restaurantId);
     const menu = await this.prisma.menu.findFirst({
-      where: { id: menuId, restaurantId: restaurant.id },
+      where: { id: menuId, restaurantId: restaurant.id, isDeleted: false },
     });
     if (!menu) throw new NotFoundException('Menu tidak ditemukan');
     const [enriched] = await this.applyPromosToMenus([menu]);
@@ -444,6 +442,7 @@ export class RestaurantsService {
       restaurant: {
         owner: { status: 'ACTIVE' },
       },
+      isDeleted: false,
     };
 
     if (query.search) {

@@ -32,8 +32,8 @@ export declare class RestaurantsController {
                     id: string;
                     createdAt: Date;
                     price: number;
-                    menuId: string;
                     orderId: string;
+                    menuId: string;
                     quantity: number;
                 })[];
             } & {
@@ -99,6 +99,7 @@ export declare class RestaurantsController {
             image: string;
             isAvailable: boolean;
             restaurantId: string;
+            isDeleted: boolean;
         };
     }>;
     updateMenu(req: Request, id: string, dto: UpdateMenuDto): Promise<{
@@ -113,6 +114,7 @@ export declare class RestaurantsController {
             image: string;
             isAvailable: boolean;
             restaurantId: string;
+            isDeleted: boolean;
         };
     }>;
     deleteMenu(req: Request, id: string): Promise<{

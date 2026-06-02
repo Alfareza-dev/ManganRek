@@ -27,8 +27,8 @@ export declare class RestaurantsService {
                 id: string;
                 createdAt: Date;
                 price: number;
-                menuId: string;
                 orderId: string;
+                menuId: string;
                 quantity: number;
             })[];
         } & {
@@ -81,6 +81,7 @@ export declare class RestaurantsService {
         image: string;
         isAvailable: boolean;
         restaurantId: string;
+        isDeleted: boolean;
     }>;
     getMenu(userId: string, menuId: string): Promise<any>;
     updateMenu(userId: string, menuId: string, dto: UpdateMenuDto): Promise<{
@@ -92,6 +93,7 @@ export declare class RestaurantsService {
         image: string;
         isAvailable: boolean;
         restaurantId: string;
+        isDeleted: boolean;
     }>;
     deleteMenu(userId: string, menuId: string): Promise<{
         deleted: boolean;
