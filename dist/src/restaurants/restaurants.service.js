@@ -252,6 +252,18 @@ let RestaurantsService = class RestaurantsService {
             const lat = parseFloat(query.lat);
             const lng = parseFloat(query.lng);
             const sortOrder = query.sort === 'terjauh' ? 'DESC' : 'ASC';
+            let searchFilter = client_1.Prisma.empty;
+            if (query.search) {
+                const searchPattern = `%${query.search}%`;
+                searchFilter = client_1.Prisma.sql `
+          AND (
+            r.name ILIKE ${searchPattern} OR
+            r.address ILIKE ${searchPattern} OR
+            r.category ILIKE ${searchPattern} OR
+            r.description ILIKE ${searchPattern}
+          )
+        `;
+            }
             restaurants = await this.prisma.$queryRaw(client_1.Prisma.sql `
           SELECT
             r.id,
@@ -281,6 +293,7 @@ let RestaurantsService = class RestaurantsService {
           FROM restaurants r
           INNER JOIN users u ON r."ownerId" = u.id
           WHERE u.status = 'ACTIVE'
+          ${searchFilter}
           ORDER BY distance ${client_1.Prisma.raw(sortOrder)}
           LIMIT ${limit} OFFSET ${offset}
         `);
@@ -289,23 +302,32 @@ let RestaurantsService = class RestaurantsService {
           FROM restaurants r
           INNER JOIN users u ON r."ownerId" = u.id
           WHERE u.status = 'ACTIVE'
+          ${searchFilter}
         `);
             total = Number(countResult[0].count);
         }
         else {
+            const where = {
+                owner: { status: 'ACTIVE' },
+            };
+            if (query.search) {
+                where.OR = [
+                    { name: { contains: query.search, mode: 'insensitive' } },
+                    { address: { contains: query.search, mode: 'insensitive' } },
+                    { category: { contains: query.search, mode: 'insensitive' } },
+                    { description: { contains: query.search, mode: 'insensitive' } },
+                    { menus: { some: { name: { contains: query.search, mode: 'insensitive' }, isDeleted: false } } },
+                ];
+            }
             [restaurants, total] = await Promise.all([
                 this.prisma.restaurant.findMany({
-                    where: {
-                        owner: { status: 'ACTIVE' },
-                    },
+                    where,
                     skip: offset,
                     take: limit,
                     orderBy: { createdAt: 'desc' },
                 }),
                 this.prisma.restaurant.count({
-                    where: {
-                        owner: { status: 'ACTIVE' },
-                    },
+                    where,
                 }),
             ]);
         }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -135,7 +135,14 @@ export class UsersService {
     });
     if (!cashier) throw new NotFoundException('Kasir tidak ditemukan');
 
-    await this.prisma.user.delete({ where: { id: cashierId } });
-    return { message: 'Kasir berhasil dihapus' };
+    try {
+      await this.prisma.user.delete({ where: { id: cashierId } });
+      return { message: 'Kasir berhasil dihapus' };
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        throw new BadRequestException('Kasir tidak dapat dihapus karena sudah memiliki riwayat pesanan (order).');
+      }
+      throw error;
+    }
   }
 }

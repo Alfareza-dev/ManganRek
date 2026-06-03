@@ -161,10 +161,11 @@ let RestaurantsController = class RestaurantsController {
             data,
         };
     }
-    async findAll(page, limit, lat, lng, sort) {
+    async findAll(page, limit, search, lat, lng, sort) {
         const data = await this.restaurantsService.findAllPublic({
             page,
             limit,
+            search,
             lat,
             lng,
             sort,
@@ -401,6 +402,7 @@ __decorate([
 __decorate([
     openapi.ApiQuery({ name: "page", required: false }),
     openapi.ApiQuery({ name: "limit", required: false }),
+    openapi.ApiQuery({ name: "search", required: false }),
     openapi.ApiQuery({ name: "lat", required: false }),
     openapi.ApiQuery({ name: "lng", required: false }),
     openapi.ApiQuery({ name: "sort", required: false }),
@@ -408,11 +410,12 @@ __decorate([
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('limit')),
-    __param(2, (0, common_1.Query)('lat')),
-    __param(3, (0, common_1.Query)('lng')),
-    __param(4, (0, common_1.Query)('sort')),
+    __param(2, (0, common_1.Query)('search')),
+    __param(3, (0, common_1.Query)('lat')),
+    __param(4, (0, common_1.Query)('lng')),
+    __param(5, (0, common_1.Query)('sort')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String, String]),
+    __metadata("design:paramtypes", [String, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "findAll", null);
 __decorate([

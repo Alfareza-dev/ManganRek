@@ -65,25 +65,56 @@ export class RestaurantsService {
   async getRevenue(userId: string) {
     const restaurant = await this.getOwnedRestaurant(userId);
     
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    // Total Orders Revenue
     const ordersAgg = await this.prisma.order.aggregate({
       where: { restaurantId: restaurant.id, status: 'SETTLED' },
       _sum: { finalAmount: true },
     });
     const totalOrderRevenue = ordersAgg._sum.finalAmount || 0;
 
+    // Daily Orders Revenue
+    const dailyOrdersAgg = await this.prisma.order.aggregate({
+      where: { restaurantId: restaurant.id, status: 'SETTLED', createdAt: { gte: startOfToday } },
+      _sum: { finalAmount: true },
+    });
+    const dailyOrderRevenue = dailyOrdersAgg._sum.finalAmount || 0;
+
+    // Total Transactions
+    const orderCount = await this.prisma.order.count({
+      where: { restaurantId: restaurant.id, status: 'SETTLED' },
+    });
+
+    // Total Vouchers Revenue
     const vouchersAgg = await this.prisma.transaction.findMany({
       where: { 
         voucher: { restaurantId: restaurant.id },
         status: 'PAID'
       }
     });
-
     const totalVoucherRevenue = vouchersAgg.reduce((sum, tx) => sum + (tx.totalPaid - tx.platformFee), 0);
+
+    // Daily Vouchers Revenue
+    const dailyVouchersAgg = await this.prisma.transaction.findMany({
+      where: { 
+        voucher: { restaurantId: restaurant.id },
+        status: 'PAID',
+        createdAt: { gte: startOfToday }
+      }
+    });
+    const dailyVoucherRevenue = dailyVouchersAgg.reduce((sum, tx) => sum + (tx.totalPaid - tx.platformFee), 0);
+
+    // Total Voucher Transactions count
+    const voucherTxCount = vouchersAgg.length;
 
     return {
       totalOrderRevenue,
       totalVoucherRevenue,
-      grandTotal: totalOrderRevenue + totalVoucherRevenue
+      totalRevenue: totalOrderRevenue + totalVoucherRevenue,
+      totalDaily: dailyOrderRevenue + dailyVoucherRevenue,
+      totalTransactions: orderCount + voucherTxCount
     };
   }
 
@@ -145,7 +176,7 @@ export class RestaurantsService {
     return enriched;
   }
 
-  async updateMenu(userId: string, menuId: string, dto: UpdateMenuDto) {
+  async updateMenu(userId: string, menuId: string, dto: UpdateMenuDto, file?: Express.Multer.File) {
     const restaurant = await this.getOwnedRestaurant(userId);
 
     // Cek apakah menu ini milik restoran user
@@ -159,14 +190,20 @@ export class RestaurantsService {
       throw new ForbiddenException('Anda tidak memiliki akses ke menu ini');
     }
 
+    let imageUrl = menu.image;
+    if (file) {
+      const uploadResult = await this.cloudinaryService.uploadFile(file, 'mangan-rek/menus');
+      imageUrl = uploadResult.secure_url;
+    }
+
     return this.prisma.menu.update({
       where: { id: menuId },
       data: {
         ...(dto.name !== undefined && { name: dto.name }),
         ...(dto.description !== undefined && { description: dto.description }),
-        ...(dto.price !== undefined && { price: dto.price }),
-        ...(dto.image !== undefined && { image: dto.image }),
-        ...(dto.isAvailable !== undefined && { isAvailable: dto.isAvailable }),
+        ...(dto.price !== undefined && { price: Number(dto.price) }),
+        ...(dto.isAvailable !== undefined && { isAvailable: String(dto.isAvailable) === 'true' || dto.isAvailable === true }),
+        image: imageUrl,
       },
     });
   }
@@ -294,6 +331,7 @@ export class RestaurantsService {
   async findAllPublic(query: {
     page?: string;
     limit?: string;
+    search?: string;
     lat?: string;
     lng?: string;
     sort?: string;
@@ -311,6 +349,25 @@ export class RestaurantsService {
       const lat = parseFloat(query.lat!);
       const lng = parseFloat(query.lng!);
       const sortOrder = query.sort === 'terjauh' ? 'DESC' : 'ASC';
+
+      let searchFilter = Prisma.empty;
+      if (query.search) {
+        const searchPattern = `%${query.search}%`;
+        searchFilter = Prisma.sql`
+          AND (
+            r.name ILIKE ${searchPattern} OR
+            r.address ILIKE ${searchPattern} OR
+            r.category ILIKE ${searchPattern} OR
+            r.description ILIKE ${searchPattern} OR
+            EXISTS (
+              SELECT 1 FROM menus m
+              WHERE m."restaurantId" = r.id
+                AND m.name ILIKE ${searchPattern}
+                AND m."isDeleted" = false
+            )
+          )
+        `;
+      }
 
       // Haversine formula via raw SQL
       restaurants = await this.prisma.$queryRaw<any[]>(
@@ -343,6 +400,7 @@ export class RestaurantsService {
           FROM restaurants r
           INNER JOIN users u ON r."ownerId" = u.id
           WHERE u.status = 'ACTIVE'
+          ${searchFilter}
           ORDER BY distance ${Prisma.raw(sortOrder)}
           LIMIT ${limit} OFFSET ${offset}
         `,
@@ -355,24 +413,35 @@ export class RestaurantsService {
           FROM restaurants r
           INNER JOIN users u ON r."ownerId" = u.id
           WHERE u.status = 'ACTIVE'
+          ${searchFilter}
         `,
       );
       total = Number(countResult[0].count);
     } else {
       // Without coordinates — standard Prisma query
+      const where: Prisma.RestaurantWhereInput = {
+        owner: { status: 'ACTIVE' },
+      };
+
+      if (query.search) {
+        where.OR = [
+          { name: { contains: query.search, mode: 'insensitive' } },
+          { address: { contains: query.search, mode: 'insensitive' } },
+          { category: { contains: query.search, mode: 'insensitive' } },
+          { description: { contains: query.search, mode: 'insensitive' } },
+          { menus: { some: { name: { contains: query.search, mode: 'insensitive' }, isDeleted: false } } },
+        ];
+      }
+
       [restaurants, total] = await Promise.all([
         this.prisma.restaurant.findMany({
-          where: {
-            owner: { status: 'ACTIVE' },
-          },
+          where,
           skip: offset,
           take: limit,
           orderBy: { createdAt: 'desc' },
         }),
         this.prisma.restaurant.count({
-          where: {
-            owner: { status: 'ACTIVE' },
-          },
+          where,
         }),
       ]);
     }

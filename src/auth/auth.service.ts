@@ -102,7 +102,7 @@ export class AuthService {
     }
     
     if (user.status === AccountStatus.REJECTED) {
-       throw new ForbiddenException('Akun ditolak oleh admin');
+       throw new ForbiddenException('Akun Anda telah ditangguhkan karena melanggar Syarat dan Ketentuan layanan kami.');
     }
 
     const payload = { email: user.email, sub: user.id, role: user.role, status: user.status };

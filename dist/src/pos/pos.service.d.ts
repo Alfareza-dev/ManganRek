@@ -21,16 +21,16 @@ export declare class PosService {
                 id: string;
                 createdAt: Date;
                 price: number;
+                orderId: string;
                 menuId: string;
                 quantity: number;
-                orderId: string;
             }[];
         } & {
             id: string;
-            status: import("@prisma/client").$Enums.OrderStatus;
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
             finalAmount: number;
             totalAmount: number;
             discount: number;
@@ -47,16 +47,16 @@ export declare class PosService {
                 id: string;
                 createdAt: Date;
                 price: number;
+                orderId: string;
                 menuId: string;
                 quantity: number;
-                orderId: string;
             }[];
         } & {
             id: string;
-            status: import("@prisma/client").$Enums.OrderStatus;
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
             finalAmount: number;
             totalAmount: number;
             discount: number;
@@ -75,16 +75,16 @@ export declare class PosService {
             id: string;
             createdAt: Date;
             price: number;
+            orderId: string;
             menuId: string;
             quantity: number;
-            orderId: string;
         })[];
     } & {
         id: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         restaurantId: string;
+        status: import("@prisma/client").$Enums.OrderStatus;
         finalAmount: number;
         totalAmount: number;
         discount: number;
@@ -94,10 +94,10 @@ export declare class PosService {
     })[]>;
     verifyMockOrder(orderId: string): Promise<{
         id: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         restaurantId: string;
+        status: import("@prisma/client").$Enums.OrderStatus;
         finalAmount: number;
         totalAmount: number;
         discount: number;

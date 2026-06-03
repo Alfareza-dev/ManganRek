@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 import { CreateVoucherDto } from './dto/create-voucher.dto';
@@ -75,9 +76,16 @@ export class VouchersService {
     });
     if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
 
-    return this.prisma.voucher.delete({
-      where: { id }
-    });
+    try {
+      return await this.prisma.voucher.delete({
+        where: { id }
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        throw new BadRequestException('Voucher tidak dapat dihapus karena sudah memiliki riwayat transaksi.');
+      }
+      throw error;
+    }
   }
 
   async buyVoucher(userId: string, dto: BuyVoucherDto) {

@@ -121,16 +121,24 @@ export class RestaurantsController {
   @Put('menus/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN_RESTO)
+  @UseInterceptors(FileInterceptor('image'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Update menu dan gambar',
+    type: UpdateMenuDto,
+  })
   async updateMenu(
     @Req() req: Request,
     @Param('id') id: string,
     @Body() dto: UpdateMenuDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
     const user = req.user as any;
     const data = await this.restaurantsService.updateMenu(
       user.userId,
       id,
       dto,
+      file,
     );
     return {
       success: true,
@@ -273,6 +281,7 @@ export class RestaurantsController {
   async findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
+    @Query('search') search?: string,
     @Query('lat') lat?: string,
     @Query('lng') lng?: string,
     @Query('sort') sort?: string,
@@ -280,6 +289,7 @@ export class RestaurantsController {
     const data = await this.restaurantsService.findAllPublic({
       page,
       limit,
+      search,
       lat,
       lng,
       sort,

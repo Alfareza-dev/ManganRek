@@ -11,15 +11,15 @@ export declare class RestaurantsService {
     constructor(prisma: PrismaService, cloudinaryService: CloudinaryService);
     private getOwnedRestaurant;
     getProfile(userId: string): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         ownerId: string;
+        name: string;
         address: string;
         latitude: number;
         longitude: number;
         legalPhoto: string;
+        createdAt: Date;
+        updatedAt: Date;
         category: string | null;
         openingHours: string | null;
         branches: string | null;
@@ -28,15 +28,15 @@ export declare class RestaurantsService {
         isOpen: boolean | null;
     }>;
     updateProfile(userId: string, dto: UpdateRestaurantDto): Promise<{
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         ownerId: string;
+        name: string;
         address: string;
         latitude: number;
         longitude: number;
         legalPhoto: string;
+        createdAt: Date;
+        updatedAt: Date;
         category: string | null;
         openingHours: string | null;
         branches: string | null;
@@ -62,16 +62,16 @@ export declare class RestaurantsService {
                 id: string;
                 createdAt: Date;
                 price: number;
+                orderId: string;
                 menuId: string;
                 quantity: number;
-                orderId: string;
             })[];
         } & {
             id: string;
-            status: import("@prisma/client").$Enums.OrderStatus;
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
             finalAmount: number;
             totalAmount: number;
             discount: number;
@@ -86,18 +86,18 @@ export declare class RestaurantsService {
             voucher: {
                 id: string;
                 createdAt: Date;
-                value: number;
-                price: number;
-                title: string;
                 restaurantId: string;
+                title: string;
+                price: number;
+                value: number;
                 stock: number;
                 expiryDate: Date;
             };
         } & {
             id: string;
-            status: import("@prisma/client").$Enums.VoucherStatus;
             createdAt: Date;
             updatedAt: Date;
+            status: import("@prisma/client").$Enums.VoucherStatus;
             userId: string;
             voucherId: string;
             uniqueCode: string | null;
@@ -108,26 +108,26 @@ export declare class RestaurantsService {
     }>;
     getAllMenus(userId: string): Promise<any[]>;
     createMenu(userId: string, dto: CreateMenuDto, file: Express.Multer.File): Promise<{
-        name: string;
         id: string;
+        name: string;
         createdAt: Date;
         description: string;
+        restaurantId: string;
         price: number;
         image: string;
         isAvailable: boolean;
-        restaurantId: string;
         isDeleted: boolean;
     }>;
     getMenu(userId: string, menuId: string): Promise<any>;
     updateMenu(userId: string, menuId: string, dto: UpdateMenuDto): Promise<{
-        name: string;
         id: string;
+        name: string;
         createdAt: Date;
         description: string;
+        restaurantId: string;
         price: number;
         image: string;
         isAvailable: boolean;
-        restaurantId: string;
         isDeleted: boolean;
     }>;
     deleteMenu(userId: string, menuId: string): Promise<{
@@ -135,57 +135,57 @@ export declare class RestaurantsService {
     }>;
     getAllPromos(userId: string): Promise<({
         menus: {
-            name: string;
             id: string;
+            name: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
-        type: import("@prisma/client").$Enums.PromoType;
         restaurantId: string;
         discount: number;
+        type: import("@prisma/client").$Enums.PromoType;
         startHour: string;
         endHour: string;
     })[]>;
     createPromo(userId: string, dto: CreatePromoDto): Promise<{
         menus: {
-            name: string;
             id: string;
+            name: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
-        type: import("@prisma/client").$Enums.PromoType;
         restaurantId: string;
         discount: number;
+        type: import("@prisma/client").$Enums.PromoType;
         startHour: string;
         endHour: string;
     }>;
     getPromo(userId: string, promoId: string): Promise<{
         menus: {
-            name: string;
             id: string;
+            name: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
-        type: import("@prisma/client").$Enums.PromoType;
         restaurantId: string;
         discount: number;
+        type: import("@prisma/client").$Enums.PromoType;
         startHour: string;
         endHour: string;
     }>;
     updatePromo(userId: string, promoId: string, dto: UpdatePromoDto): Promise<{
         menus: {
-            name: string;
             id: string;
+            name: string;
         }[];
     } & {
         id: string;
         createdAt: Date;
-        type: import("@prisma/client").$Enums.PromoType;
         restaurantId: string;
         discount: number;
+        type: import("@prisma/client").$Enums.PromoType;
         startHour: string;
         endHour: string;
     }>;
@@ -195,6 +195,7 @@ export declare class RestaurantsService {
     findAllPublic(query: {
         page?: string;
         limit?: string;
+        search?: string;
         lat?: string;
         lng?: string;
         sort?: string;
@@ -212,15 +213,15 @@ export declare class RestaurantsService {
             name: string;
         };
     } & {
-        name: string;
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         ownerId: string;
+        name: string;
         address: string;
         latitude: number;
         longitude: number;
         legalPhoto: string;
+        createdAt: Date;
+        updatedAt: Date;
         category: string | null;
         openingHours: string | null;
         branches: string | null;
@@ -233,10 +234,10 @@ export declare class RestaurantsService {
     getVouchersPublic(restaurantId: string): Promise<{
         id: string;
         createdAt: Date;
-        value: number;
-        price: number;
-        title: string;
         restaurantId: string;
+        title: string;
+        price: number;
+        value: number;
         stock: number;
         expiryDate: Date;
     }[]>;
@@ -248,42 +249,42 @@ export declare class RestaurantsService {
     } & {
         id: string;
         createdAt: Date;
-        value: number;
-        price: number;
-        title: string;
         restaurantId: string;
+        title: string;
+        price: number;
+        value: number;
         stock: number;
         expiryDate: Date;
     }>;
     getPromosPublic(restaurantId: string): Promise<{
         isActive: boolean;
         menus: {
-            name: string;
             id: string;
+            name: string;
             price: number;
             image: string;
         }[];
         id: string;
         createdAt: Date;
-        type: import("@prisma/client").$Enums.PromoType;
         restaurantId: string;
         discount: number;
+        type: import("@prisma/client").$Enums.PromoType;
         startHour: string;
         endHour: string;
     }[]>;
     getPromoDetailPublic(restaurantId: string, promoId: string): Promise<{
         isActive: boolean;
         menus: {
-            name: string;
             id: string;
+            name: string;
             price: number;
             image: string;
         }[];
         id: string;
         createdAt: Date;
-        type: import("@prisma/client").$Enums.PromoType;
         restaurantId: string;
         discount: number;
+        type: import("@prisma/client").$Enums.PromoType;
         startHour: string;
         endHour: string;
     }>;
@@ -305,17 +306,17 @@ export declare class RestaurantsService {
     }): Promise<{
         vouchers: ({
             restaurant: {
-                name: string;
                 id: string;
+                name: string;
                 address: string;
             };
         } & {
             id: string;
             createdAt: Date;
-            value: number;
-            price: number;
-            title: string;
             restaurantId: string;
+            title: string;
+            price: number;
+            value: number;
             stock: number;
             expiryDate: Date;
         })[];
@@ -332,22 +333,22 @@ export declare class RestaurantsService {
     }): Promise<{
         promos: {
             isActive: boolean;
-            restaurant: {
-                name: string;
-                id: string;
-                address: string;
-            };
             menus: {
-                name: string;
                 id: string;
+                name: string;
                 price: number;
                 image: string;
             }[];
+            restaurant: {
+                id: string;
+                name: string;
+                address: string;
+            };
             id: string;
             createdAt: Date;
-            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
+            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         }[];
