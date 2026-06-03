@@ -1,98 +1,119 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Mangan Rek! - Backend API 
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**Mangan Rek!** adalah platform direktori kuliner modern yang dirancang khusus untuk menjelajahi, merencanakan perjalanan kuliner, serta mengelola promosi kuliner bersejarah di Kota Malang. Repositori ini berisi **Backend API** yang melayani aplikasi antarmuka pengguna (Frontend), dibangun dengan performa tinggi menggunakan NestJS, Prisma ORM, dan PostgreSQL.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Fitur Utama (Backend)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+API ini melayani berbagai fungsi yang terbagi dalam beberapa sisi pengguna:
 
-## Project setup
+### 1. 🧑‍💻 Sisi Pengguna (User / Wisatawan)
+* **Autentikasi:** Registrasi, login, dan manajemen profil wisatawan.
+* **Eksplorasi Kuliner:** Endpoint untuk mengambil daftar restoran, detail restoran, dan lokasi kuliner di Malang.
+* **Rencana Perjalanan (Itinerary):** CRUD (Create, Read, Update, Delete) untuk rencana kunjungan kuliner terorganisir.
+* **Promo & Voucher:** Endpoint untuk klaim dan penggunaan voucher/promo restoran.
+* **Kirim Pesan:** Endpoint form kontak interaktif untuk memberikan feedback.
 
+### 2. 🏢 Sisi Pemilik Restoran (Admin Resto)
+* **Manajemen Restoran:** Memperbarui data restoran, jam buka, dan fasilitas.
+* **Manajemen Menu:** CRUD untuk kategori menu dan item menu beserta unggahan foto melalui **Cloudinary**.
+* **Manajemen Promo & Voucher:** Pembuatan dan pengelolaan voucher potongan harga/diskon.
+* **Laporan Penjualan:** Agregasi data penjualan dan laporan transaksi untuk dashboard owner.
+
+### 3. 👥 Sisi Kasir (Cashier Dashboard / POS)
+* **Transaksi Kasir (POS):** Pembuatan pesanan baru (order) dan pencatatan pembayaran (transaction).
+* **Riwayat Pesanan:** Endpoint untuk memantau transaksi harian.
+
+### 4. 🔑 Sisi Administrator Sistem (Admin Web)
+* **Manajemen Persetujuan (Approvals):** Endpoint untuk memvalidasi pendaftaran restoran baru.
+* **Manajemen Pengguna & Pemilik:** CRUD dan pemantauan semua akun di dalam sistem.
+* **Pesan Masuk (Contacts):** Membaca dan membalas pesan masuk dari pengguna.
+
+---
+
+## 🛠️ Stack Teknologi
+
+Proyek backend ini dibangun menggunakan teknologi modern berikut:
+
+* **Framework Utama:** [NestJS 11](https://nestjs.com/)
+* **ORM & Database:** [Prisma ORM](https://www.prisma.io/) & PostgreSQL
+* **Autentikasi & Keamanan:** [Passport.js](https://www.passportjs.org/) (JWT Strategy) & Bcrypt
+* **Dokumentasi API:** [Swagger UI](https://swagger.io/tools/swagger-ui/) (@nestjs/swagger)
+* **Penyimpanan Berkas (Uploads):** [Cloudinary](https://cloudinary.com/) & Multer
+* **Bahasa Pemrograman:** TypeScript
+
+---
+
+## ⚙️ Cara Menjalankan Project Secara Lokal
+
+Ikuti langkah-langkah berikut untuk menjalankan Backend API di lingkungan lokal Anda:
+
+### 1. Clone Repositori & Instal Dependensi
+Pastikan Anda sudah menginstal **Node.js** di perangkat Anda, kemudian jalankan perintah berikut:
 ```bash
-$ npm install
+# Masuk ke direktori backend
+cd BE
+
+# Instal seluruh package dependensi
+npm install
 ```
 
-## Compile and run the project
+### 2. Konfigurasi Environment (Variabel Lingkungan)
+Buat file `.env` di dalam direktori `BE` dan isi dengan konfigurasi berikut (sesuaikan dengan nilai Anda):
+```env
+# Contoh konfigurasi koneksi database PostgreSQL
+DATABASE_URL="postgresql://user:password@localhost:5432/manganrek?schema=public"
 
-```bash
-# development
-$ npm run start
+# Konfigurasi JWT Secret untuk autentikasi
+JWT_SECRET="rahasia_jwt_super_aman"
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Konfigurasi Cloudinary untuk upload gambar
+CLOUDINARY_CLOUD_NAME="your_cloud_name"
+CLOUDINARY_API_KEY="your_api_key"
+CLOUDINARY_API_SECRET="your_api_secret"
 ```
 
-## Run tests
-
+### 3. Migrasi Database (Prisma)
+Generate Prisma Client dan sinkronisasi skema database ke PostgreSQL:
 ```bash
-# unit tests
-$ npm run test
+npx prisma generate
+npx prisma db push
+```
+*(Gunakan `npx prisma migrate dev` jika Anda ingin membuat riwayat migrasi)*
 
-# e2e tests
-$ npm run test:e2e
+### 4. Jalankan Mode Development
+Jalankan server backend:
+```bash
+npm run start:dev
+```
+Setelah berhasil berjalan, API dapat diakses melalui `http://localhost:3000`.
 
-# test coverage
-$ npm run test:cov
+### 5. Dokumentasi API (Swagger)
+Dokumentasi interaktif OpenAPI/Swagger tersedia saat aplikasi berjalan secara lokal. Buka di browser:
+👉 [http://localhost:3000/api](http://localhost:3000/api)
+
+---
+
+## 📂 Struktur Folder Utama
+```text
+BE/
+├── prisma/               # Skema Prisma & Migrasi Database
+├── src/
+│   ├── admin/            # Modul fitur Administrator Sistem
+│   ├── auth/             # Modul Autentikasi dan Otorisasi (JWT)
+│   ├── cloudinary/       # Layanan untuk Upload Gambar
+│   ├── contacts/         # Modul Pesan/Kontak dari Pengguna
+│   ├── itinerary/        # Modul Perencanaan Perjalanan Kuliner
+│   ├── pos/              # Modul Point of Sales (Kasir) & Pesanan
+│   ├── prisma/           # Konfigurasi Database Prisma Service
+│   ├── restaurants/      # Modul Manajemen Restoran & Menu
+│   ├── users/            # Modul Profil dan Pengguna Umum
+│   ├── vouchers/         # Modul Promo dan Voucher
+│   └── main.ts           # Entry point aplikasi NestJS & Konfigurasi Swagger
+├── package.json          # File konfigurasi dependensi & npm scripts
+└── README.md             # Dokumentasi Backend
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+*Dibuat dengan sungguh-sungguh untuk melestarikan Warisan Kuliner Khas Kota Malang.*
