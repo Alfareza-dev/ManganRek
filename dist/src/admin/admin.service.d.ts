@@ -4,36 +4,37 @@ export declare class AdminService {
     private prisma;
     constructor(prisma: PrismaService);
     updateApproval(userId: string, dto: UpdateApprovalDto): Promise<{
-        name: string;
-        email: string;
         id: string;
+        email: string;
+        name: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
         createdAt: Date;
         updatedAt: Date;
     }>;
     getPendingApprovals(): Promise<{
-        restaurant: {
-            name: string;
-            id: string;
-            address: string;
-            legalPhoto: string;
-        } | null;
-        name: string;
-        email: string;
         id: string;
+        email: string;
+        name: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
         createdAt: Date;
+        restaurant: {
+            id: string;
+            name: string;
+            address: string;
+            legalPhoto: string;
+        } | null;
     }[]>;
     getUsers(page: number, limit: number): Promise<{
         data: {
-            name: string;
+            id: string;
             email: string;
             password: string;
-            id: string;
+            name: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
+            isDeleted: boolean;
             createdAt: Date;
             updatedAt: Date;
             managedRestoId: string | null;
@@ -46,15 +47,15 @@ export declare class AdminService {
     getOwners(page: number, limit: number): Promise<{
         data: ({
             restaurant: {
-                name: string;
                 id: string;
+                name: string;
                 createdAt: Date;
                 updatedAt: Date;
-                ownerId: string;
                 address: string;
                 latitude: number;
                 longitude: number;
                 legalPhoto: string;
+                ownerId: string;
                 category: string | null;
                 openingHours: string | null;
                 branches: string | null;
@@ -63,12 +64,13 @@ export declare class AdminService {
                 isOpen: boolean | null;
             } | null;
         } & {
-            name: string;
+            id: string;
             email: string;
             password: string;
-            id: string;
+            name: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
+            isDeleted: boolean;
             createdAt: Date;
             updatedAt: Date;
             managedRestoId: string | null;
@@ -80,15 +82,15 @@ export declare class AdminService {
     }>;
     getUserById(id: string): Promise<{
         restaurant: {
-            name: string;
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            ownerId: string;
             address: string;
             latitude: number;
             longitude: number;
             legalPhoto: string;
+            ownerId: string;
             category: string | null;
             openingHours: string | null;
             branches: string | null;
@@ -97,15 +99,15 @@ export declare class AdminService {
             isOpen: boolean | null;
         } | null;
         managedResto: {
-            name: string;
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            ownerId: string;
             address: string;
             latitude: number;
             longitude: number;
             legalPhoto: string;
+            ownerId: string;
             category: string | null;
             openingHours: string | null;
             branches: string | null;
@@ -114,27 +116,28 @@ export declare class AdminService {
             isOpen: boolean | null;
         } | null;
     } & {
-        name: string;
+        id: string;
         email: string;
         password: string;
-        id: string;
+        name: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
+        isDeleted: boolean;
         createdAt: Date;
         updatedAt: Date;
         managedRestoId: string | null;
     }>;
     getOwnerById(id: string): Promise<{
         restaurant: {
-            name: string;
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
-            ownerId: string;
             address: string;
             latitude: number;
             longitude: number;
             legalPhoto: string;
+            ownerId: string;
             category: string | null;
             openingHours: string | null;
             branches: string | null;
@@ -143,19 +146,20 @@ export declare class AdminService {
             isOpen: boolean | null;
         } | null;
     } & {
-        name: string;
+        id: string;
         email: string;
         password: string;
-        id: string;
+        name: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
+        isDeleted: boolean;
         createdAt: Date;
         updatedAt: Date;
         managedRestoId: string | null;
     }>;
     toggleBanUser(id: string): Promise<{
-        email: string;
         id: string;
+        email: string;
         status: import("@prisma/client").$Enums.AccountStatus;
     }>;
     deleteUser(id: string): Promise<{
@@ -164,17 +168,16 @@ export declare class AdminService {
     upsertConfig(key: string, value: string): Promise<{
         id: string;
         updatedAt: Date;
-        value: string;
         key: string;
+        value: string;
     }>;
     getConfig(key: string): Promise<string | null>;
-    getPlatformRevenue(): Promise<number>;
     getAllPayments(page: number, limit: number): Promise<{
         transactions: {
             data: ({
                 user: {
-                    name: string;
                     email: string;
+                    name: string;
                 };
                 voucher: {
                     restaurant: {
@@ -213,11 +216,11 @@ export declare class AdminService {
                 createdAt: Date;
                 updatedAt: Date;
                 restaurantId: string;
-                finalAmount: number;
-                totalAmount: number;
-                discount: number;
                 cashierId: string;
                 customerName: string | null;
+                totalAmount: number;
+                discount: number;
+                finalAmount: number;
                 paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
             })[];
             total: number;

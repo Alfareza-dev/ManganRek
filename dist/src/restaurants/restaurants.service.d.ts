@@ -47,7 +47,9 @@ export declare class RestaurantsService {
     getRevenue(userId: string): Promise<{
         totalOrderRevenue: number;
         totalVoucherRevenue: number;
-        grandTotal: number;
+        totalRevenue: number;
+        totalDaily: number;
+        totalTransactions: number;
     }>;
     getOrdersHistory(userId: string): Promise<{
         orders: ({
@@ -92,6 +94,7 @@ export declare class RestaurantsService {
                 value: number;
                 stock: number;
                 expiryDate: Date;
+                isDeleted: boolean;
             };
         } & {
             id: string;
@@ -114,21 +117,21 @@ export declare class RestaurantsService {
         description: string;
         restaurantId: string;
         price: number;
+        isDeleted: boolean;
         image: string;
         isAvailable: boolean;
-        isDeleted: boolean;
     }>;
     getMenu(userId: string, menuId: string): Promise<any>;
-    updateMenu(userId: string, menuId: string, dto: UpdateMenuDto): Promise<{
+    updateMenu(userId: string, menuId: string, dto: UpdateMenuDto, file?: Express.Multer.File): Promise<{
         id: string;
         name: string;
         createdAt: Date;
         description: string;
         restaurantId: string;
         price: number;
+        isDeleted: boolean;
         image: string;
         isAvailable: boolean;
-        isDeleted: boolean;
     }>;
     deleteMenu(userId: string, menuId: string): Promise<{
         deleted: boolean;
@@ -240,6 +243,7 @@ export declare class RestaurantsService {
         value: number;
         stock: number;
         expiryDate: Date;
+        isDeleted: boolean;
     }[]>;
     getVoucherDetailPublic(restaurantId: string, voucherId: string): Promise<{
         restaurant: {
@@ -255,6 +259,7 @@ export declare class RestaurantsService {
         value: number;
         stock: number;
         expiryDate: Date;
+        isDeleted: boolean;
     }>;
     getPromosPublic(restaurantId: string): Promise<{
         isActive: boolean;
@@ -319,6 +324,7 @@ export declare class RestaurantsService {
             value: number;
             stock: number;
             expiryDate: Date;
+            isDeleted: boolean;
         })[];
         pagination: {
             page: number;

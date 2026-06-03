@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { AccountStatus, Role } from '@prisma/client';
+import { AccountStatus, Role, Prisma } from '@prisma/client';
 import { UpdateApprovalDto } from './dto/update-approval.dto';
 
 @Injectable()
@@ -92,12 +92,12 @@ export class AdminService {
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({
-        where: { role: { in: [Role.USER, Role.KASIR] } },
+        where: { role: { in: [Role.USER, Role.KASIR] }, isDeleted: false },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.user.count({ where: { role: { in: [Role.USER, Role.KASIR] } } }),
+      this.prisma.user.count({ where: { role: { in: [Role.USER, Role.KASIR] }, isDeleted: false } }),
     ]);
 
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
@@ -107,13 +107,13 @@ export class AdminService {
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
       this.prisma.user.findMany({
-        where: { role: Role.ADMIN_RESTO },
+        where: { role: Role.ADMIN_RESTO, isDeleted: false },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
         include: { restaurant: true },
       }),
-      this.prisma.user.count({ where: { role: Role.ADMIN_RESTO } }),
+      this.prisma.user.count({ where: { role: Role.ADMIN_RESTO, isDeleted: false } }),
     ]);
 
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
@@ -157,8 +157,13 @@ export class AdminService {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException('User not found');
 
-    await this.prisma.user.delete({ where: { id } });
-    return { message: 'User berhasil dihapus secara permanen' };
+    // Soft delete to preserve history (orders, transactions)
+    await this.prisma.user.update({
+      where: { id },
+      data: { isDeleted: true }
+    });
+
+    return { message: 'User berhasil dihapus' };
   }
 
   async upsertConfig(key: string, value: string) {
@@ -176,13 +181,7 @@ export class AdminService {
     return config ? config.value : null;
   }
 
-  async getPlatformRevenue() {
-    const result = await this.prisma.transaction.aggregate({
-      where: { status: 'PAID' },
-      _sum: { platformFee: true },
-    });
-    return result._sum.platformFee || 0;
-  }
+  // Removed getPlatformRevenue as Admin Web no longer takes a cut
 
   async getAllPayments(page: number, limit: number) {
     const skip = (page - 1) * limit;

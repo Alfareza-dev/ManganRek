@@ -74,9 +74,9 @@ let RestaurantsController = class RestaurantsController {
             data,
         };
     }
-    async updateMenu(req, id, dto) {
+    async updateMenu(req, id, dto, file) {
         const user = req.user;
-        const data = await this.restaurantsService.updateMenu(user.userId, id, dto);
+        const data = await this.restaurantsService.updateMenu(user.userId, id, dto, file);
         return {
             success: true,
             message: 'Menu berhasil diperbarui',
@@ -290,12 +290,19 @@ __decorate([
     (0, common_1.Put)('menus/:id'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
+    (0, swagger_1.ApiConsumes)('multipart/form-data'),
+    (0, swagger_1.ApiBody)({
+        description: 'Update menu dan gambar',
+        type: update_menu_dto_1.UpdateMenuDto,
+    }),
     openapi.ApiResponse({ status: 200 }),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Param)('id')),
     __param(2, (0, common_1.Body)()),
+    __param(3, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, update_menu_dto_1.UpdateMenuDto]),
+    __metadata("design:paramtypes", [Object, String, update_menu_dto_1.UpdateMenuDto, Object]),
     __metadata("design:returntype", Promise)
 ], RestaurantsController.prototype, "updateMenu", null);
 __decorate([

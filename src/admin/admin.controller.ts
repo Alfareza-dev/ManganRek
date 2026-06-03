@@ -23,25 +23,7 @@ import { Role } from '@prisma/client';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Post('config')
-  async updateConfig(@Body() dto: UpdateConfigDto) {
-    const data = await this.adminService.upsertConfig(dto.key, dto.value);
-    return { success: true, message: 'Konfigurasi berhasil disimpan', data };
-  }
-
-  @Get('config')
-  async getConfig(@Query('key') key: string) {
-    const targetKey = key || 'VOUCHER_FEE_PERCENTAGE';
-    const value = await this.adminService.getConfig(targetKey);
-    return { success: true, message: 'Konfigurasi berhasil diambil', data: { key: targetKey, value } };
-  }
-
-  @Get('revenue')
-  async getRevenue() {
-    const totalPlatformFee = await this.adminService.getPlatformRevenue();
-    return { success: true, message: 'Total pendapatan platform', data: { totalPlatformFee } };
-  }
-
+  // Config and revenue endpoints removed. Admin Resto gets 100% of revenue now.
   @Get('payments')
   async getAllPayments(
     @Query('page') page: string = '1',
@@ -116,6 +98,22 @@ export class AdminController {
 
   @Delete('users/:id')
   async deleteUser(@Param('id') id: string) {
+    const data = await this.adminService.deleteUser(id);
+    return { success: true, message: data.message };
+  }
+
+  @Patch('owners/:id/ban')
+  async toggleBanOwner(@Param('id') id: string) {
+    const data = await this.adminService.toggleBanUser(id);
+    return {
+      success: true,
+      message: `Status akun owner berhasil diubah menjadi ${data.status}`,
+      data,
+    };
+  }
+
+  @Delete('owners/:id')
+  async deleteOwner(@Param('id') id: string) {
     const data = await this.adminService.deleteUser(id);
     return { success: true, message: data.message };
   }

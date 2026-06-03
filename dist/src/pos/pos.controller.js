@@ -60,6 +60,15 @@ let PosController = class PosController {
             data
         };
     }
+    async cancelOrder(req, id) {
+        const user = req.user;
+        const data = await this.posService.cancelOrder(user.userId, id);
+        return {
+            success: true,
+            message: 'Order berhasil dibatalkan',
+            data
+        };
+    }
     async verifyMockOrder(id) {
         const data = await this.posService.verifyMockOrder(id);
         return {
@@ -116,6 +125,18 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], PosController.prototype, "getOrderHistory", null);
+__decorate([
+    (0, common_1.Patch)('orders/:id/cancel'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.KASIR),
+    (0, swagger_1.ApiOperation)({ summary: 'Batalkan order kasir yang PENDING' }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], PosController.prototype, "cancelOrder", null);
 __decorate([
     (0, common_1.Patch)('orders/:id/verify-mock'),
     (0, swagger_1.ApiOperation)({ summary: 'Mock verifikasi order QRIS (Ubah PENDING menjadi SETTLED)' }),

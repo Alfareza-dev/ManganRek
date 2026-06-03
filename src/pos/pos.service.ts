@@ -238,5 +238,26 @@ export class PosService {
       data: { status: 'SETTLED' }
     });
   }
+
+  async cancelOrder(cashierId: string, orderId: string) {
+    const order = await this.prisma.order.findUnique({ 
+      where: { id: orderId },
+      include: { items: true }
+    });
+    
+    if (!order) throw new NotFoundException('Order tidak ditemukan');
+    if (order.cashierId !== cashierId) throw new ForbiddenException('Akses ditolak: Ini bukan order Anda');
+    if (order.status !== 'PENDING') throw new BadRequestException(`Order tidak bisa dibatalkan karena berstatus ${order.status}`);
+
+    // If order used a voucher, we might need to restore it.
+    // We don't have a direct link from Order to Transaction(Voucher), 
+    // but typically a transaction uniqueCode was passed and its status was changed to USED.
+    // If the requirement is just to set order to CANCELLED, we will do that.
+    
+    return this.prisma.order.update({
+      where: { id: orderId },
+      data: { status: 'CANCELLED' }
+    });
+  }
 }
 

@@ -51,22 +51,43 @@ let RestaurantsService = class RestaurantsService {
     }
     async getRevenue(userId) {
         const restaurant = await this.getOwnedRestaurant(userId);
+        const startOfToday = new Date();
+        startOfToday.setHours(0, 0, 0, 0);
         const ordersAgg = await this.prisma.order.aggregate({
             where: { restaurantId: restaurant.id, status: 'SETTLED' },
             _sum: { finalAmount: true },
         });
         const totalOrderRevenue = ordersAgg._sum.finalAmount || 0;
+        const dailyOrdersAgg = await this.prisma.order.aggregate({
+            where: { restaurantId: restaurant.id, status: 'SETTLED', createdAt: { gte: startOfToday } },
+            _sum: { finalAmount: true },
+        });
+        const dailyOrderRevenue = dailyOrdersAgg._sum.finalAmount || 0;
+        const orderCount = await this.prisma.order.count({
+            where: { restaurantId: restaurant.id, status: 'SETTLED' },
+        });
         const vouchersAgg = await this.prisma.transaction.findMany({
             where: {
                 voucher: { restaurantId: restaurant.id },
                 status: 'PAID'
             }
         });
-        const totalVoucherRevenue = vouchersAgg.reduce((sum, tx) => sum + (tx.totalPaid - tx.platformFee), 0);
+        const totalVoucherRevenue = vouchersAgg.reduce((sum, tx) => sum + tx.totalPaid, 0);
+        const dailyVouchersAgg = await this.prisma.transaction.findMany({
+            where: {
+                voucher: { restaurantId: restaurant.id },
+                status: 'PAID',
+                createdAt: { gte: startOfToday }
+            }
+        });
+        const dailyVoucherRevenue = dailyVouchersAgg.reduce((sum, tx) => sum + tx.totalPaid, 0);
+        const voucherTxCount = vouchersAgg.length;
         return {
             totalOrderRevenue,
             totalVoucherRevenue,
-            grandTotal: totalOrderRevenue + totalVoucherRevenue
+            totalRevenue: totalOrderRevenue + totalVoucherRevenue,
+            totalDaily: dailyOrderRevenue + dailyVoucherRevenue,
+            totalTransactions: orderCount + voucherTxCount
         };
     }
     async getOrdersHistory(userId) {
@@ -117,7 +138,7 @@ let RestaurantsService = class RestaurantsService {
         const [enriched] = await this.applyPromosToMenus([menu]);
         return enriched;
     }
-    async updateMenu(userId, menuId, dto) {
+    async updateMenu(userId, menuId, dto, file) {
         const restaurant = await this.getOwnedRestaurant(userId);
         const menu = await this.prisma.menu.findUnique({
             where: { id: menuId },
@@ -128,14 +149,19 @@ let RestaurantsService = class RestaurantsService {
         if (menu.restaurantId !== restaurant.id) {
             throw new common_1.ForbiddenException('Anda tidak memiliki akses ke menu ini');
         }
+        let imageUrl = menu.image;
+        if (file) {
+            const uploadResult = await this.cloudinaryService.uploadFile(file, 'mangan-rek/menus');
+            imageUrl = uploadResult.secure_url;
+        }
         return this.prisma.menu.update({
             where: { id: menuId },
             data: {
                 ...(dto.name !== undefined && { name: dto.name }),
                 ...(dto.description !== undefined && { description: dto.description }),
-                ...(dto.price !== undefined && { price: dto.price }),
-                ...(dto.image !== undefined && { image: dto.image }),
-                ...(dto.isAvailable !== undefined && { isAvailable: dto.isAvailable }),
+                ...(dto.price !== undefined && { price: Number(dto.price) }),
+                ...(dto.isAvailable !== undefined && { isAvailable: String(dto.isAvailable) === 'true' || dto.isAvailable === true }),
+                image: imageUrl,
             },
         });
     }
@@ -260,7 +286,13 @@ let RestaurantsService = class RestaurantsService {
             r.name ILIKE ${searchPattern} OR
             r.address ILIKE ${searchPattern} OR
             r.category ILIKE ${searchPattern} OR
-            r.description ILIKE ${searchPattern}
+            r.description ILIKE ${searchPattern} OR
+            EXISTS (
+              SELECT 1 FROM menus m
+              WHERE m."restaurantId" = r.id
+                AND m.name ILIKE ${searchPattern}
+                AND m."isDeleted" = false
+            )
           )
         `;
             }

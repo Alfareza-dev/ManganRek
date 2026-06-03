@@ -56,7 +56,9 @@ export declare class RestaurantsController {
         data: {
             totalOrderRevenue: number;
             totalVoucherRevenue: number;
-            grandTotal: number;
+            totalRevenue: number;
+            totalDaily: number;
+            totalTransactions: number;
         };
     }>;
     getOrdersHistory(req: Request): Promise<{
@@ -105,6 +107,7 @@ export declare class RestaurantsController {
                     value: number;
                     stock: number;
                     expiryDate: Date;
+                    isDeleted: boolean;
                 };
             } & {
                 id: string;
@@ -140,12 +143,12 @@ export declare class RestaurantsController {
             description: string;
             restaurantId: string;
             price: number;
+            isDeleted: boolean;
             image: string;
             isAvailable: boolean;
-            isDeleted: boolean;
         };
     }>;
-    updateMenu(req: Request, id: string, dto: UpdateMenuDto): Promise<{
+    updateMenu(req: Request, id: string, dto: UpdateMenuDto, file?: Express.Multer.File): Promise<{
         success: boolean;
         message: string;
         data: {
@@ -155,9 +158,9 @@ export declare class RestaurantsController {
             description: string;
             restaurantId: string;
             price: number;
+            isDeleted: boolean;
             image: string;
             isAvailable: boolean;
-            isDeleted: boolean;
         };
     }>;
     deleteMenu(req: Request, id: string): Promise<{
@@ -271,6 +274,7 @@ export declare class RestaurantsController {
                 value: number;
                 stock: number;
                 expiryDate: Date;
+                isDeleted: boolean;
             })[];
             pagination: {
                 page: number;
@@ -373,6 +377,7 @@ export declare class RestaurantsController {
             value: number;
             stock: number;
             expiryDate: Date;
+            isDeleted: boolean;
         }[];
     }>;
     getVoucherDetailPublic(id: string, voucherId: string): Promise<{
@@ -392,6 +397,7 @@ export declare class RestaurantsController {
             value: number;
             stock: number;
             expiryDate: Date;
+            isDeleted: boolean;
         };
     }>;
     getPromosPublic(id: string): Promise<{

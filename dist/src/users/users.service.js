@@ -170,8 +170,16 @@ let UsersService = class UsersService {
         });
         if (!cashier)
             throw new common_1.NotFoundException('Kasir tidak ditemukan');
-        await this.prisma.user.delete({ where: { id: cashierId } });
-        return { message: 'Kasir berhasil dihapus' };
+        try {
+            await this.prisma.user.delete({ where: { id: cashierId } });
+            return { message: 'Kasir berhasil dihapus' };
+        }
+        catch (error) {
+            if (error instanceof client_1.Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+                throw new common_1.BadRequestException('Kasir tidak dapat dihapus karena sudah memiliki riwayat pesanan (order).');
+            }
+            throw error;
+        }
     }
 };
 exports.UsersService = UsersService;

@@ -38,14 +38,14 @@ export class VouchersService {
   async findAll(adminId: string) {
     const resto = await this.getAdminResto(adminId);
     return this.prisma.voucher.findMany({
-      where: { restaurantId: resto.id }
+      where: { restaurantId: resto.id, isDeleted: false }
     });
   }
 
   async findOne(adminId: string, id: string) {
     const resto = await this.getAdminResto(adminId);
     const voucher = await this.prisma.voucher.findFirst({
-      where: { id, restaurantId: resto.id }
+      where: { id, restaurantId: resto.id, isDeleted: false }
     });
     if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
     return voucher;
@@ -54,7 +54,7 @@ export class VouchersService {
   async update(adminId: string, id: string, dto: UpdateVoucherDto) {
     const resto = await this.getAdminResto(adminId);
     const voucher = await this.prisma.voucher.findFirst({
-      where: { id, restaurantId: resto.id }
+      where: { id, restaurantId: resto.id, isDeleted: false }
     });
     if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
 
@@ -72,18 +72,17 @@ export class VouchersService {
   async remove(adminId: string, id: string) {
     const resto = await this.getAdminResto(adminId);
     const voucher = await this.prisma.voucher.findFirst({
-      where: { id, restaurantId: resto.id }
+      where: { id, restaurantId: resto.id, isDeleted: false }
     });
     if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
 
     try {
-      return await this.prisma.voucher.delete({
-        where: { id }
+      // Soft delete
+      return await this.prisma.voucher.update({
+        where: { id },
+        data: { isDeleted: true }
       });
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
-        throw new BadRequestException('Voucher tidak dapat dihapus karena sudah memiliki riwayat transaksi.');
-      }
       throw error;
     }
   }
@@ -92,7 +91,7 @@ export class VouchersService {
     const voucher = await this.prisma.voucher.findUnique({
       where: { id: dto.voucherId }
     });
-    if (!voucher) throw new NotFoundException('Voucher tidak ditemukan');
+    if (!voucher || voucher.isDeleted) throw new NotFoundException('Voucher tidak ditemukan');
     if (voucher.expiryDate < new Date()) {
       throw new BadRequestException('Voucher sudah kadaluarsa');
     }
@@ -202,16 +201,8 @@ export class VouchersService {
     const uniqueCode = this.generateUniqueCode(8);
 
     // Get config fee
-    let feePercentage = 0;
-    const config = await this.prisma.systemConfig.findUnique({
-      where: { key: 'VOUCHER_FEE_PERCENTAGE' }
-    });
-    
-    if (config) {
-      feePercentage = parseFloat(config.value) || 0;
-    }
-
-    const platformFee = tx.totalPaid * (feePercentage / 100);
+    // No platform fee anymore. Admin Resto gets 100%.
+    const platformFee = 0;
 
     return this.prisma.transaction.update({
       where: { id: tx.id },
@@ -226,6 +217,7 @@ export class VouchersService {
 
   async findAllPublic() {
     return this.prisma.voucher.findMany({
+      where: { isDeleted: false },
       include: {
         restaurant: {
           select: { name: true, address: true }
@@ -237,7 +229,7 @@ export class VouchersService {
 
   async findByRestoPublic(restoId: string) {
     return this.prisma.voucher.findMany({
-      where: { restaurantId: restoId },
+      where: { restaurantId: restoId, isDeleted: false },
       orderBy: { createdAt: 'desc' }
     });
   }

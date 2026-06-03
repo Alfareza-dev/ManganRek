@@ -17,7 +17,6 @@ const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const admin_service_1 = require("./admin.service");
 const update_approval_dto_1 = require("./dto/update-approval.dto");
-const system_config_dto_1 = require("./dto/system-config.dto");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const roles_guard_1 = require("../auth/guards/roles.guard");
 const roles_decorator_1 = require("../auth/decorators/roles.decorator");
@@ -26,19 +25,6 @@ let AdminController = class AdminController {
     adminService;
     constructor(adminService) {
         this.adminService = adminService;
-    }
-    async updateConfig(dto) {
-        const data = await this.adminService.upsertConfig(dto.key, dto.value);
-        return { success: true, message: 'Konfigurasi berhasil disimpan', data };
-    }
-    async getConfig(key) {
-        const targetKey = key || 'VOUCHER_FEE_PERCENTAGE';
-        const value = await this.adminService.getConfig(targetKey);
-        return { success: true, message: 'Konfigurasi berhasil diambil', data: { key: targetKey, value } };
-    }
-    async getRevenue() {
-        const totalPlatformFee = await this.adminService.getPlatformRevenue();
-        return { success: true, message: 'Total pendapatan platform', data: { totalPlatformFee } };
     }
     async getAllPayments(page = '1', limit = '10') {
         const data = await this.adminService.getAllPayments(Number(page), Number(limit));
@@ -88,31 +74,20 @@ let AdminController = class AdminController {
         const data = await this.adminService.deleteUser(id);
         return { success: true, message: data.message };
     }
+    async toggleBanOwner(id) {
+        const data = await this.adminService.toggleBanUser(id);
+        return {
+            success: true,
+            message: `Status akun owner berhasil diubah menjadi ${data.status}`,
+            data,
+        };
+    }
+    async deleteOwner(id) {
+        const data = await this.adminService.deleteUser(id);
+        return { success: true, message: data.message };
+    }
 };
 exports.AdminController = AdminController;
-__decorate([
-    (0, common_1.Post)('config'),
-    openapi.ApiResponse({ status: 201 }),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [system_config_dto_1.UpdateConfigDto]),
-    __metadata("design:returntype", Promise)
-], AdminController.prototype, "updateConfig", null);
-__decorate([
-    (0, common_1.Get)('config'),
-    openapi.ApiResponse({ status: 200 }),
-    __param(0, (0, common_1.Query)('key')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AdminController.prototype, "getConfig", null);
-__decorate([
-    (0, common_1.Get)('revenue'),
-    openapi.ApiResponse({ status: 200 }),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], AdminController.prototype, "getRevenue", null);
 __decorate([
     openapi.ApiQuery({ name: "page", required: false }),
     openapi.ApiQuery({ name: "limit", required: false }),
@@ -194,6 +169,22 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "deleteUser", null);
+__decorate([
+    (0, common_1.Patch)('owners/:id/ban'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "toggleBanOwner", null);
+__decorate([
+    (0, common_1.Delete)('owners/:id'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "deleteOwner", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('api/admin'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

@@ -78,12 +78,12 @@ let AdminService = class AdminService {
         const skip = (page - 1) * limit;
         const [data, total] = await Promise.all([
             this.prisma.user.findMany({
-                where: { role: { in: [client_1.Role.USER, client_1.Role.KASIR] } },
+                where: { role: { in: [client_1.Role.USER, client_1.Role.KASIR] }, isDeleted: false },
                 skip,
                 take: limit,
                 orderBy: { createdAt: 'desc' },
             }),
-            this.prisma.user.count({ where: { role: { in: [client_1.Role.USER, client_1.Role.KASIR] } } }),
+            this.prisma.user.count({ where: { role: { in: [client_1.Role.USER, client_1.Role.KASIR] }, isDeleted: false } }),
         ]);
         return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
     }
@@ -91,13 +91,13 @@ let AdminService = class AdminService {
         const skip = (page - 1) * limit;
         const [data, total] = await Promise.all([
             this.prisma.user.findMany({
-                where: { role: client_1.Role.ADMIN_RESTO },
+                where: { role: client_1.Role.ADMIN_RESTO, isDeleted: false },
                 skip,
                 take: limit,
                 orderBy: { createdAt: 'desc' },
                 include: { restaurant: true },
             }),
-            this.prisma.user.count({ where: { role: client_1.Role.ADMIN_RESTO } }),
+            this.prisma.user.count({ where: { role: client_1.Role.ADMIN_RESTO, isDeleted: false } }),
         ]);
         return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
     }
@@ -137,8 +137,11 @@ let AdminService = class AdminService {
         const user = await this.prisma.user.findUnique({ where: { id } });
         if (!user)
             throw new common_1.NotFoundException('User not found');
-        await this.prisma.user.delete({ where: { id } });
-        return { message: 'User berhasil dihapus secara permanen' };
+        await this.prisma.user.update({
+            where: { id },
+            data: { isDeleted: true }
+        });
+        return { message: 'User berhasil dihapus' };
     }
     async upsertConfig(key, value) {
         return this.prisma.systemConfig.upsert({
@@ -152,13 +155,6 @@ let AdminService = class AdminService {
             where: { key },
         });
         return config ? config.value : null;
-    }
-    async getPlatformRevenue() {
-        const result = await this.prisma.transaction.aggregate({
-            where: { status: 'PAID' },
-            _sum: { platformFee: true },
-        });
-        return result._sum.platformFee || 0;
     }
     async getAllPayments(page, limit) {
         const skip = (page - 1) * limit;

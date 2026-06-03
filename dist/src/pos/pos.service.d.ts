@@ -105,4 +105,17 @@ export declare class PosService {
         customerName: string | null;
         paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
     }>;
+    cancelOrder(cashierId: string, orderId: string): Promise<{
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        restaurantId: string;
+        status: import("@prisma/client").$Enums.OrderStatus;
+        finalAmount: number;
+        totalAmount: number;
+        discount: number;
+        cashierId: string;
+        customerName: string | null;
+        paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+    }>;
 }

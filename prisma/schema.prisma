@@ -39,6 +39,7 @@ enum OrderStatus {
   PENDING
   SETTLED
   FAILED
+  CANCELLED
 }
 
 enum PromoType {
@@ -65,6 +66,7 @@ model User {
   name      String
   role      Role          @default(USER)
   status    AccountStatus @default(ACTIVE)
+  isDeleted Boolean       @default(false)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
@@ -160,6 +162,7 @@ model Voucher {
   value        Float    // Nilai potongan belanja voucher di kasir
   stock        Int      @default(0) // Kapasitas/jumlah stok voucher
   expiryDate   DateTime
+  isDeleted    Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   // Relations

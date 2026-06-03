@@ -103,6 +103,23 @@ export declare class PosController {
             paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
         })[];
     }>;
+    cancelOrder(req: Request, id: string): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            restaurantId: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
+            finalAmount: number;
+            totalAmount: number;
+            discount: number;
+            cashierId: string;
+            customerName: string | null;
+            paymentMethod: import("@prisma/client").$Enums.PaymentMethod;
+        };
+    }>;
     verifyMockOrder(id: string): Promise<{
         success: boolean;
         message: string;

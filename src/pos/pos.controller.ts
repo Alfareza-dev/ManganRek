@@ -75,6 +75,20 @@ export class PosController {
     };
   }
 
+  @Patch('orders/:id/cancel')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.KASIR)
+  @ApiOperation({ summary: 'Batalkan order kasir yang PENDING' })
+  async cancelOrder(@Req() req: Request, @Param('id') id: string) {
+    const user = req.user as any;
+    const data = await this.posService.cancelOrder(user.userId, id);
+    return {
+      success: true,
+      message: 'Order berhasil dibatalkan',
+      data
+    };
+  }
+
   @Patch('orders/:id/verify-mock')
   @ApiOperation({ summary: 'Mock verifikasi order QRIS (Ubah PENDING menjadi SETTLED)' })
   async verifyMockOrder(@Param('id') id: string) {

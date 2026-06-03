@@ -7,9 +7,9 @@ export declare class ContactsController {
         success: boolean;
         message: string;
         data: {
-            name: string;
-            email: string;
             id: string;
+            email: string;
+            name: string;
             createdAt: Date;
             message: string;
         };
@@ -17,9 +17,9 @@ export declare class ContactsController {
     findAll(): Promise<{
         success: boolean;
         data: {
-            name: string;
-            email: string;
             id: string;
+            email: string;
+            name: string;
             createdAt: Date;
             message: string;
         }[];

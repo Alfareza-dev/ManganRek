@@ -131,7 +131,7 @@ let AuthService = class AuthService {
             throw new common_1.ForbiddenException('Akun menunggu persetujuan admin');
         }
         if (user.status === client_1.AccountStatus.REJECTED) {
-            throw new common_1.ForbiddenException('Akun ditolak oleh admin');
+            throw new common_1.ForbiddenException('Akun Anda telah ditangguhkan karena melanggar Syarat dan Ketentuan layanan kami.');
         }
         const payload = { email: user.email, sub: user.id, role: user.role, status: user.status };
         const token = this.jwtService.sign(payload);

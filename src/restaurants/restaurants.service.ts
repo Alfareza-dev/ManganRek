@@ -94,7 +94,7 @@ export class RestaurantsService {
         status: 'PAID'
       }
     });
-    const totalVoucherRevenue = vouchersAgg.reduce((sum, tx) => sum + (tx.totalPaid - tx.platformFee), 0);
+    const totalVoucherRevenue = vouchersAgg.reduce((sum, tx) => sum + tx.totalPaid, 0);
 
     // Daily Vouchers Revenue
     const dailyVouchersAgg = await this.prisma.transaction.findMany({
@@ -104,7 +104,7 @@ export class RestaurantsService {
         createdAt: { gte: startOfToday }
       }
     });
-    const dailyVoucherRevenue = dailyVouchersAgg.reduce((sum, tx) => sum + (tx.totalPaid - tx.platformFee), 0);
+    const dailyVoucherRevenue = dailyVouchersAgg.reduce((sum, tx) => sum + tx.totalPaid, 0);
 
     // Total Voucher Transactions count
     const voucherTxCount = vouchersAgg.length;

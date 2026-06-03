@@ -212,6 +212,22 @@ let PosService = class PosService {
             data: { status: 'SETTLED' }
         });
     }
+    async cancelOrder(cashierId, orderId) {
+        const order = await this.prisma.order.findUnique({
+            where: { id: orderId },
+            include: { items: true }
+        });
+        if (!order)
+            throw new common_1.NotFoundException('Order tidak ditemukan');
+        if (order.cashierId !== cashierId)
+            throw new common_1.ForbiddenException('Akses ditolak: Ini bukan order Anda');
+        if (order.status !== 'PENDING')
+            throw new common_1.BadRequestException(`Order tidak bisa dibatalkan karena berstatus ${order.status}`);
+        return this.prisma.order.update({
+            where: { id: orderId },
+            data: { status: 'CANCELLED' }
+        });
+    }
 };
 exports.PosService = PosService;
 exports.PosService = PosService = __decorate([
