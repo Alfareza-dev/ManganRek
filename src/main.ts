@@ -6,9 +6,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://192.168.110.208:3000', 'http://127.0.0.1:3000'],
-    credentials: true,
+    origin: [
+      'http://localhost:3000', 
+      'http://localhost:3001', // Port lokal frontend
+      'http://127.0.0.1:3000',
+      'https://manganrek.my.id',     // Domain produksi frontend utama
+      'https://www.manganrek.my.id' // Domain dengan www
+    ],
+    credentials: true, 
   });
+  
   app.use(cookieParser());
 
   const config = new DocumentBuilder()
@@ -21,6 +28,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(process.env.PORT ?? 5001);
+  await app.listen(process.env.PORT ?? 3000); // Pastikan port fallback sesuai Nginx (3000)
 }
 bootstrap();

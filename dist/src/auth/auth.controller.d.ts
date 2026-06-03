@@ -11,9 +11,9 @@ export declare class AuthController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             isDeleted: boolean;
@@ -27,9 +27,9 @@ export declare class AuthController {
         message: string;
         data: {
             user: {
-                id: string;
-                email: string;
                 name: string;
+                email: string;
+                id: string;
                 role: import("@prisma/client").$Enums.Role;
                 status: import("@prisma/client").$Enums.AccountStatus;
                 isDeleted: boolean;
@@ -38,8 +38,8 @@ export declare class AuthController {
                 managedRestoId: string | null;
             };
             restaurant: {
-                id: string;
                 name: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 ownerId: string;
@@ -60,9 +60,9 @@ export declare class AuthController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             isDeleted: boolean;
@@ -81,8 +81,8 @@ export declare class AuthController {
         message: string;
         data: {
             restaurant: {
-                id: string;
                 name: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 ownerId: string;
@@ -97,9 +97,9 @@ export declare class AuthController {
                 description: string | null;
                 isOpen: boolean | null;
             } | null;
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             managedRestoId: string | null;
@@ -109,9 +109,9 @@ export declare class AuthController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
         };

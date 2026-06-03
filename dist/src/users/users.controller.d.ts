@@ -10,9 +10,9 @@ export declare class UsersController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             isDeleted: boolean;
@@ -25,9 +25,9 @@ export declare class UsersController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             status: import("@prisma/client").$Enums.AccountStatus;
             createdAt: Date;
         }[];
@@ -36,9 +36,9 @@ export declare class UsersController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             status: import("@prisma/client").$Enums.AccountStatus;
             createdAt: Date;
         };
@@ -47,9 +47,9 @@ export declare class UsersController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             status: import("@prisma/client").$Enums.AccountStatus;
         };
     }>;

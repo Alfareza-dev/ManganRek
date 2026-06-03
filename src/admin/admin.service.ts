@@ -226,5 +226,81 @@ export class AdminService {
       }
     };
   }
+
+  async deleteRestaurantPermanently(id: string) {
+    const restaurant = await this.prisma.restaurant.findUnique({
+      where: { id },
+      include: { cashiers: true }
+    });
+
+    if (!restaurant) {
+      throw new NotFoundException('Restoran tidak ditemukan');
+    }
+
+    const cashierIds = restaurant.cashiers.map(c => c.id);
+    const ownerId = restaurant.ownerId;
+
+    // 1. Lepaskan Foreign Key Constraint (managedRestoId) dari semua Kasir & Owner
+    await this.prisma.user.updateMany({
+      where: {
+        OR: [
+          { managedRestoId: id },
+          { id: { in: [ownerId, ...cashierIds] } }
+        ]
+      },
+      data: { managedRestoId: null }
+    });
+
+    // 2. Hapus data transaksi voucher yang terkait dengan voucher restoran ini ATAU dibeli oleh owner/kasir
+    await this.prisma.transaction.deleteMany({
+      where: {
+        OR: [
+          { voucher: { restaurantId: id } },
+          { userId: { in: [ownerId, ...cashierIds] } }
+        ]
+      }
+    });
+
+    // 3. Hapus OrderItem yang merujuk ke Menu restoran ini (menghindari constraint order_items_menuId_fkey)
+    await this.prisma.orderItem.deleteMany({
+      where: {
+        menu: {
+          restaurantId: id
+        }
+      }
+    });
+
+    // 4. Hapus Order restoran ini
+    await this.prisma.order.deleteMany({
+      where: { restaurantId: id }
+    });
+
+    // 5. Hapus Restoran (Prisma otomatis cascade delete Menu, Promo, Voucher)
+    await this.prisma.restaurant.delete({
+      where: { id }
+    });
+
+    // 6. Hapus Permanen Akun Kasir
+    if (cashierIds.length > 0) {
+      try {
+        await this.prisma.user.deleteMany({
+          where: { id: { in: cashierIds } }
+        });
+      } catch (error) {
+        console.warn(`Gagal menghapus kasir dari restoran ${id}:`, error);
+      }
+    }
+
+    // 7. Hapus Permanen Akun Owner
+    try {
+      await this.prisma.user.delete({
+        where: { id: ownerId }
+      });
+    } catch (error) {
+      console.warn(`Gagal menghapus owner dari restoran ${id}:`, error);
+    }
+
+    return { message: 'Restoran beserta seluruh data terkait (Owner, Kasir, Transaksi, dll) berhasil dihapus permanen' };
+  }
 }
 

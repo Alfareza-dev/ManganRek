@@ -117,4 +117,10 @@ export class AdminController {
     const data = await this.adminService.deleteUser(id);
     return { success: true, message: data.message };
   }
+
+  @Delete('restaurants/:id')
+  async deleteRestaurantPermanently(@Param('id') id: string) {
+    const data = await this.adminService.deleteRestaurantPermanently(id);
+    return { success: true, message: data.message };
+  }
 }

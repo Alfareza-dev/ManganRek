@@ -86,6 +86,10 @@ let AdminController = class AdminController {
         const data = await this.adminService.deleteUser(id);
         return { success: true, message: data.message };
     }
+    async deleteRestaurantPermanently(id) {
+        const data = await this.adminService.deleteRestaurantPermanently(id);
+        return { success: true, message: data.message };
+    }
 };
 exports.AdminController = AdminController;
 __decorate([
@@ -185,6 +189,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "deleteOwner", null);
+__decorate([
+    (0, common_1.Delete)('restaurants/:id'),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "deleteRestaurantPermanently", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('api/admin'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

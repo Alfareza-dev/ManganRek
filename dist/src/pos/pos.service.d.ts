@@ -27,10 +27,10 @@ export declare class PosService {
             }[];
         } & {
             id: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
-            status: import("@prisma/client").$Enums.OrderStatus;
             finalAmount: number;
             totalAmount: number;
             discount: number;
@@ -53,10 +53,10 @@ export declare class PosService {
             }[];
         } & {
             id: string;
+            status: import("@prisma/client").$Enums.OrderStatus;
             createdAt: Date;
             updatedAt: Date;
             restaurantId: string;
-            status: import("@prisma/client").$Enums.OrderStatus;
             finalAmount: number;
             totalAmount: number;
             discount: number;
@@ -81,10 +81,10 @@ export declare class PosService {
         })[];
     } & {
         id: string;
+        status: import("@prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         restaurantId: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
         finalAmount: number;
         totalAmount: number;
         discount: number;
@@ -94,10 +94,10 @@ export declare class PosService {
     })[]>;
     verifyMockOrder(orderId: string): Promise<{
         id: string;
+        status: import("@prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         restaurantId: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
         finalAmount: number;
         totalAmount: number;
         discount: number;
@@ -107,10 +107,10 @@ export declare class PosService {
     }>;
     cancelOrder(cashierId: string, orderId: string): Promise<{
         id: string;
+        status: import("@prisma/client").$Enums.OrderStatus;
         createdAt: Date;
         updatedAt: Date;
         restaurantId: string;
-        status: import("@prisma/client").$Enums.OrderStatus;
         finalAmount: number;
         totalAmount: number;
         discount: number;

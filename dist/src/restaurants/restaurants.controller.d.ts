@@ -12,15 +12,15 @@ export declare class RestaurantsController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            ownerId: string;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            ownerId: string;
             address: string;
             latitude: number;
             longitude: number;
             legalPhoto: string;
-            createdAt: Date;
-            updatedAt: Date;
             category: string | null;
             openingHours: string | null;
             branches: string | null;
@@ -33,15 +33,15 @@ export declare class RestaurantsController {
         success: boolean;
         message: string;
         data: {
-            id: string;
-            ownerId: string;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            ownerId: string;
             address: string;
             latitude: number;
             longitude: number;
             legalPhoto: string;
-            createdAt: Date;
-            updatedAt: Date;
             category: string | null;
             openingHours: string | null;
             branches: string | null;
@@ -83,10 +83,10 @@ export declare class RestaurantsController {
                 })[];
             } & {
                 id: string;
+                status: import("@prisma/client").$Enums.OrderStatus;
                 createdAt: Date;
                 updatedAt: Date;
                 restaurantId: string;
-                status: import("@prisma/client").$Enums.OrderStatus;
                 finalAmount: number;
                 totalAmount: number;
                 discount: number;
@@ -100,20 +100,20 @@ export declare class RestaurantsController {
                 };
                 voucher: {
                     id: string;
+                    isDeleted: boolean;
                     createdAt: Date;
-                    restaurantId: string;
-                    title: string;
-                    price: number;
                     value: number;
+                    price: number;
+                    title: string;
+                    restaurantId: string;
                     stock: number;
                     expiryDate: Date;
-                    isDeleted: boolean;
                 };
             } & {
                 id: string;
+                status: import("@prisma/client").$Enums.VoucherStatus;
                 createdAt: Date;
                 updatedAt: Date;
-                status: import("@prisma/client").$Enums.VoucherStatus;
                 userId: string;
                 voucherId: string;
                 uniqueCode: string | null;
@@ -137,30 +137,30 @@ export declare class RestaurantsController {
         success: boolean;
         message: string;
         data: {
-            id: string;
             name: string;
+            id: string;
+            isDeleted: boolean;
             createdAt: Date;
             description: string;
-            restaurantId: string;
             price: number;
-            isDeleted: boolean;
             image: string;
             isAvailable: boolean;
+            restaurantId: string;
         };
     }>;
     updateMenu(req: Request, id: string, dto: UpdateMenuDto, file?: Express.Multer.File): Promise<{
         success: boolean;
         message: string;
         data: {
-            id: string;
             name: string;
+            id: string;
+            isDeleted: boolean;
             createdAt: Date;
             description: string;
-            restaurantId: string;
             price: number;
-            isDeleted: boolean;
             image: string;
             isAvailable: boolean;
+            restaurantId: string;
         };
     }>;
     deleteMenu(req: Request, id: string): Promise<{
@@ -172,15 +172,15 @@ export declare class RestaurantsController {
         message: string;
         data: ({
             menus: {
-                id: string;
                 name: string;
+                id: string;
             }[];
         } & {
             id: string;
             createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
-            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         })[];
@@ -190,15 +190,15 @@ export declare class RestaurantsController {
         message: string;
         data: {
             menus: {
-                id: string;
                 name: string;
+                id: string;
             }[];
         } & {
             id: string;
             createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
-            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         };
@@ -208,15 +208,15 @@ export declare class RestaurantsController {
         message: string;
         data: {
             menus: {
-                id: string;
                 name: string;
+                id: string;
             }[];
         } & {
             id: string;
             createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
-            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         };
@@ -226,15 +226,15 @@ export declare class RestaurantsController {
         message: string;
         data: {
             menus: {
-                id: string;
                 name: string;
+                id: string;
             }[];
         } & {
             id: string;
             createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
-            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         };
@@ -261,20 +261,20 @@ export declare class RestaurantsController {
         data: {
             vouchers: ({
                 restaurant: {
-                    id: string;
                     name: string;
+                    id: string;
                     address: string;
                 };
             } & {
                 id: string;
+                isDeleted: boolean;
                 createdAt: Date;
-                restaurantId: string;
-                title: string;
-                price: number;
                 value: number;
+                price: number;
+                title: string;
+                restaurantId: string;
                 stock: number;
                 expiryDate: Date;
-                isDeleted: boolean;
             })[];
             pagination: {
                 page: number;
@@ -290,22 +290,22 @@ export declare class RestaurantsController {
         data: {
             promos: {
                 isActive: boolean;
-                menus: {
-                    id: string;
+                restaurant: {
                     name: string;
+                    id: string;
+                    address: string;
+                };
+                menus: {
+                    name: string;
+                    id: string;
                     price: number;
                     image: string;
                 }[];
-                restaurant: {
-                    id: string;
-                    name: string;
-                    address: string;
-                };
                 id: string;
                 createdAt: Date;
+                type: import("@prisma/client").$Enums.PromoType;
                 restaurantId: string;
                 discount: number;
-                type: import("@prisma/client").$Enums.PromoType;
                 startHour: string;
                 endHour: string;
             }[];
@@ -338,15 +338,15 @@ export declare class RestaurantsController {
                 name: string;
             };
         } & {
-            id: string;
-            ownerId: string;
             name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            ownerId: string;
             address: string;
             latitude: number;
             longitude: number;
             legalPhoto: string;
-            createdAt: Date;
-            updatedAt: Date;
             category: string | null;
             openingHours: string | null;
             branches: string | null;
@@ -370,14 +370,14 @@ export declare class RestaurantsController {
         message: string;
         data: {
             id: string;
+            isDeleted: boolean;
             createdAt: Date;
-            restaurantId: string;
-            title: string;
-            price: number;
             value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
             stock: number;
             expiryDate: Date;
-            isDeleted: boolean;
         }[];
     }>;
     getVoucherDetailPublic(id: string, voucherId: string): Promise<{
@@ -390,14 +390,14 @@ export declare class RestaurantsController {
             };
         } & {
             id: string;
+            isDeleted: boolean;
             createdAt: Date;
-            restaurantId: string;
-            title: string;
-            price: number;
             value: number;
+            price: number;
+            title: string;
+            restaurantId: string;
             stock: number;
             expiryDate: Date;
-            isDeleted: boolean;
         };
     }>;
     getPromosPublic(id: string): Promise<{
@@ -406,16 +406,16 @@ export declare class RestaurantsController {
         data: {
             isActive: boolean;
             menus: {
-                id: string;
                 name: string;
+                id: string;
                 price: number;
                 image: string;
             }[];
             id: string;
             createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
-            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         }[];
@@ -426,16 +426,16 @@ export declare class RestaurantsController {
         data: {
             isActive: boolean;
             menus: {
-                id: string;
                 name: string;
+                id: string;
                 price: number;
                 image: string;
             }[];
             id: string;
             createdAt: Date;
+            type: import("@prisma/client").$Enums.PromoType;
             restaurantId: string;
             discount: number;
-            type: import("@prisma/client").$Enums.PromoType;
             startHour: string;
             endHour: string;
         };

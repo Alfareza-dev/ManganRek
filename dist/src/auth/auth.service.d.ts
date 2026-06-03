@@ -12,9 +12,9 @@ export declare class AuthService {
     private cloudinaryService;
     constructor(prisma: PrismaService, jwtService: JwtService, cloudinaryService: CloudinaryService);
     registerUser(dto: RegisterUserDto): Promise<{
-        id: string;
-        email: string;
         name: string;
+        email: string;
+        id: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
         isDeleted: boolean;
@@ -24,9 +24,9 @@ export declare class AuthService {
     }>;
     registerResto(dto: RegisterRestoDto, file: Express.Multer.File): Promise<{
         user: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             isDeleted: boolean;
@@ -35,8 +35,8 @@ export declare class AuthService {
             managedRestoId: string | null;
         };
         restaurant: {
-            id: string;
             name: string;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
             ownerId: string;
@@ -55,9 +55,9 @@ export declare class AuthService {
     login(dto: LoginDto): Promise<{
         token: string;
         user: {
-            id: string;
-            email: string;
             name: string;
+            email: string;
+            id: string;
             role: import("@prisma/client").$Enums.Role;
             status: import("@prisma/client").$Enums.AccountStatus;
             isDeleted: boolean;
@@ -68,8 +68,8 @@ export declare class AuthService {
     }>;
     getProfile(userId: string): Promise<{
         restaurant: {
-            id: string;
             name: string;
+            id: string;
             createdAt: Date;
             updatedAt: Date;
             ownerId: string;
@@ -84,17 +84,17 @@ export declare class AuthService {
             description: string | null;
             isOpen: boolean | null;
         } | null;
-        id: string;
-        email: string;
         name: string;
+        email: string;
+        id: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
         managedRestoId: string | null;
     }>;
     updateProfile(userId: string, dto: UpdateProfileDto): Promise<{
-        id: string;
-        email: string;
         name: string;
+        email: string;
+        id: string;
         role: import("@prisma/client").$Enums.Role;
         status: import("@prisma/client").$Enums.AccountStatus;
     }>;

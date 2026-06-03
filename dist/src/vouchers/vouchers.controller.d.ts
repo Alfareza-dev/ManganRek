@@ -11,14 +11,14 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
-            title: string;
-            price: number;
-            value: number;
-            stock: number;
-            expiryDate: Date;
             isDeleted: boolean;
             createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
             restaurantId: string;
+            stock: number;
+            expiryDate: Date;
         };
     }>;
     findAll(req: Request): Promise<{
@@ -26,14 +26,14 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
-            title: string;
-            price: number;
-            value: number;
-            stock: number;
-            expiryDate: Date;
             isDeleted: boolean;
             createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
             restaurantId: string;
+            stock: number;
+            expiryDate: Date;
         }[];
     }>;
     findAllPublic(): Promise<{
@@ -46,14 +46,14 @@ export declare class VouchersController {
             };
         } & {
             id: string;
-            title: string;
-            price: number;
-            value: number;
-            stock: number;
-            expiryDate: Date;
             isDeleted: boolean;
             createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
             restaurantId: string;
+            stock: number;
+            expiryDate: Date;
         })[];
     }>;
     findByRestoPublic(restoId: string): Promise<{
@@ -61,14 +61,14 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
-            title: string;
-            price: number;
-            value: number;
-            stock: number;
-            expiryDate: Date;
             isDeleted: boolean;
             createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
             restaurantId: string;
+            stock: number;
+            expiryDate: Date;
         }[];
     }>;
     getUserHistory(req: Request): Promise<{
@@ -83,23 +83,23 @@ export declare class VouchersController {
                 };
             } & {
                 id: string;
-                title: string;
-                price: number;
-                value: number;
-                stock: number;
-                expiryDate: Date;
                 isDeleted: boolean;
                 createdAt: Date;
+                value: number;
+                price: number;
+                title: string;
                 restaurantId: string;
+                stock: number;
+                expiryDate: Date;
             };
         } & {
             id: string;
+            status: import("@prisma/client").$Enums.VoucherStatus;
             createdAt: Date;
             updatedAt: Date;
-            uniqueCode: string | null;
             userId: string;
             voucherId: string;
-            status: import("@prisma/client").$Enums.VoucherStatus;
+            uniqueCode: string | null;
             totalPaid: number;
             platformFee: number;
             paymentUrl: string | null;
@@ -110,14 +110,14 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
-            title: string;
-            price: number;
-            value: number;
-            stock: number;
-            expiryDate: Date;
             isDeleted: boolean;
             createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
             restaurantId: string;
+            stock: number;
+            expiryDate: Date;
         };
     }>;
     update(req: Request, id: string, dto: UpdateVoucherDto): Promise<{
@@ -125,14 +125,14 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
-            title: string;
-            price: number;
-            value: number;
-            stock: number;
-            expiryDate: Date;
             isDeleted: boolean;
             createdAt: Date;
+            value: number;
+            price: number;
+            title: string;
             restaurantId: string;
+            stock: number;
+            expiryDate: Date;
         };
     }>;
     remove(req: Request, id: string): Promise<{
@@ -144,12 +144,12 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
+            status: import("@prisma/client").$Enums.VoucherStatus;
             createdAt: Date;
             updatedAt: Date;
-            uniqueCode: string | null;
             userId: string;
             voucherId: string;
-            status: import("@prisma/client").$Enums.VoucherStatus;
+            uniqueCode: string | null;
             totalPaid: number;
             platformFee: number;
             paymentUrl: string | null;
@@ -163,12 +163,12 @@ export declare class VouchersController {
         message: string;
         data: {
             id: string;
+            status: import("@prisma/client").$Enums.VoucherStatus;
             createdAt: Date;
             updatedAt: Date;
-            uniqueCode: string | null;
             userId: string;
             voucherId: string;
-            status: import("@prisma/client").$Enums.VoucherStatus;
+            uniqueCode: string | null;
             totalPaid: number;
             platformFee: number;
             paymentUrl: string | null;

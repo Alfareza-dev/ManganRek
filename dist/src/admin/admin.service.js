@@ -197,6 +197,66 @@ let AdminService = class AdminService {
             }
         };
     }
+    async deleteRestaurantPermanently(id) {
+        const restaurant = await this.prisma.restaurant.findUnique({
+            where: { id },
+            include: { cashiers: true }
+        });
+        if (!restaurant) {
+            throw new common_1.NotFoundException('Restoran tidak ditemukan');
+        }
+        const cashierIds = restaurant.cashiers.map(c => c.id);
+        const ownerId = restaurant.ownerId;
+        await this.prisma.user.updateMany({
+            where: {
+                OR: [
+                    { managedRestoId: id },
+                    { id: { in: [ownerId, ...cashierIds] } }
+                ]
+            },
+            data: { managedRestoId: null }
+        });
+        await this.prisma.transaction.deleteMany({
+            where: {
+                OR: [
+                    { voucher: { restaurantId: id } },
+                    { userId: { in: [ownerId, ...cashierIds] } }
+                ]
+            }
+        });
+        await this.prisma.orderItem.deleteMany({
+            where: {
+                menu: {
+                    restaurantId: id
+                }
+            }
+        });
+        await this.prisma.order.deleteMany({
+            where: { restaurantId: id }
+        });
+        await this.prisma.restaurant.delete({
+            where: { id }
+        });
+        if (cashierIds.length > 0) {
+            try {
+                await this.prisma.user.deleteMany({
+                    where: { id: { in: cashierIds } }
+                });
+            }
+            catch (error) {
+                console.warn(`Gagal menghapus kasir dari restoran ${id}:`, error);
+            }
+        }
+        try {
+            await this.prisma.user.delete({
+                where: { id: ownerId }
+            });
+        }
+        catch (error) {
+            console.warn(`Gagal menghapus owner dari restoran ${id}:`, error);
+        }
+        return { message: 'Restoran beserta seluruh data terkait (Owner, Kasir, Transaksi, dll) berhasil dihapus permanen' };
+    }
 };
 exports.AdminService = AdminService;
 exports.AdminService = AdminService = __decorate([
