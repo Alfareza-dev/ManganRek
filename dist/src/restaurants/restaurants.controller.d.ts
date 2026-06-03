@@ -77,9 +77,9 @@ export declare class RestaurantsController {
                     id: string;
                     createdAt: Date;
                     price: number;
-                    orderId: string;
                     menuId: string;
                     quantity: number;
+                    orderId: string;
                 })[];
             } & {
                 id: string;
