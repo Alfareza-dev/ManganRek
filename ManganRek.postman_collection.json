@@ -1669,6 +1669,162 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Restaurant Profile (Admin Resto)",
+      "item": [
+        {
+          "name": "Get Restaurant Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin_resto}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Restaurant Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_admin_resto}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Bakso Malang legendaris dengan cita rasa otentik...\",\n  \"category\": \"Makanan & Minuman\",\n  \"openingHours\": \"Senin - Jumat 09:00 - 22:00 WIB\",\n  \"branches\": \"Cabang Utama (Ijen)\\nJl. Ijen No. 10\",\n  \"googleMapsUrl\": \"https://maps.google.com/...\",\n  \"isOpen\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/restaurants/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "restaurants",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "Submit Contact Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"message\": \"Subjek: Kerjasama\\n\\nHalo, saya ingin...\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/contact",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contact"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Contact Messages (Super Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_super_admin}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/contact",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contact"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Contact Message (Super Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token_super_admin}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/contact/MESSAGE_ID",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "contact",
+                "MESSAGE_ID"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

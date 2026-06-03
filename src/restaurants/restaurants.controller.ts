@@ -33,6 +33,15 @@ export class RestaurantsController {
 
   // ==================== RESTAURANT PROFILE (ADMIN_RESTO) ====================
 
+  @Get('profile')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN_RESTO)
+  async getProfile(@Req() req: Request) {
+    const user = req.user as any;
+    const data = await this.restaurantsService.getProfile(user.userId);
+    return { success: true, message: 'Profil restoran berhasil dimuat', data };
+  }
+
   @Put('profile')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN_RESTO)

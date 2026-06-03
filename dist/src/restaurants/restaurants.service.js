@@ -30,6 +30,9 @@ let RestaurantsService = class RestaurantsService {
         }
         return restaurant;
     }
+    async getProfile(userId) {
+        return this.getOwnedRestaurant(userId);
+    }
     async updateProfile(userId, dto) {
         const restaurant = await this.getOwnedRestaurant(userId);
         return this.prisma.restaurant.update({

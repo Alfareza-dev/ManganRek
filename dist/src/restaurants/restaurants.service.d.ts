@@ -10,6 +10,23 @@ export declare class RestaurantsService {
     private cloudinaryService;
     constructor(prisma: PrismaService, cloudinaryService: CloudinaryService);
     private getOwnedRestaurant;
+    getProfile(userId: string): Promise<{
+        name: string;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        ownerId: string;
+        address: string;
+        latitude: number;
+        longitude: number;
+        legalPhoto: string;
+        category: string | null;
+        openingHours: string | null;
+        branches: string | null;
+        googleMapsUrl: string | null;
+        description: string | null;
+        isOpen: boolean | null;
+    }>;
     updateProfile(userId: string, dto: UpdateRestaurantDto): Promise<{
         name: string;
         id: string;
@@ -45,9 +62,9 @@ export declare class RestaurantsService {
                 id: string;
                 createdAt: Date;
                 price: number;
-                orderId: string;
                 menuId: string;
                 quantity: number;
+                orderId: string;
             })[];
         } & {
             id: string;

@@ -38,6 +38,10 @@ export class RestaurantsService {
 
   // ==================== RESTAURANT PROFILE ====================
 
+  async getProfile(userId: string) {
+    return this.getOwnedRestaurant(userId);
+  }
+
   async updateProfile(userId: string, dto: UpdateRestaurantDto) {
     const restaurant = await this.getOwnedRestaurant(userId);
     

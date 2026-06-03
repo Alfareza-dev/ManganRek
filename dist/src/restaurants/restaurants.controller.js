@@ -32,6 +32,11 @@ let RestaurantsController = class RestaurantsController {
     constructor(restaurantsService) {
         this.restaurantsService = restaurantsService;
     }
+    async getProfile(req) {
+        const user = req.user;
+        const data = await this.restaurantsService.getProfile(user.userId);
+        return { success: true, message: 'Profil restoran berhasil dimuat', data };
+    }
     async updateProfile(req, dto) {
         const user = req.user;
         const data = await this.restaurantsService.updateProfile(user.userId, dto);
@@ -200,6 +205,16 @@ let RestaurantsController = class RestaurantsController {
     }
 };
 exports.RestaurantsController = RestaurantsController;
+__decorate([
+    (0, common_1.Get)('profile'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(client_1.Role.ADMIN_RESTO),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RestaurantsController.prototype, "getProfile", null);
 __decorate([
     (0, common_1.Put)('profile'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard, roles_guard_1.RolesGuard),

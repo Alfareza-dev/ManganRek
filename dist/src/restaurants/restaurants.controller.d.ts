@@ -8,6 +8,27 @@ import type { Request } from 'express';
 export declare class RestaurantsController {
     private readonly restaurantsService;
     constructor(restaurantsService: RestaurantsService);
+    getProfile(req: Request): Promise<{
+        success: boolean;
+        message: string;
+        data: {
+            name: string;
+            id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            ownerId: string;
+            address: string;
+            latitude: number;
+            longitude: number;
+            legalPhoto: string;
+            category: string | null;
+            openingHours: string | null;
+            branches: string | null;
+            googleMapsUrl: string | null;
+            description: string | null;
+            isOpen: boolean | null;
+        };
+    }>;
     updateProfile(req: Request, dto: UpdateRestaurantDto): Promise<{
         success: boolean;
         message: string;
@@ -54,9 +75,9 @@ export declare class RestaurantsController {
                     id: string;
                     createdAt: Date;
                     price: number;
-                    orderId: string;
                     menuId: string;
                     quantity: number;
+                    orderId: string;
                 })[];
             } & {
                 id: string;
