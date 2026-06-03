@@ -440,6 +440,7 @@ let RestaurantsService = class RestaurantsService {
         return this.prisma.voucher.findMany({
             where: {
                 restaurantId: restaurant.id,
+                isDeleted: false,
                 expiryDate: { gte: new Date() },
                 stock: { gt: 0 },
             },
@@ -452,6 +453,7 @@ let RestaurantsService = class RestaurantsService {
             where: {
                 id: voucherId,
                 restaurantId: restaurant.id,
+                isDeleted: false,
             },
             include: {
                 restaurant: {
@@ -544,6 +546,7 @@ let RestaurantsService = class RestaurantsService {
         const offset = (page - 1) * limit;
         const where = {
             restaurant: { owner: { status: 'ACTIVE' } },
+            isDeleted: false,
             expiryDate: { gte: new Date() },
             stock: { gt: 0 },
         };

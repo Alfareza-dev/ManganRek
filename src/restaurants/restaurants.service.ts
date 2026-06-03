@@ -538,6 +538,7 @@ export class RestaurantsService {
     return this.prisma.voucher.findMany({
       where: {
         restaurantId: restaurant.id,
+        isDeleted: false,
         expiryDate: { gte: new Date() },
         stock: { gt: 0 },
       },
@@ -551,6 +552,7 @@ export class RestaurantsService {
       where: {
         id: voucherId,
         restaurantId: restaurant.id,
+        isDeleted: false,
       },
       include: {
         restaurant: {
@@ -658,6 +660,7 @@ export class RestaurantsService {
 
     const where: Prisma.VoucherWhereInput = {
       restaurant: { owner: { status: 'ACTIVE' } },
+      isDeleted: false,
       expiryDate: { gte: new Date() },
       stock: { gt: 0 },
     };

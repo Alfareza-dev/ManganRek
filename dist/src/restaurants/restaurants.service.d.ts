@@ -64,9 +64,9 @@ export declare class RestaurantsService {
                 id: string;
                 createdAt: Date;
                 price: number;
+                orderId: string;
                 menuId: string;
                 quantity: number;
-                orderId: string;
             })[];
         } & {
             id: string;
